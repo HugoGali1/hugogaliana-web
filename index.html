@@ -689,6 +689,13 @@ a:hover{color:var(--accent-hover)}
    Aqui el escenario deja de ser pegajoso: cada banda es una seccion normal de
    una pantalla y aparece al entrar en vista con una transicion de opacidad y
    desplazamiento, que van sobre el compositor y no cuestan trabajo por frame. */
+@keyframes fragEntra{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+/* Con "reducir movimiento" el navegador anula las animaciones; como los
+   fragmentos parten de opacidad 0, sin esto el texto se quedaria invisible. */
+@media (pointer:coarse) and (prefers-reduced-motion: reduce){
+  .band .w,.band .c,.band .e-blur .sharp,.band .kicker,.band .sub,
+  .band .static-sub,.band .static-cta,.band .cta-row{opacity:1}
+}
 @media (pointer:coarse){
   .hero{height:auto}
   .stage{position:relative;height:auto;overflow:visible;background:var(--canvas)}
@@ -702,13 +709,24 @@ a:hover{color:var(--accent-hover)}
   .scrim{position:absolute;left:0;right:0;top:0;height:100svh}
   /* la colocacion por banda (p1..p5) obedecia a los capitulos de luz del video;
      apiladas como secciones, lo natural es centrarlas */
-  .band{align-items:center;justify-content:center;position:relative;inset:auto;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .45s var(--ease);pointer-events:auto}
+  .band{align-items:center;justify-content:center;position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto}
   /* solo la primera ocupa la pantalla entera, que es la que lleva la foto.
      Las demas son frases cortas: darles una pantalla a cada una convertia el
      hero en cinco pantallas de hueco que hay que atravesar. */
   .band[data-first]{min-height:100svh;padding:12svh 0}
   .band:not([data-first]){min-height:auto;padding:14svh 0}
-  .band.in{opacity:1;transform:none}
+  /* La animacion no la calcula JavaScript ni sigue a la posicion del scroll:
+     se dispara una vez, al entrar la banda, y la ejecuta el compositor sobre
+     opacidad y transform. Por eso no puede desincronizarse del dedo en iOS.
+     El escalonado palabra a palabra conserva el caracter del hero original. */
+  .band .w,.band .c,.band .e-blur .sharp,.band .kicker,.band .sub,
+  .band .static-sub,.band .static-cta,.band .cta-row{opacity:0}
+  .band.in .kicker{animation:fragEntra .5s var(--ease) both}
+  .band.in .w,.band.in .c,.band.in .e-blur .sharp{
+    animation:fragEntra .55s var(--ease) both;
+    animation-delay:calc(90ms + var(--i,0)*var(--step,30ms))}
+  .band.in .sub,.band.in .static-sub{animation:fragEntra .6s var(--ease) both;animation-delay:var(--d2,320ms)}
+  .band.in .static-cta,.band.in .cta-row{animation:fragEntra .6s var(--ease) both;animation-delay:calc(var(--d2,320ms) + 110ms)}
   /* cada banda traia su colocacion a medida (p2 arriba a la izquierda, p3 abajo
      a la izquierda, p4 abajo a la derecha...) para componer sobre el metraje.
      Apiladas en una pantalla estrecha eso deja el texto descuadrado y pegado a
@@ -723,7 +741,7 @@ a:hover{color:var(--accent-hover)}
      quedaba pintado por debajo de la propia foto y no servia de nada */
   .band[data-first]::before{display:block;z-index:1;opacity:1;background:linear-gradient(to bottom,rgba(4,6,9,.30) 0%,rgba(4,6,9,.72) 42%,rgba(4,6,9,.86) 100%)}
   /* los efectos por letra se neutralizan: en tactil el texto se muestra entero */
-  .band .w,.band .c,.band .sub,.band .cta-row,.e-blur .sharp{opacity:1;transform:none}
+  .band .w,.band .c,.band .sub,.band .cta-row,.e-blur .sharp{transform:none}
   .e-blur .soft{display:none}
   .static-sub,.static-cta{display:block}
 }
@@ -1130,6 +1148,17 @@ if(matchMedia('(pointer:coarse)').matches){
     el.style.removeProperty('opacity');
     el.style.removeProperty('visibility');
     el.style.removeProperty('--k');
+    /* Indice de cada fragmento para escalonar su entrada. Se calcula una sola
+       vez al cargar: la animacion la lleva despues el compositor, aqui no se
+       vuelve a tocar nada mientras se hace scroll. */
+    var frag=el.querySelectorAll('.w,.c,.e-blur .sharp');
+    frag.forEach(function(f,i){f.style.setProperty('--i',i)});
+    /* El escalonado completo se acota a ~320 ms pase lo que pase: con 28
+       caracteres y un paso fijo, el ultimo entraba casi un segundo despues y
+       deslizando no daba tiempo a verlo. */
+    var paso=Math.min(34,Math.round(320/Math.max(1,frag.length)));
+    el.style.setProperty('--step',paso+'ms');
+    el.style.setProperty('--d2',(90+frag.length*paso+110)+'ms');
     ioBandas.observe(el);
   });
 }
