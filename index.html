@@ -690,6 +690,46 @@ a:hover{color:var(--accent-hover)}
    una pantalla y aparece al entrar en vista con una transicion de opacidad y
    desplazamiento, que van sobre el compositor y no cuestan trabajo por frame. */
 @keyframes fragEntra{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+/* Escape: si una banda llega a estar en pantalla con su texto aun invisible
+   --una linea de tiempo que no se activa, un navegador que no ejecuta la
+   animacion-- se le quitan las animaciones y queda su estado natural, visible. */
+.band.sin-anim .w,.band.sin-anim .c,.band.sin-anim .e-blur .sharp,
+.band.sin-anim .kicker,.band.sin-anim .sub,.band.sin-anim .static-sub,
+.band.sin-anim .static-cta,.band.sin-anim .cta-row{animation:none}
+/* ---- movil: la aparicion ligada al dedo, como en escritorio ----
+   En escritorio las palabras van saliendo conforme desplazas. Atar eso al
+   scroll desde JavaScript es justo lo que no puede ir fino en iOS, porque el
+   desplazamiento va en otro hilo. Con animation-timeline lo lleva el
+   compositor: el progreso lo marca la posicion de la banda en pantalla, sin
+   una sola linea de JavaScript por medio.
+   La primera banda queda fuera: al cargar ya esta a la vista, nunca llegaria a
+   "entrar" y se quedaria congelada en su primer fotograma. Esa conserva la
+   entrada por tiempo. */
+@supports (animation-timeline: view()){
+  @media (pointer:coarse){
+    .band:not([data-first]) .w,.band:not([data-first]) .c,
+    .band:not([data-first]) .e-blur .sharp,
+    .band:not([data-first]).in .w,.band:not([data-first]).in .c,
+    .band:not([data-first]).in .e-blur .sharp{
+      animation-name:fragEntra;animation-timing-function:linear;
+      animation-fill-mode:both;animation-duration:auto;
+      animation-timeline:view();
+      animation-range:entry calc(8% + var(--o,0%)) entry calc(52% + var(--o,0%));
+      animation-delay:0s}
+    .band:not([data-first]) .kicker,.band:not([data-first]).in .kicker{
+      animation-name:fragEntra;animation-timing-function:linear;
+      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
+      animation-range:entry 2% entry 34%;animation-delay:0s}
+    .band:not([data-first]) .sub,.band:not([data-first]).in .sub{
+      animation-name:fragEntra;animation-timing-function:linear;
+      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
+      animation-range:entry 46% entry 82%;animation-delay:0s}
+    .band:not([data-first]) .cta-row,.band:not([data-first]).in .cta-row{
+      animation-name:fragEntra;animation-timing-function:linear;
+      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
+      animation-range:entry 58% entry 92%;animation-delay:0s}
+  }
+}
 @media (pointer:coarse){
   .hero{height:auto}
   .stage{position:relative;height:auto;overflow:visible;background:var(--canvas)}
@@ -1153,6 +1193,9 @@ if(matchMedia('(pointer:coarse)').matches){
     /* el escalonado completo se acota a ~320 ms tenga los fragmentos que tenga */
     var paso=Math.min(34,Math.round(320/Math.max(1,frag.length)));
     el.style.setProperty('--step',paso+'ms');
+    /* mismo escalonado, pero medido en recorrido de scroll para la version
+       ligada al dedo: el conjunto se reparte en un 34% del rango */
+    frag.forEach(function(f,i){f.style.setProperty('--o',(i*34/Math.max(1,frag.length)).toFixed(2)+'%')});
     el.style.setProperty('--d2',(90+frag.length*paso+110)+'ms');
   });
   var pendientes=bandasT.slice();
@@ -1163,7 +1206,9 @@ if(matchMedia('(pointer:coarse)').matches){
     var limite=innerHeight;
     for(var i=pendientes.length-1;i>=0;i--){
       if(pendientes[i].getBoundingClientRect().top<limite){
-        pendientes[i].classList.add('in');
+        var banda=pendientes[i];
+        banda.classList.add('in');
+        vigilarBanda(banda);
         pendientes.splice(i,1);
       }
     }
@@ -1171,6 +1216,16 @@ if(matchMedia('(pointer:coarse)').matches){
       removeEventListener('scroll',alScrollBandas);
       clearInterval(vigilante);
     }
+  }
+  function vigilarBanda(banda){
+    /* A los 2,5 s: si la banda esta en pantalla y su texto sigue invisible, es
+       que la animacion no se ha ejecutado. Se desactiva y queda el texto. */
+    setTimeout(function(){
+      var r=banda.getBoundingClientRect();
+      if(r.bottom<0||r.top>innerHeight)return;
+      var f=banda.querySelector('.w,.c,.e-blur .sharp');
+      if(f&&parseFloat(getComputedStyle(f).opacity)<0.1)banda.classList.add('sin-anim');
+    },2500);
   }
   var pedido=false;
   function alScrollBandas(){
