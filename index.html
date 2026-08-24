@@ -233,7 +233,7 @@ a:hover{color:var(--accent-hover)}
   <div class="wrap about-wrap">
     <div class="rev">
       <div class="about-photo-box part" id="about-photo">
-        <img src="assets/hugo-retrato.jpg" width="1000" height="1250" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
+        <img src="assets/hugo-retrato.jpg?v=2" width="1000" height="1000" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
       </div>
     </div>
     <div class="rev">
@@ -560,14 +560,14 @@ a:hover{color:var(--accent-hover)}
 .faq p{padding:0 22px 20px;color:var(--text-secondary);font-size:15.5px;max-width:70ch}
 /* quien soy */
 .about-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,5vw,60px);align-items:center}
-.about-photo-box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;max-width:380px;box-shadow:0 26px 74px rgba(0,0,0,.45)}
+.about-photo-box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1;max-width:380px;box-shadow:0 26px 74px rgba(0,0,0,.45)}
 .about-photo-box::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:20px;box-shadow:inset 0 0 0 1px var(--line)}
 .about-photo-box img{width:100%;height:100%;object-fit:cover;display:block}
 .about-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--text-secondary)}
 .about-ph svg{width:52px;height:52px;color:var(--accent)}
 .about p+p{margin-top:14px}
 .about .rev + .rev h2{margin-top:14px}
-@media (max-width:860px){.about-wrap{grid-template-columns:1fr}.about-photo-box{max-width:300px}}
+@media (max-width:860px){.about-wrap{grid-template-columns:1fr}.about-photo-box{max-width:min(320px,72vw);margin-inline:auto}}
 /* contacto */
 .contact{padding-bottom:120px;position:relative;isolation:isolate;overflow:hidden}
 .contact::before{content:"";position:absolute;inset:0;z-index:-1;background:url('assets/hero-ending.jpg') center/cover no-repeat;opacity:.15;-webkit-mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent);mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent)}
