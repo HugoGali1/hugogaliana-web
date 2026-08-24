@@ -152,7 +152,7 @@ a:hover{color:var(--accent-hover)}
 .e-approach .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:scale(calc(.82 + .18*var(--kc)))}
 .e-blur .soft,.e-blur .sharp{display:block}
 .e-blur{position:relative}
-.e-blur .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0))}
+.e-blur .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0));will-change:opacity}
 .e-blur .sharp{opacity:var(--k,0)}
 .e-grid .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
 .e-scatter .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translate(calc((1 - var(--kc))*var(--jx,0px)),calc((1 - var(--kc))*var(--jy,0px))) rotate(calc((1 - var(--kc))*var(--jr,0deg)))}
@@ -772,6 +772,12 @@ var SEQ_TOTAL=48;
    bitmaps en RAM y la animación sigue leyéndose bien */
 var LOWMEM=(navigator.deviceMemory||4)<=3;
 var SEQ_STEP=LOWMEM?2:1;
+/* En tactil el recalculo de estilo de las letras partidas es lo que mas cuesta
+   del frame (medido: x3 en los picos al actualizar varias bandas a la vez).
+   Subir el escalon reduce esos recalculos sin que el ojo note la diferencia:
+   --k recorre 0..1, y un paso de 0.025 son 40 actualizaciones por banda. */
+var STEP_K=LIGHT?0.025:0.008;
+var VIS_MIN=LIGHT?0.02:0.004;
 var heroOnScreen=true,loadK=0,loadT0=0;
 
 function heroProgress(){
@@ -790,18 +796,18 @@ function updateCaptions(p,now){
     var ramp=b.ramp||Math.min(0.025,(b.b-b.a)*0.35);
     var k=clamp((p-b.a)/ramp,0,1);
     if(b.first){k=Math.max(k,loadK)}
-    if(Math.abs(op-b.op)>0.008){
+    if(Math.abs(op-b.op)>STEP_K){
       b.op=op;b.el.style.opacity=op.toFixed(3);
       /* una banda invisible no se pinta ni se mide: se saca del trabajo del frame */
-      b.el.style.visibility=op<0.004?'hidden':'';
+      b.el.style.visibility=op<VIS_MIN?'hidden':'';
     }
     /* cada cambio de --k obliga a recalcular estilo en las ~40 letras de la banda.
        Si la banda no se ve, ese trabajo se tira: solo actualizamos las visibles. */
-    if((op>0.004||b.k<0)&&Math.abs(k-b.k)>0.008){b.k=k;b.el.style.setProperty('--k',k.toFixed(3))}
+    if((op>VIS_MIN||b.k<0)&&Math.abs(k-b.k)>STEP_K){b.k=k;b.el.style.setProperty('--k',k.toFixed(3))}
     if(b.last){
       var ks=clamp((k-0.5)*3,0,1),kb=clamp((k-0.72)*4,0,1);
-      if(Math.abs(ks-b.ks)>0.008){b.ks=ks;b.el.style.setProperty('--ks',ks.toFixed(3))}
-      if(Math.abs(kb-b.kb)>0.008){b.kb=kb;b.el.style.setProperty('--kb',kb.toFixed(3))}
+      if(Math.abs(ks-b.ks)>STEP_K){b.ks=ks;b.el.style.setProperty('--ks',ks.toFixed(3))}
+      if(Math.abs(kb-b.kb)>STEP_K){b.kb=kb;b.el.style.setProperty('--kb',kb.toFixed(3))}
       var live=op>0.55;
       if(live!==b.live){b.live=live;b.el.classList.toggle('live',live)}
     }
