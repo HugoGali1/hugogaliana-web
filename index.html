@@ -338,7 +338,7 @@ a:hover{color:var(--accent-hover)}
     <ol class="steps rev">
       <li class="step part">
         <span class="n mono">01</span>
-        <h3>Hablamos 30 minutos y me cuentas qué necesitas.</h3>
+        <h3>Hablamos y me cuentas qué necesitas.</h3>
         <p>Me cuentas tu negocio y lo que te falta. Yo traduzco eso a una solución concreta.</p>
       </li>
       <li class="step part">
@@ -439,12 +439,9 @@ a:hover{color:var(--accent-hover)}
     <div class="rev">
       <span class="kicker part">El siguiente paso</span>
       <h2 id="h-cont" class="part">Cuéntame tu proyecto.</h2>
-      <p class="lede part">Escríbeme qué tienes y qué te falta. Te respondo con una llamada de 30 minutos, sin compromiso y en lenguaje claro.</p>
+      <p class="lede part">Explicame qué necesitas y qué te falta. Contacto contigo sin compromiso y con lenguaje claro.</p>
     </div>
     <form class="cform rev" id="cform" method="POST" action="https://api.web3forms.com/submit" novalidate>
-      <!-- ↓↓↓ PEGA AQUÍ TU ACCESS KEY DE WEB3FORMS ↓↓↓
-           La consigues gratis en https://web3forms.com poniendo tu correo:
-           te llega al instante por email. Es lo único que hay que tocar. -->
       <input type="hidden" name="access_key" id="w3f-key" value="19029ac9-2e87-4a0d-82e3-4cb66b1ac2ea">
       <div class="cform-grid part">
         <div class="fld">
@@ -455,6 +452,10 @@ a:hover{color:var(--accent-hover)}
           <label class="mono" for="f-mail">Tu correo</label>
           <input id="f-mail" name="email" type="email" autocomplete="email" required maxlength="160" inputmode="email" placeholder="maria@ejemplo.com">
         </div>
+        <div class="fld">
+          <label class="mono" for="f-tel">Tu teléfono <span class="opt">(opcional)</span></label>
+          <input id="f-tel" name="phone" type="tel" autocomplete="tel" maxlength="24" inputmode="tel" placeholder="600 12 34 56">
+        </div>
       </div>
       <label class="mono part" for="f-msg">Tu proyecto</label>
       <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un restaurante y quiero que mis clientes puedan reservar desde la web..."></textarea>
@@ -464,9 +465,7 @@ a:hover{color:var(--accent-hover)}
       <input type="hidden" name="from_name" value="Formulario de hugogaliana.com">
       <div class="cform-row part">
         <button class="btn btn-solid" id="send-btn" type="submit">Enviar mi proyecto</button>
-        <button class="btn btn-ghost" id="copy-btn" type="button">Copiar mi email</button>
       </div>
-      <p class="mono cnote part" aria-live="polite" role="status">Llega directo a mi correo y te respondo al tuyo. <span id="copy-ok"></span></p>
       <div class="form-ok" role="status" hidden>
         <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 24l6 6 12-12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <p><strong>Recibido.</strong> Tu mensaje ya está en mi correo. Te escribo pronto.</p>
@@ -574,6 +573,7 @@ a:hover{color:var(--accent-hover)}
 .cform{margin-top:36px;display:grid;gap:12px}
 .cform label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary)}
 .cform-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld .opt{opacity:.55;letter-spacing:0}
 .fld{display:grid;gap:8px}
 @media (max-width:640px){.cform-grid{grid-template-columns:1fr}}
 .cform input,.cform textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;color:var(--text-primary);font-family:var(--fb);font-size:16px;padding:14px 18px;transition:border-color .3s var(--ease)}
@@ -589,7 +589,6 @@ a:hover{color:var(--accent-hover)}
 .cform-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
 .cnote{font-size:12px;color:var(--text-secondary);transition:color .3s var(--ease)}
 .cnote.bad{color:#E0917F}
-#copy-ok{color:var(--accent)}
 /* footer */
 .foot{border-top:1px solid var(--line);padding:30px 0 42px}
 .foot-row{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline;color:var(--text-secondary);font-size:14px}
@@ -985,6 +984,7 @@ var cnote=cform.querySelector('.cnote');
 var fName=document.getElementById('f-name');
 var fMail=document.getElementById('f-mail');
 var fMsg=document.getElementById('f-msg');
+var fTel=document.getElementById('f-tel');
 var botcheck=cform.querySelector('[name="botcheck"]');
 var NOTE_DEFAULT='Llega directo a mi correo y te respondo al tuyo.';
 
@@ -1021,6 +1021,7 @@ cform.addEventListener('submit',function(ev){
   ev.preventDefault();
   if(sendBtn.disabled)return;
   var n=fName.value.trim(),m=fMail.value.trim(),t=fMsg.value.trim();
+  var tel=fTel?fTel.value.trim():'';
   if(botcheck&&botcheck.checked)return;              /* bot: se traga el envío en silencio */
   if(!n)return fieldError(fName,'Dime tu nombre y le doy salida.');
   if(!isMail(m))return fieldError(fMail,'Revisa el correo: sin él no puedo responderte.');
@@ -1045,6 +1046,7 @@ cform.addEventListener('submit',function(ev){
       name:n,
       email:m,
       message:t,
+      phone:tel||'No indicado',
       replyto:m,
       from_name:'Formulario de hugogaliana.com',
       subject:'Nuevo proyecto desde hugogaliana.com — '+n
@@ -1068,12 +1070,6 @@ cform.addEventListener('submit',function(ev){
       ? 'El servidor de correo tarda demasiado en contestar. Te abro tu correo con el mensaje ya escrito.'
       : 'No hay conexión con el servidor de correo. Te abro tu correo con el mensaje ya escrito.',n,m,t);
   });
-});
-document.getElementById('copy-btn').addEventListener('click',function(){
-  var ok=document.getElementById('copy-ok');
-  function done(){ok.textContent='Copiado.';setTimeout(function(){ok.textContent=''},2200)}
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(EMAIL).then(done,done)}
-  else{done()}
 });
 
 /* ---------- boot ---------- */
