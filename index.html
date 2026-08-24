@@ -79,6 +79,7 @@ a:hover{color:var(--accent-hover)}
 .nav ul a:hover{color:var(--text-primary)}
 .nav ul a.cta{color:var(--accent)}
 /* el menú se va soltando lastre para no partirse nunca en dos líneas */
+@media (max-width:1320px){.nav li[data-lvl="4"]{display:none}}
 @media (max-width:1180px){.nav ul{gap:20px}.nav li[data-lvl="3"]{display:none}}
 @media (max-width:980px){.nav li[data-lvl="2"]{display:none}}
 @media (max-width:780px){.nav li[data-lvl="1"]{display:none}}
@@ -166,6 +167,7 @@ a:hover{color:var(--accent-hover)}
     <li data-lvl="2"><a href="#servicios">Qué construyo</a></li>
     <li data-lvl="3"><a href="#proceso">Cómo trabajo</a></li>
     <li data-lvl="3"><a href="#proyectos">Proyectos</a></li>
+    <li data-lvl="4"><a href="#faq">Preguntas frecuentes</a></li>
     <li><a class="cta" href="#contacto">Cuéntame tu proyecto</a></li>
   </ul>
 </nav>
@@ -425,11 +427,7 @@ a:hover{color:var(--accent-hover)}
       </details>
       <details class="faq part">
         <summary>¿Y si ya tengo una web?</summary>
-        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Me quedo atado a ti?</summary>
-        <p>No. El código, el dominio y los datos son tuyos desde el primer día. Si mañana quieres trabajar con otra persona, se lo llevas todo.</p>
+        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. En cada caso se realizaran los cambios necesarios.</p>
       </details>
     </div>
   </div>
@@ -447,7 +445,7 @@ a:hover{color:var(--accent-hover)}
       <!-- ↓↓↓ PEGA AQUÍ TU ACCESS KEY DE WEB3FORMS ↓↓↓
            La consigues gratis en https://web3forms.com poniendo tu correo:
            te llega al instante por email. Es lo único que hay que tocar. -->
-      <input type="hidden" name="access_key" id="w3f-key" value="PEGA-AQUI-TU-ACCESS-KEY">
+      <input type="hidden" name="access_key" id="w3f-key" value="19029ac9-2e87-4a0d-82e3-4cb66b1ac2ea">
       <div class="cform-grid part">
         <div class="fld">
           <label class="mono" for="f-name">Tu nombre</label>
