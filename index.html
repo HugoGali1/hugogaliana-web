@@ -912,6 +912,10 @@ function tick(now){
   updateCaptions(shown,now);
 }
 function onScroll(){
+  /* El observador del hero llama aqui al cargar, sin pasar por la puerta: sin
+     esta guarda el motor daba una pasada y dejaba opacity/visibility en linea
+     sobre las bandas, que luego pisaban al CSS del modo tactil. */
+  if(!scrubOn)return;
   lastScroll=performance.now();
   /* Al despertar el bucle refrescamos las medidas: en iOS la barra de direcciones
      se pliega al deslizar y cambia innerHeight, asi que el recorrido del hero no
@@ -1093,7 +1097,12 @@ document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)})
 /* en tactil las bandas del hero son secciones normales: aparecen al entrar en
    vista, igual que el resto de la pagina, en vez de seguir al scroll */
 if(matchMedia('(pointer:coarse)').matches){
-  document.querySelectorAll('.band').forEach(function(el){io.observe(el)});
+  document.querySelectorAll('.band').forEach(function(el){
+    el.style.removeProperty('opacity');
+    el.style.removeProperty('visibility');
+    el.style.removeProperty('--k');
+    io.observe(el);
+  });
 }
 
 /* ---------- hold moment ---------- */
