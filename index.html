@@ -702,7 +702,12 @@ a:hover{color:var(--accent-hover)}
   .scrim{position:absolute;left:0;right:0;top:0;height:100svh}
   /* la colocacion por banda (p1..p5) obedecia a los capitulos de luz del video;
      apiladas como secciones, lo natural es centrarlas */
-  .band{align-items:center;justify-content:center;position:relative;inset:auto;min-height:100svh;padding:12svh 0;opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);pointer-events:auto}
+  .band{align-items:center;justify-content:center;position:relative;inset:auto;opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .45s var(--ease);pointer-events:auto}
+  /* solo la primera ocupa la pantalla entera, que es la que lleva la foto.
+     Las demas son frases cortas: darles una pantalla a cada una convertia el
+     hero en cinco pantallas de hueco que hay que atravesar. */
+  .band[data-first]{min-height:100svh;padding:12svh 0}
+  .band:not([data-first]){min-height:auto;padding:14svh 0}
   .band.in{opacity:1;transform:none}
   /* cada banda traia su colocacion a medida (p2 arriba a la izquierda, p3 abajo
      a la izquierda, p4 abajo a la derecha...) para componer sobre el metraje.
@@ -1112,11 +1117,20 @@ document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)})
 /* en tactil las bandas del hero son secciones normales: aparecen al entrar en
    vista, igual que el resto de la pagina, en vez de seguir al scroll */
 if(matchMedia('(pointer:coarse)').matches){
+  /* Observador propio, no el de las secciones: aquel dispara con la banda ya
+     dentro (-12%), y con una transicion de 0.7s se llegaba a cada frase con la
+     opacidad a medias. Aqui se adelanta media pantalla, de modo que cuando la
+     banda entra en vista ya esta puesta. */
+  var ioBandas=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');ioBandas.unobserve(e.target)}
+    });
+  },{threshold:0,rootMargin:'0px 0px 55% 0px'});
   document.querySelectorAll('.band').forEach(function(el){
     el.style.removeProperty('opacity');
     el.style.removeProperty('visibility');
     el.style.removeProperty('--k');
-    io.observe(el);
+    ioBandas.observe(el);
   });
 }
 
