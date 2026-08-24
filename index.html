@@ -696,12 +696,27 @@ a:hover{color:var(--accent-hover)}
      un 'cover' la ampliaba hasta convertirla en un borron */
   .stage::after{content:"";position:absolute;left:0;right:0;top:0;height:100svh;z-index:0;background:url('assets/hero-static.jpg') center/cover no-repeat;-webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent);mask-image:linear-gradient(to bottom,#000 62%,transparent)}
   .stage video,.stage canvas,.poster,.ringbox{display:none}
-  .scrim{position:absolute;inset:0}
+  /* el velo cubria el video a pantalla completa; con el escenario de cinco
+     pantallas se convertia en una capa de 4.200 px que iOS tiene que
+     rasterizar entera, asi que se limita a la pantalla de la foto */
+  .scrim{position:absolute;left:0;right:0;top:0;height:100svh}
   /* la colocacion por banda (p1..p5) obedecia a los capitulos de luz del video;
      apiladas como secciones, lo natural es centrarlas */
-  .band{align-items:center;position:relative;inset:auto;min-height:100svh;padding:12svh 0;opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);pointer-events:auto}
+  .band{align-items:center;justify-content:center;position:relative;inset:auto;min-height:100svh;padding:12svh 0;opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);pointer-events:auto}
   .band.in{opacity:1;transform:none}
-  .band::before{opacity:.55}
+  /* cada banda traia su colocacion a medida (p2 arriba a la izquierda, p3 abajo
+     a la izquierda, p4 abajo a la derecha...) para componer sobre el metraje.
+     Apiladas en una pantalla estrecha eso deja el texto descuadrado y pegado a
+     un borde distinto en cada una: se normaliza. */
+  .band .inner{margin:0 auto;text-align:center;max-width:640px}
+  /* cinco degradados a pantalla completa mas: daban profundidad sobre el
+     metraje, sobre fondo plano solo cuestan pintura */
+  .band::before{display:none}
+  /* salvo en la primera, que es la unica sobre la foto: ahi el degradado es lo
+     que mantiene legible el texto contra la roca */
+  /* z-index 1: la foto va en 0 y el texto en 2, asi que sin esto el velo
+     quedaba pintado por debajo de la propia foto y no servia de nada */
+  .band[data-first]::before{display:block;z-index:1;opacity:1;background:linear-gradient(to bottom,rgba(4,6,9,.30) 0%,rgba(4,6,9,.72) 42%,rgba(4,6,9,.86) 100%)}
   /* los efectos por letra se neutralizan: en tactil el texto se muestra entero */
   .band .w,.band .c,.band .sub,.band .cta-row,.e-blur .sharp{opacity:1;transform:none}
   .e-blur .soft{display:none}
