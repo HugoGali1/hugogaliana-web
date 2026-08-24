@@ -670,7 +670,10 @@ a:hover{color:var(--accent-hover)}
   .p3 .inner,.p4 .inner,.p5 .inner{margin-bottom:8svh}
 }
 /* ============ hero estático solo si el sistema pide menos movimiento ============ */
-@media (prefers-reduced-motion: reduce){
+/* El hero estatico se usa tambien en tactil. Encadenar una animacion al scroll
+   en iOS no puede ir fino: el desplazamiento lo lleva un hilo aparte y las
+   actualizaciones de JS llegan siempre por detras del movimiento real. */
+@media (prefers-reduced-motion: reduce), (pointer:coarse){
   .hero{height:auto;min-height:100svh}
   .stage{position:relative;height:100svh;background:url('assets/hero-static.jpg') center/cover no-repeat var(--canvas)}
   .stage video,.ringbox{display:none}
@@ -1031,7 +1034,7 @@ video.addEventListener('error',failVideo);
 /* ---------- gates del hero estático (mismas cadenas que en el CSS) ----------
    El scrub va también en móvil: lo único que lo apaga es que el sistema
    pida menos movimiento. */
-var GATES=['(prefers-reduced-motion: reduce)'];
+var GATES=['(prefers-reduced-motion: reduce)','(pointer:coarse)'];
 var scrubOn=false;
 function enableScrub(){
   if(scrubOn)return;scrubOn=true;
