@@ -780,10 +780,19 @@ var STEP_K=LIGHT?0.025:0.008;
 var VIS_MIN=LIGHT?0.02:0.004;
 var heroOnScreen=true,loadK=0,loadT0=0;
 
+/* El recorrido del hero se mide una vez, no en cada scroll: getBoundingClientRect
+   obliga al navegador a recalcular posiciones, y en iOS eso se paga justo durante
+   el desplazamiento por inercia. Con scrollY basta y no cuesta nada. */
+var heroTop=0,heroTotal=1;
+function measureHero(){
+  heroTop=hero.offsetTop;
+  heroTotal=Math.max(1,hero.offsetHeight-innerHeight);
+}
+measureHero();
+addEventListener('resize',measureHero,{passive:true});
+addEventListener('orientationchange',measureHero,{passive:true});
 function heroProgress(){
-  var total=hero.offsetHeight-innerHeight;
-  if(total<=0)return 0;
-  return clamp(-hero.getBoundingClientRect().top/total,0,1);
+  return clamp((scrollY-heroTop)/heroTotal,0,1);
 }
 function updateCaptions(p,now){
   for(var i=0;i<bands.length;i++){
@@ -852,19 +861,37 @@ if(!LIGHT)setInterval(function(){
   if(seekBusy&&!video.seeking){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}}
 },350);
 /* lerp loop that rests */
-var target=0,shown=0,rafId=null,lastTick=0;
+var target=0,shown=0,rafId=null,lastTick=0,lastScroll=0;
 function tick(now){
   if(!loadT0)loadT0=now;
   var lk=clamp((now-loadT0)/1600,0,1);loadK=lk*lk*(3-2*lk);
   var dt=Math.min(100,now-(lastTick||now));lastTick=now;
-  var k=LIGHT?0.26:0.16;   /* en táctil el scroll llega a golpes: menos suavizado, más respuesta */
-  shown+=(target-shown)*(1-Math.pow(1-k,dt/16.667));
-  if(Math.abs(target-shown)<0.0005&&loadK>=1){shown=target;rafId=null;lastTick=0}
+  /* En tactil no se suaviza: el dedo ya da una posicion continua, y perseguirla
+     con un factor de 0.26 costaba ~10 fotogramas (unos 165 ms) en alcanzarla, que
+     es el retraso que se nota al deslizar. Se lee el scroll en el propio frame
+     para no depender de cuando dispare el evento. */
+  if(LIGHT){
+    target=heroProgress();
+    shown=target;
+  }else{
+    var k=0.16;
+    shown+=(target-shown)*(1-Math.pow(1-k,dt/16.667));
+  }
+  /* En tactil el bucle no puede pararse en cuanto alcanza el objetivo (siempre lo
+     alcanza), o volveriamos a depender del evento de scroll. Sigue vivo mientras
+     haya deslizamiento reciente y se duerme medio segundo despues del ultimo. */
+  var enReposo=LIGHT?(now-lastScroll>500):(Math.abs(target-shown)<0.0005);
+  if(enReposo&&loadK>=1){shown=target;rafId=null;lastTick=0}
   else{rafId=requestAnimationFrame(tick)}
   renderMedia(shown);
   updateCaptions(shown,now);
 }
 function onScroll(){
+  lastScroll=performance.now();
+  /* Al despertar el bucle refrescamos las medidas: en iOS la barra de direcciones
+     se pliega al deslizar y cambia innerHeight, asi que el recorrido del hero no
+     es el mismo entre un gesto y el siguiente. Una lectura por gesto, no por frame. */
+  if(rafId===null)measureHero();
   target=heroProgress();
   if(rafId===null&&heroOnScreen)rafId=requestAnimationFrame(tick);
 }
