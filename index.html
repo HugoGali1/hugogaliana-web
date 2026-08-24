@@ -670,10 +670,7 @@ a:hover{color:var(--accent-hover)}
   .p3 .inner,.p4 .inner,.p5 .inner{margin-bottom:8svh}
 }
 /* ============ hero estático solo si el sistema pide menos movimiento ============ */
-/* El hero estatico se usa tambien en tactil. Encadenar una animacion al scroll
-   en iOS no puede ir fino: el desplazamiento lo lleva un hilo aparte y las
-   actualizaciones de JS llegan siempre por detras del movimiento real. */
-@media (prefers-reduced-motion: reduce), (pointer:coarse){
+@media (prefers-reduced-motion: reduce){
   .hero{height:auto;min-height:100svh}
   .stage{position:relative;height:100svh;background:url('assets/hero-static.jpg') center/cover no-repeat var(--canvas)}
   .stage video,.ringbox{display:none}
@@ -686,6 +683,31 @@ a:hover{color:var(--accent-hover)}
 .static-sub{margin-top:18px;font-size:clamp(16px,4vw,19px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
 .static-cta{margin-top:28px}
 /* reduced motion: full stop */
+/* ---- movil: el relato sin encadenarlo al scroll ----
+   En iOS el desplazamiento lo lleva un hilo aparte del de JavaScript, asi que
+   cualquier animacion atada a la posicion del scroll llega por detras del dedo.
+   Aqui el escenario deja de ser pegajoso: cada banda es una seccion normal de
+   una pantalla y aparece al entrar en vista con una transicion de opacidad y
+   desplazamiento, que van sobre el compositor y no cuestan trabajo por frame. */
+@media (pointer:coarse){
+  .hero{height:auto}
+  .stage{position:relative;height:auto;overflow:visible;background:var(--canvas)}
+  /* la foto ocupa solo la primera pantalla: con el escenario de cinco pantallas,
+     un 'cover' la ampliaba hasta convertirla en un borron */
+  .stage::after{content:"";position:absolute;left:0;right:0;top:0;height:100svh;z-index:0;background:url('assets/hero-static.jpg') center/cover no-repeat;-webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent);mask-image:linear-gradient(to bottom,#000 62%,transparent)}
+  .stage video,.stage canvas,.poster,.ringbox{display:none}
+  .scrim{position:absolute;inset:0}
+  /* la colocacion por banda (p1..p5) obedecia a los capitulos de luz del video;
+     apiladas como secciones, lo natural es centrarlas */
+  .band{align-items:center;position:relative;inset:auto;min-height:100svh;padding:12svh 0;opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);pointer-events:auto}
+  .band.in{opacity:1;transform:none}
+  .band::before{opacity:.55}
+  /* los efectos por letra se neutralizan: en tactil el texto se muestra entero */
+  .band .w,.band .c,.band .sub,.band .cta-row,.e-blur .sharp{opacity:1;transform:none}
+  .e-blur .soft{display:none}
+  .static-sub,.static-cta{display:block}
+}
+
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none !important;transition:none !important;transition-delay:0s !important}
@@ -1068,6 +1090,11 @@ var io=new IntersectionObserver(function(entries){
   });
 },{threshold:0,rootMargin:'0px 0px -12% 0px'});
 document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)});
+/* en tactil las bandas del hero son secciones normales: aparecen al entrar en
+   vista, igual que el resto de la pagina, en vez de seguir al scroll */
+if(matchMedia('(pointer:coarse)').matches){
+  document.querySelectorAll('.band').forEach(function(el){io.observe(el)});
+}
 
 /* ---------- hold moment ---------- */
 var pad=document.getElementById('holdpad');
