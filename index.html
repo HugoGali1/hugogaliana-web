@@ -6,7 +6,6 @@
 <title>Hugo Galiana · Software que hace funcionar tu negocio</title>
 <meta name="description" content="Desarrollador full-stack en Valencia. Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.">
 <meta name="theme-color" content="#0B141A">
-<!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL before zipping -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hugo Galiana · Software que hace funcionar tu negocio">
 <meta property="og:description" content="Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.">
@@ -79,6 +78,11 @@ a:hover{color:var(--accent-hover)}
 .nav ul a:hover{color:var(--text-primary)}
 .nav ul a.cta{color:var(--accent)}
 /* el menú se va soltando lastre para no partirse nunca en dos líneas */
+/* desenfocar la barra sobre un hero que cambia en cada frame obliga a la GPU
+   del móvil a rehacer el blur constantemente: ahí va opaca */
+@media (pointer:coarse){
+  .nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(9,14,20,.94)}
+}
 @media (max-width:1320px){.nav li[data-lvl="4"]{display:none}}
 @media (max-width:1180px){.nav ul{gap:20px}.nav li[data-lvl="3"]{display:none}}
 @media (max-width:980px){.nav li[data-lvl="2"]{display:none}}
@@ -89,6 +93,12 @@ a:hover{color:var(--accent-hover)}
 .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);will-change:transform;transform:translateZ(0)}
 .stage.video-ready video{opacity:1}
 .stage.video-failed video{display:none}
+/* lienzo del hero en móvil: fotogramas ya decodificados, sin pedirle
+   nada al decodificador de vídeo mientras se hace scroll */
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);display:none}
+.stage.seq video{display:none}
+.stage.seq canvas{display:block}
+.stage.seq-ready canvas{opacity:1}
 .poster{position:absolute;inset:0;background-size:cover;background-position:center}
 .scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 35%,rgba(10,10,18,.62) 100%)}
 .ringbox{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);color:var(--accent);z-index:5}
@@ -176,6 +186,7 @@ a:hover{color:var(--accent-hover)}
   <div class="stage" id="stage">
     <div class="poster" id="poster" aria-hidden="true"></div>
     <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+    <canvas id="hero-seq" width="450" height="800" aria-hidden="true"></canvas>
     <div class="scrim" aria-hidden="true"></div>
 
     <div class="band p1 e-approach" data-a="0" data-b="0.155" data-first="1">
@@ -253,7 +264,7 @@ a:hover{color:var(--accent-hover)}
     <div class="rev">
       <span class="kicker part">Mi mejor proyecto</span>
       <h2 id="h-prueba" class="part">Un sistema de pedidos completo, construido de cero.</h2>
-      <p class="lede part">Brasa y Ascuas es mi proyecto de fin de grado, consiste en escanear un QR en la mesa, se pide y se paga desde el móvil y la comanda aparece al instante en el panel del personal. Está publicado y puedes probarlo tú mismo.</p>
+      <p class="lede part">Brasa y Ascuas es mi proyecto de fin de grado, construido de arriba abajo: se escanea un QR en la mesa, se pide y se paga desde el móvil, y la comanda aparece al instante en el panel del personal. Está publicado y puedes probarlo tú mismo.</p>
     </div>
     <div class="proof-grid rev">
       <figure class="shot part" id="shot-buffet">
@@ -390,7 +401,7 @@ a:hover{color:var(--accent-hover)}
         <div class="proj-info">
           <span class="mono tag part">Con IA</span>
           <h3 class="part">Top Note</h3>
-          <p class="part">Buscador inteligente sobre un catálogo de 30.000 perfumes: describes lo que buscas con tus palabras y la IA te recomienda en base a tu descripcion. La misma tecnología sirve para cualquier catálogo de productos.</p>
+          <p class="part">Buscador inteligente sobre un catálogo de 30.000 perfumes: describes lo que buscas con tus palabras y la IA te recomienda con razones. La misma tecnología sirve para cualquier catálogo de productos.</p>
           <p class="part"><a class="alink" href="https://hugogaliana.com/topnote" target="_blank" rel="noopener">Ver la demo ↗</a></p>
         </div>
         <figure class="shot small part" id="shot-topnote">
@@ -409,13 +420,13 @@ a:hover{color:var(--accent-hover)}
 <section class="sec" id="faq" aria-labelledby="h-faq">
   <div class="wrap narrow">
     <div class="rev">
-      <span class="kicker part">Preguntas frecuentes</span>
+      <span class="kicker part">Preguntas honestas</span>
       <h2 id="h-faq" class="part">Lo que todo el mundo pregunta antes de escribir.</h2>
     </div>
     <div class="faqs rev">
       <details class="faq part">
         <summary>¿Cuánto cuesta?</summary>
-        <p>Depende de la dimensión del proyecto, por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir.</p>
+        <p>Depende del tamaño del proyecto, y por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir.</p>
       </details>
       <details class="faq part">
         <summary>¿Cuánto tarda?</summary>
@@ -423,11 +434,11 @@ a:hover{color:var(--accent-hover)}
       </details>
       <details class="faq part">
         <summary>¿Podré actualizarla yo?</summary>
-        <p>Sí. Te entrego un panel para cambiar los textos, precios y fotos sin tocar código y te enseño a usarlo el día de la entrega.</p>
+        <p>Sí. Te entrego un panel para cambiar tus textos, precios y fotos sin tocar código, y te enseño a usarlo el día de la entrega.</p>
       </details>
       <details class="faq part">
         <summary>¿Y si ya tengo una web?</summary>
-        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. En cada caso se realizaran los cambios necesarios.</p>
+        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré.</p>
       </details>
     </div>
   </div>
@@ -442,6 +453,9 @@ a:hover{color:var(--accent-hover)}
       <p class="lede part">Explicame qué necesitas y qué te falta. Contacto contigo sin compromiso y con lenguaje claro.</p>
     </div>
     <form class="cform rev" id="cform" method="POST" action="https://api.web3forms.com/submit" novalidate>
+      <!-- ↓↓↓ PEGA AQUÍ TU ACCESS KEY DE WEB3FORMS ↓↓↓
+           La consigues gratis en https://web3forms.com poniendo tu correo:
+           te llega al instante por email. Es lo único que hay que tocar. -->
       <input type="hidden" name="access_key" id="w3f-key" value="19029ac9-2e87-4a0d-82e3-4cb66b1ac2ea">
       <div class="cform-grid part">
         <div class="fld">
@@ -458,7 +472,7 @@ a:hover{color:var(--accent-hover)}
         </div>
       </div>
       <label class="mono part" for="f-msg">Tu proyecto</label>
-      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un negocio y quiero que mis clientes puedan reservar desde la web..."></textarea>
+      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un restaurante y quiero que mis clientes puedan reservar desde la web..."></textarea>
       <!-- antispam: invisible para personas, irresistible para bots -->
       <input type="checkbox" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
@@ -694,7 +708,7 @@ function rng(seed){var s=seed>>>0;return function(){s=(s*1664525+1013904223)>>>0
 
 /* ---------- env layer ---------- */
 var env=document.getElementById('env');
-(function(){var r=rng(7);var h='';for(var i=0;i<26;i++){h+='<i style="left:'+(r()*100).toFixed(1)+'%;top:'+(100+r()*110).toFixed(1)+'vh;animation-delay:-'+(r()*76).toFixed(1)+'s;opacity:'+(0.05+r()*0.09).toFixed(2)+'"></i>'}
+(function(){var r=rng(7);var h='';var N=matchMedia('(pointer:coarse)').matches?12:26;for(var i=0;i<N;i++){h+='<i style="left:'+(r()*100).toFixed(1)+'%;top:'+(100+r()*110).toFixed(1)+'vh;animation-delay:-'+(r()*76).toFixed(1)+'s;opacity:'+(0.05+r()*0.09).toFixed(2)+'"></i>'}
 h+='<span class="f" style="left:22%;animation-delay:-12s"></span><span class="f" style="left:74%;animation-delay:-51s"></span>';env.innerHTML=h})();
 
 /* ---------- nav ---------- */
@@ -742,12 +756,22 @@ var bands=bandsEls.map(function(el){
     first:el.hasAttribute('data-first'),last:el.hasAttribute('data-last'),
     ramp:parseFloat(el.dataset.ramp||'0')||null,op:-1,k:-1,ks:-1,kb:-1,live:false};
 });
-/* En táctil/pantalla estrecha servimos un master más ligero y con keyframes
-   cada 3 fotogramas: pesa 2,1 MB en vez de 6,2 y el scrub va fino en el móvil. */
+/* Dos motores para el mismo hero:
+   - escritorio: scrub sobre el vídeo (el decodificador de sobremesa aguanta).
+   - táctil/estrecho: secuencia de fotogramas ya decodificados pintados en un
+     lienzo. Pedirle un seek al decodificador en cada frame de scroll es lo que
+     hacía que el móvil fuese a tirones; así el scroll solo cuesta un drawImage. */
 var LIGHT=matchMedia('(pointer:coarse)').matches||innerWidth<=900;
-var VIDEO_URL=LIGHT?'assets/hero-scrub-mobile.mp4':'assets/hero-scrub.mp4';
-var VIDEO_BYTES=LIGHT?2138000:6233767;
+var VIDEO_URL='assets/hero-scrub.mp4';
+var VIDEO_BYTES=6233767;
 var FPS=24;
+/* la secuencia va recortada a 9:16, que es justo lo que el móvil ve con cover */
+var SEQ_DIR='assets/seq/';
+var SEQ_TOTAL=48;
+/* en móviles con poca memoria pintamos la mitad de fotogramas: la mitad de
+   bitmaps en RAM y la animación sigue leyéndose bien */
+var LOWMEM=(navigator.deviceMemory||4)<=3;
+var SEQ_STEP=LOWMEM?2:1;
 var heroOnScreen=true,loadK=0,loadT0=0;
 
 function heroProgress(){
@@ -766,8 +790,14 @@ function updateCaptions(p,now){
     var ramp=b.ramp||Math.min(0.025,(b.b-b.a)*0.35);
     var k=clamp((p-b.a)/ramp,0,1);
     if(b.first){k=Math.max(k,loadK)}
-    if(Math.abs(op-b.op)>0.008){b.op=op;b.el.style.opacity=op.toFixed(3)}
-    if(Math.abs(k-b.k)>0.008){b.k=k;b.el.style.setProperty('--k',k.toFixed(3))}
+    if(Math.abs(op-b.op)>0.008){
+      b.op=op;b.el.style.opacity=op.toFixed(3);
+      /* una banda invisible no se pinta ni se mide: se saca del trabajo del frame */
+      b.el.style.visibility=op<0.004?'hidden':'';
+    }
+    /* cada cambio de --k obliga a recalcular estilo en las ~40 letras de la banda.
+       Si la banda no se ve, ese trabajo se tira: solo actualizamos las visibles. */
+    if((op>0.004||b.k<0)&&Math.abs(k-b.k)>0.008){b.k=k;b.el.style.setProperty('--k',k.toFixed(3))}
     if(b.last){
       var ks=clamp((k-0.5)*3,0,1),kb=clamp((k-0.72)*4,0,1);
       if(Math.abs(ks-b.ks)>0.008){b.ks=ks;b.el.style.setProperty('--ks',ks.toFixed(3))}
@@ -777,9 +807,22 @@ function updateCaptions(p,now){
     }
   }
 }
-/* seek gate — cuantizado a fotograma para no pedir saltos que no se ven */
+/* ---- motor A: lienzo con la secuencia (móvil) ---- */
+var seq=document.getElementById('hero-seq');
+var sctx=null,seqFrames=[],seqReady=false,lastFrame=-1;
+function drawSeq(p){
+  if(!seqReady)return;
+  var i=Math.round(p*(seqFrames.length-1));
+  if(i===lastFrame)return;
+  var bmp=seqFrames[i];
+  if(!bmp)return;
+  lastFrame=i;
+  sctx.drawImage(bmp,0,0,seq.width,seq.height);
+}
+
+/* ---- motor B: seek del vídeo (escritorio), cuantizado a fotograma ---- */
 var seekBusy=false,pendingTime=null,lastSeek=-1;
-var canFastSeek=LIGHT&&typeof video.fastSeek==='function';
+var canFastSeek=typeof video.fastSeek==='function';
 function requestSeek(t){
   var d=video.duration;
   if(!d||!isFinite(d))return;
@@ -789,10 +832,17 @@ function requestSeek(t){
   lastSeek=t;seekBusy=true;
   if(canFastSeek){video.fastSeek(t)}else{video.currentTime=t}
 }
+
+/* punto único por el que pasa el render, sea cual sea el motor */
+function renderMedia(p){
+  if(LIGHT)drawSeq(p);
+  else requestSeek(p*video.duration);
+}
 video.addEventListener('seeked',function(){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}});
 video.addEventListener('error',function(){seekBusy=false;pendingTime=null});
-/* red de seguridad: si un 'seeked' se pierde (pasa en Safari) no dejamos el scrub colgado */
-setInterval(function(){
+/* red de seguridad: si un 'seeked' se pierde (pasa en Safari) no dejamos el scrub
+   colgado. Solo hace falta en el motor de vídeo. */
+if(!LIGHT)setInterval(function(){
   if(seekBusy&&!video.seeking){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}}
 },350);
 /* lerp loop that rests */
@@ -805,7 +855,7 @@ function tick(now){
   shown+=(target-shown)*(1-Math.pow(1-k,dt/16.667));
   if(Math.abs(target-shown)<0.0005&&loadK>=1){shown=target;rafId=null;lastTick=0}
   else{rafId=requestAnimationFrame(tick)}
-  requestSeek(shown*video.duration);
+  renderMedia(shown);
   updateCaptions(shown,now);
 }
 function onScroll(){
@@ -814,15 +864,84 @@ function onScroll(){
 }
 new IntersectionObserver(function(en){heroOnScreen=en[0].isIntersecting;if(heroOnScreen)onScroll()}).observe(hero);
 
-/* blob loader with honest ring */
+/* carga con anillo de progreso honesto */
 var heroInit=false;
 function initHeroOnce(){
   if(heroInit)return;heroInit=true;
   poster.style.backgroundImage="url('assets/hero-poster.jpg')";
   var started=false;
-  function startBlobFetch(){if(started)return;started=true;loadHeroBlob().catch(failVideo)}
-  var pi=new Image();pi.onload=startBlobFetch;pi.onerror=startBlobFetch;pi.src='assets/hero-poster.jpg';
-  setTimeout(startBlobFetch,4000);
+  function start(){
+    if(started)return;started=true;
+    (LIGHT?loadSequence():loadHeroBlob()).catch(failVideo);
+  }
+  var pi=new Image();pi.onload=start;pi.onerror=start;pi.src='assets/hero-poster.jpg';
+  setTimeout(start,4000);
+}
+
+/* ---- carga de la secuencia de fotogramas ----
+   Descarga las 48 imágenes, las decodifica una sola vez a ImageBitmap y las
+   deja listas en memoria. A partir de ahí, mover el scroll es un drawImage. */
+async function loadSequence(){
+  stage.classList.add('seq');
+  sctx=seq.getContext('2d',{alpha:false});
+  var slots=[];
+  for(var i=1;i<=SEQ_TOTAL;i+=SEQ_STEP)slots.push(i);
+  var bitmaps=new Array(slots.length);
+  seqFrames=bitmaps;                 /* referencia viva: se va rellenando sola */
+  var done=0,failed=0;
+
+  /* Orden de descarga en "barrido binario": primero el 0, luego la mitad,
+     luego los cuartos... Así, en cualquier instante de la carga los fotogramas
+     que ya están cubren todo el recorrido en vez de solo el principio, y quien
+     hace scroll antes de tiempo ve la animación entera aunque tosca. */
+  var order=[],step=slots.length;
+  while(step>1){
+    step=Math.ceil(step/2);
+    for(var s=0;s<slots.length;s+=step)if(order.indexOf(s)<0)order.push(s);
+  }
+  for(var s2=0;s2<slots.length;s2++)if(order.indexOf(s2)<0)order.push(s2);
+
+  function revealOnce(){
+    if(seqReady||!bitmaps[0])return;
+    seqReady=true;lastFrame=-1;
+    drawSeq(heroProgress());
+    stage.classList.add('seq-ready');
+  }
+
+  async function grab(slot){
+    var url=SEQ_DIR+'f'+('00'+slots[slot]).slice(-3)+'.webp';
+    try{
+      var r=await fetch(url);
+      if(!r.ok)throw new Error(r.status);
+      var blob=await r.blob();
+      bitmaps[slot]=self.createImageBitmap
+        ? await createImageBitmap(blob)
+        : await new Promise(function(ok,no){
+            var im=new Image();im.onload=function(){ok(im)};im.onerror=no;im.src=URL.createObjectURL(blob);
+          });
+    }catch(e){failed++}
+    done++;
+    if(ringbox&&ringbox.parentNode)ringbox.style.setProperty('--ld',Math.round(126*(1-done/slots.length)));
+    revealOnce();
+  }
+
+  /* El fotograma de portada va solo y primero: si sale en la misma tanda que los
+     otros 47 no gana la carrera y la pantalla se queda en negro de más. */
+  await grab(order.shift());
+  /* El resto, todos a la vez: el navegador limita la concurrencia mejor que
+     nosotros, y así no pagamos una ida y vuelta por cada lote. */
+  await Promise.all(order.map(grab));
+
+  if(failed>slots.length/2)throw new Error('secuencia no disponible');
+  if(!bitmaps[0])throw new Error('secuencia vacía');
+  seqReady=true;lastFrame=-1;
+  drawSeq(heroProgress());
+  stage.classList.add('seq-ready');
+  if(ringbox&&ringbox.parentNode){
+    ringbox.style.setProperty('--ld',0);
+    ringbox.style.opacity=0;
+    setTimeout(function(){if(ringbox.parentNode)ringbox.remove()},900);
+  }
 }
 async function loadHeroBlob(){
   var ctrl=new AbortController();
@@ -862,13 +981,17 @@ function unlockMedia(){
   if(pr&&pr.then){pr.then(function(){mediaUnlocked=true;video.pause()},function(){});}
   else{mediaUnlocked=true;try{video.pause()}catch(e){}}
 }
-['touchstart','pointerdown'].forEach(function(ev){
+if(!LIGHT)['touchstart','pointerdown'].forEach(function(ev){
   addEventListener(ev,function once(){removeEventListener(ev,once);if(video.readyState>0)unlockMedia()},{passive:true});
 });
 function makeChevron(){var s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('class','chev');s.innerHTML='<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';return s}
+/* si el medio no carga, el póster se queda de fondo y las bandas de texto
+   siguen animándose con el scroll: se pierde el metraje, no la narración */
 function failVideo(){
   if(ringbox&&ringbox.parentNode){var c=makeChevron();ringbox.innerHTML='';ringbox.appendChild(c)}
+  stage.classList.remove('seq','seq-ready');
   stage.classList.add('video-failed');
+  seqReady=false;
 }
 video.addEventListener('error',failVideo);
 
