@@ -1157,14 +1157,20 @@ if(matchMedia('(pointer:coarse)').matches){
   });
   var pendientes=bandasT.slice();
   function revisarBandas(){
-    var limite=innerHeight*1.35;
+    /* Se dispara justo cuando la banda asoma por abajo, no una pantalla y media
+       antes: si se adelanta demasiado, la entrada termina fuera de pantalla y
+       llegas a la frase con todo ya puesto. */
+    var limite=innerHeight;
     for(var i=pendientes.length-1;i>=0;i--){
       if(pendientes[i].getBoundingClientRect().top<limite){
         pendientes[i].classList.add('in');
         pendientes.splice(i,1);
       }
     }
-    if(!pendientes.length)removeEventListener('scroll',alScrollBandas);
+    if(!pendientes.length){
+      removeEventListener('scroll',alScrollBandas);
+      clearInterval(vigilante);
+    }
   }
   var pedido=false;
   function alScrollBandas(){
@@ -1175,8 +1181,11 @@ if(matchMedia('(pointer:coarse)').matches){
   addEventListener('resize',alScrollBandas,{passive:true});
   revisarBandas();
   setTimeout(revisarBandas,400);
-  /* ultima red: pase lo que pase, a los 6 s no queda texto invisible */
-  setTimeout(function(){bandasT.forEach(function(el){el.classList.add('in')})},6000);
+  /* Red de seguridad por si los eventos de scroll fallaran: cinco comparaciones
+     de posicion cada 700 ms, que no cuestan nada, y se detiene sola al terminar.
+     Antes esto marcaba todas las bandas de golpe a los 6 s, con lo que su
+     entrada se ejecutaba fuera de pantalla y no se llegaba a ver. */
+  var vigilante=setInterval(revisarBandas,700);
 }
 
 /* ---------- hold moment ---------- */
