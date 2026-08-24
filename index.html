@@ -458,7 +458,7 @@ a:hover{color:var(--accent-hover)}
         </div>
       </div>
       <label class="mono part" for="f-msg">Tu proyecto</label>
-      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un restaurante y quiero que mis clientes puedan reservar desde la web..."></textarea>
+      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un negocio y quiero que mis clientes puedan reservar desde la web..."></textarea>
       <!-- antispam: invisible para personas, irresistible para bots -->
       <input type="checkbox" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
@@ -466,6 +466,7 @@ a:hover{color:var(--accent-hover)}
       <div class="cform-row part">
         <button class="btn btn-solid" id="send-btn" type="submit">Enviar mi proyecto</button>
       </div>
+      <p class="mono cnote part" aria-live="polite" role="status"></p>
       <div class="form-ok" role="status" hidden>
         <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 24l6 6 12-12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <p><strong>Recibido.</strong> Tu mensaje ya está en mi correo. Te escribo pronto.</p>
@@ -588,6 +589,7 @@ a:hover{color:var(--accent-hover)}
 .form-ok p{color:var(--text-primary)}
 .cform-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
 .cnote{font-size:12px;color:var(--text-secondary);transition:color .3s var(--ease)}
+.cnote:empty{display:none}
 .cnote.bad{color:#E0917F}
 /* footer */
 .foot{border-top:1px solid var(--line);padding:30px 0 42px}
@@ -989,7 +991,10 @@ var botcheck=cform.querySelector('[name="botcheck"]');
 var NOTE_DEFAULT='Llega directo a mi correo y te respondo al tuyo.';
 
 function noteMsg(t,bad){
-  cnote.childNodes[0].textContent=t+' ';
+  /* defensivo: si algun dia se borra la linea de estado del HTML, el envio
+     debe seguir funcionando en vez de romperse a mitad. */
+  if(!cnote)return;
+  cnote.textContent=t;
   cnote.classList.toggle('bad',!!bad);
 }
 function isMail(v){return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)}
@@ -1036,6 +1041,13 @@ cform.addEventListener('submit',function(ev){
   var ctrl=new AbortController();
   var timedOut=false;
   var to=setTimeout(function(){timedOut=true;ctrl.abort()},20000);
+  /* Red de seguridad: si por lo que sea el envio no resuelve, el boton no se
+     queda colgado en "Enviando..." dejando al visitante sin saber que hacer. */
+  var stallGuard=setTimeout(function(){
+    if(sendBtn.disabled&&!cform.classList.contains('sent')){
+      failGracefully('El envio se ha quedado a medias. Te abro tu correo con el mensaje ya escrito.',n,m,t);
+    }
+  },25000);
 
   fetch(W3F_ENDPOINT,{
     method:'POST',
@@ -1056,7 +1068,7 @@ cform.addEventListener('submit',function(ev){
     return r.json().catch(function(){return null}).then(function(d){return {status:r.status,data:d}});
   })
   .then(function(res){
-    clearTimeout(to);
+    clearTimeout(to);clearTimeout(stallGuard);
     var d=res.data||{};
     /* el único camino al "Recibido": la API confirma que el correo ha salido */
     if(res.status===200&&d.success===true)return markDelivered();
@@ -1065,7 +1077,7 @@ cform.addEventListener('submit',function(ev){
     failGracefully('No he podido confirmar la entrega ('+why+'). Te abro tu correo con el mensaje ya escrito.',n,m,t);
   })
   .catch(function(){
-    clearTimeout(to);
+    clearTimeout(to);clearTimeout(stallGuard);
     failGracefully(timedOut
       ? 'El servidor de correo tarda demasiado en contestar. Te abro tu correo con el mensaje ya escrito.'
       : 'No hay conexión con el servidor de correo. Te abro tu correo con el mensaje ya escrito.',n,m,t);
