@@ -716,16 +716,11 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .poster{z-index:0;background-image:url('assets/seq/f001.webp')}
   .band{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;
     animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  /* La entrada palabra a palabra la movia --k, que escribia JavaScript. Aqui no
-     hay JavaScript, asi que --k se anima solo: registrado con @property para que
-     sea interpolable y heredado, para que lo vean las letras. Toda la aritmetica
-     de .e-grid, .e-scatter, .e-blur y .e-rise sigue intacta, con su escalonado
-     por --th; lo unico que cambia es quien mueve el numero.
-     (Lo intente antes metiendo el escalonado en animation-range con calc y var,
-     y no cuela: la declaracion se descarta entera y las letras acababan
-     desvaneciendose a lo largo de todo el hero en vez de encenderse.)
-     La rampa pasa de 2,5% a 7% del recorrido: con el hero acortado, 2,5% eran
-     40 px y la entrada no daba tiempo a verse. 7% son 111 px, como en escritorio. */
+  /* Lo que se ve aqui es solo el aparecer y desaparecer de cada banda, que si
+     depende de donde este el dedo. La entrada palabra a palabra ya no: la monta
+     textoAlCompositor con animaciones normales, medidas en milisegundos, que el
+     scroll unicamente dispara al entrar en el tramo de la banda. Asi la frase se
+     compone entera aunque pares de deslizar. */
   .p1{animation-name:banda1}
   .p2{animation-name:banda2}
   .p3{animation-name:banda3}
@@ -855,14 +850,20 @@ var bandsEls=[].slice.call(document.querySelectorAll('.band'));
 var bands=bandsEls.map(function(el){
   return {el:el,a:parseFloat(el.dataset.a),b:parseFloat(el.dataset.b),
     first:el.hasAttribute('data-first'),last:el.hasAttribute('data-last'),
-    ramp:parseFloat(el.dataset.ramp||'0')||null,op:-1,k:-1,ks:-1,kb:-1,live:false};
+    t0:-1,op:-1,k:-1,ks:-1,kb:-1,live:false};
 });
 /* Dos motores para el mismo hero:
    - escritorio: scrub sobre el vídeo (el decodificador de sobremesa aguanta).
    - táctil/estrecho: secuencia de fotogramas ya decodificados pintados en un
      lienzo. Pedirle un seek al decodificador en cada frame de scroll es lo que
      hacía que el móvil fuese a tirones; así el scroll solo cuesta un drawImage. */
-var LIGHT=matchMedia('(pointer:coarse)').matches||innerWidth<=900;
+/* Dos preguntas distintas que hasta ahora se respondian con la misma variable:
+   TACTIL es que el dedo mueve el scroll --entrada continua, sin suavizado y con
+   el texto en el compositor--; LIGHT es que el metraje lo pinta el lienzo en vez
+   del decodificador. Una ventana de escritorio estrecha es LIGHT pero no TACTIL:
+   la mueve una rueda, que da saltos, y sin suavizado se veia a tirones. */
+var TACTIL=matchMedia('(pointer:coarse)').matches;
+var LIGHT=TACTIL||innerWidth<=900;
 var VIDEO_URL='assets/hero-scrub.mp4';
 var VIDEO_BYTES=6233767;
 var FPS=24;
@@ -882,8 +883,8 @@ var SEQ_ESCALA=LOWMEM?0.5:1;
    del frame (medido: x3 en los picos al actualizar varias bandas a la vez).
    Subir el escalon reduce esos recalculos sin que el ojo note la diferencia:
    --k recorre 0..1, y un paso de 0.025 son 40 actualizaciones por banda. */
-var STEP_K=LIGHT?0.025:0.008;
-var VIS_MIN=LIGHT?0.02:0.004;
+var STEP_K=TACTIL?0.025:0.008;
+var VIS_MIN=TACTIL?0.02:0.004;
 var heroOnScreen=true,loadK=0,loadT0=0;
 
 /* El recorrido del hero se mide una vez, no en cada scroll: getBoundingClientRect
@@ -905,7 +906,8 @@ function updateCaptions(p,now){
      sus animaciones y volveria a meter en cada fotograma el recalculo de estilo
      de los 68 fragmentos que costaba 0,84 ms. El bucle sigue vivo para el
      metraje; el texto no pasa por aqui. */
-  if(TEXTO_CSS)return;
+  entradaViva=false;
+  if(TEXTO_CSS){disparaEntradas(p);return}
   for(var i=0;i<bands.length;i++){
     var b=bands[i];
     var f=Math.min(0.02,(b.b-b.a)/3);
@@ -913,9 +915,16 @@ function updateCaptions(p,now){
     if(!b.first&&!b.last){op=smoothstep(p,b.a,b.a+f)*(1-smoothstep(p,b.b-f,b.b))}
     if(b.first){op=1-smoothstep(p,b.b-f,b.b)}
     if(b.last){op=smoothstep(p,b.a,b.a+f)}
-    var ramp=b.ramp||Math.min(0.025,(b.b-b.a)*0.35);
-    var k=clamp((p-b.a)/ramp,0,1);
+    /* El scroll dispara la entrada; medirla es cosa del reloj. Antes k era la
+       distancia recorrida desde el principio de la banda, asi que la frase no
+       acababa de montarse hasta haber deslizado la rampa entera --2,5% del hero,
+       unos 137 px-- y, si parabas antes, se quedaba a medias. */
+    if(p>=b.a){if(b.t0<0)b.t0=now}else{b.t0=-1}
+    var k=b.t0<0?0:clamp((now-b.t0)/T_ENTRADA,0,1);
     if(b.first){k=Math.max(k,loadK)}
+    /* solo cuenta la banda que ya ha arrancado: las que aun no han llegado
+       tienen k=0 y dejarian el bucle despierto para siempre */
+    if(b.t0>=0&&k<1)entradaViva=true;
     if(Math.abs(op-b.op)>STEP_K){
       b.op=op;b.el.style.opacity=op.toFixed(3);
       /* una banda invisible no se pinta ni se mide: se saca del trabajo del frame */
@@ -935,15 +944,52 @@ function updateCaptions(p,now){
 }
 /* ---- motor A: lienzo con la secuencia (móvil) ---- */
 var seq=document.getElementById('hero-seq');
-var sctx=null,seqFrames=[],seqReady=false,lastFrame=-1;
+var sctx=null,seqFrames=[],seqReady=false,lastI=-1,lastG=-1;
+/* Los 48 fotogramas se reparten unos 1.900 px de recorrido: 40 px de dedo por
+   fotograma. Saltar de uno al siguiente hacía que el metraje avanzase a tirones
+   --los pasos--, aunque el scroll fuese perfectamente fluido. La salida es
+   cruzar cada fotograma con el siguiente, pero un cruce que dure todo el
+   intervalo no deja ver nunca una imagen limpia: dos fotogramas superpuestos al
+   50% se leen como desenfoque. Asi que el cruce se comprime al centro del
+   intervalo (MEZCLA) y los extremos se ven nitidos, y al pararse el dedo se
+   retira del todo (nitidez): lo que se queda en pantalla mientras se lee el
+   texto es siempre un fotograma limpio. */
+var MEZCLA=0.5;                    /* fraccion del intervalo que dura el cruce */
+var NITIDO_MS=220;                 /* lo que tarda en enfocar tras soltar */
+var nitidez=0;
+function frameCercano(i){
+  for(var d=1;d<seqFrames.length;d++){
+    if(seqFrames[i-d])return seqFrames[i-d];
+    if(seqFrames[i+d])return seqFrames[i+d];
+  }
+  return null;
+}
 function drawSeq(p){
   if(!seqReady)return;
-  var i=Math.round(p*(seqFrames.length-1));
-  if(i===lastFrame)return;
-  var bmp=seqFrames[i];
-  if(!bmp)return;
-  lastFrame=i;
-  sctx.drawImage(bmp,0,0,seq.width,seq.height);
+  var x=p*(seqFrames.length-1);
+  var i=Math.floor(x),f=x-i;
+  var g=clamp((f-(1-MEZCLA)/2)/MEZCLA,0,1);
+  if(nitidez>0)g+=((f<0.5?0:1)-g)*nitidez;
+  /* con el dedo quieto el bucle sigue vivo medio segundo: sin esta puerta
+     repintaria el mismo par de fotogramas treinta veces */
+  if(i===lastI&&Math.abs(g-lastG)<0.002)return;
+  var a=seqFrames[i],b=seqFrames[i+1];
+  var uno=g<0.004?a:(g>0.996?b:null);
+  if(!uno&&a&&b){
+    lastI=i;lastG=g;
+    sctx.globalAlpha=1;sctx.drawImage(a,0,0,seq.width,seq.height);
+    sctx.globalAlpha=g;sctx.drawImage(b,0,0,seq.width,seq.height);
+    sctx.globalAlpha=1;
+    return;
+  }
+  /* Solo se cruzan vecinos de verdad. Durante la carga faltan fotogramas, y
+     cruzar dos que estan a seis de distancia se ve como una doble exposicion:
+     ahi vale mas el de siempre, el mas cercano que ya haya llegado. */
+  var u=uno||a||b||frameCercano(i);
+  if(!u)return;
+  lastI=i;lastG=g;
+  sctx.globalAlpha=1;
+  sctx.drawImage(u,0,0,seq.width,seq.height);
 }
 
 /* ---- motor B: seek del vídeo (escritorio), cuantizado a fotograma ---- */
@@ -972,7 +1018,7 @@ if(!LIGHT)setInterval(function(){
   if(seekBusy&&!video.seeking){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}}
 },350);
 /* lerp loop that rests */
-var target=0,shown=0,rafId=null,lastTick=0,lastScroll=0;
+var target=0,shown=0,rafId=null,lastTick=0,lastScroll=0,entradaViva=false;
 function tick(now){
   if(!loadT0)loadT0=now;
   var lk=clamp((now-loadT0)/1600,0,1);loadK=lk*lk*(3-2*lk);
@@ -981,7 +1027,7 @@ function tick(now){
      con un factor de 0.26 costaba ~10 fotogramas (unos 165 ms) en alcanzarla, que
      es el retraso que se nota al deslizar. Se lee el scroll en el propio frame
      para no depender de cuando dispare el evento. */
-  if(LIGHT){
+  if(TACTIL){
     target=heroProgress();
     shown=target;
   }else{
@@ -991,8 +1037,15 @@ function tick(now){
   /* En tactil el bucle no puede pararse en cuanto alcanza el objetivo (siempre lo
      alcanza), o volveriamos a depender del evento de scroll. Sigue vivo mientras
      haya deslizamiento reciente y se duerme medio segundo despues del ultimo. */
-  var enReposo=LIGHT?(now-lastScroll>500):(Math.abs(target-shown)<0.0005);
-  if(enReposo&&loadK>=1){shown=target;rafId=null;lastTick=0}
+  /* entradaViva: con el texto movido por JavaScript el bucle no puede dormirse
+     con una banda a medio montar, o la frase se congelaria hasta el proximo
+     gesto. En tactil el texto lo mueve el compositor y esto nunca se activa. */
+  var enReposo=(TACTIL?(now-lastScroll>500):(Math.abs(target-shown)<0.0005))&&!entradaViva;
+  /* El bucle no se duerme en cuanto llega al reposo: se queda los 220 ms que
+     tarda el cruce entre fotogramas en retirarse. Es lo que convierte el ultimo
+     fotograma en una imagen limpia, y se lee como un enfoque, no como un salto. */
+  nitidez=enReposo?Math.min(1,nitidez+dt/NITIDO_MS):0;
+  if(enReposo&&loadK>=1&&nitidez>=1){shown=target;rafId=null;lastTick=0}
   else{rafId=requestAnimationFrame(tick)}
   renderMedia(shown);
   updateCaptions(shown,now);
@@ -1058,7 +1111,7 @@ async function loadSequence(){
 
   function revealOnce(){
     if(seqReady||!bitmaps[0])return;
-    seqReady=true;lastFrame=-1;
+    seqReady=true;lastI=-1;lastG=-1;
     drawSeq(heroProgress());
     stage.classList.add('seq-ready');
   }
@@ -1092,7 +1145,7 @@ async function loadSequence(){
 
   if(failed>slots.length/2)throw new Error('secuencia no disponible');
   if(!bitmaps[0])throw new Error('secuencia vacía');
-  seqReady=true;lastFrame=-1;
+  seqReady=true;lastI=-1;lastG=-1;
   drawSeq(heroProgress());
   stage.classList.add('seq-ready');
   if(ringbox&&ringbox.parentNode){
@@ -1160,7 +1213,7 @@ video.addEventListener('error',failVideo);
    compositor. Antes el compositor llevaba las dos cosas y el metraje iba en
    hojas de sprites, que es lo que reventaba la memoria; el texto, en cambio, no
    cuesta nada ahi y no puede ir con retraso, asi que se queda donde estaba. */
-var TEXTO_CSS=matchMedia('(pointer:coarse)').matches &&
+var TEXTO_CSS=TACTIL &&
   !matchMedia('(prefers-reduced-motion: reduce)').matches &&
   !!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()'));
 /* --- la entrada del texto, al compositor ---------------------------------
@@ -1168,48 +1221,73 @@ var TEXTO_CSS=matchMedia('(pointer:coarse)').matches &&
    no se puede componer: cada paso invalidaba el estilo de los 68 fragmentos que
    heredan la variable, 0,84 ms de cada fotograma. Aqui cada fragmento lleva su
    propia animacion de opacity y transform, que si van por el compositor.
-   Lo que impedia hacerlo directamente en CSS es que animation-range descarta la
-   declaracion si lleva var(), y el escalonado vive en --th. Se rodea calculando
-   los numeros aqui y escribiendolos ya resueltos: JavaScript corre una vez al
-   cargar, no una vez por fotograma. */
-var RAMPA=7;                       /* % del recorrido que dura la entrada */
+   El escalonado vive en --th, y CSS no sabe multiplicar un retardo por una
+   variable: los numeros se calculan aqui y se escriben ya resueltos. JavaScript
+   corre una vez al cargar, no una vez por fotograma. */
+var EASE='cubic-bezier(.22,.75,.25,1)';   /* el mismo --ease de la hoja */
+/* El scroll disparaba la entrada y ademas la medía: la posicion del dedo era la
+   linea de tiempo de la animacion, asi que la frase no acababa de montarse hasta
+   haber recorrido el 9,7% del hero --unos 125 px-- y, si parabas antes, se
+   quedaba a medias. Ahora el scroll solo dispara: en cuanto la banda entra en su
+   tramo, el texto se monta entero por su cuenta con el reloj del compositor,
+   aunque el dedo se haya parado. Sigue siendo reversible: al volver por encima
+   del disparador la banda se desarma y se monta otra vez al cruzarlo. */
+var T_FRAG=580;                    /* lo que tarda cada letra o palabra */
+var T_ESCALON=760;                 /* del primer fragmento al ultimo */
+var T_CRUCE=900;                   /* el cruce borroso/nitido de la banda 2 */
+var T_ENTRADA=T_ESCALON+T_FRAG;    /* la banda entera, de la primera letra a la ultima */
 var INICIO={p2:15.43,p3:39.01,p4:60.13,p5:83.17};
+var entradas={},armadas={};
 function textoAlCompositor(){
   var css=[],n=0;
-  function pon(el,nombre,ini,dur){
-    el.style.setProperty('animation','__'+nombre+' 1s linear both');
-    el.style.setProperty('animation-timeline','--hero');
-    el.style.setProperty('animation-range','contain '+ini.toFixed(3)+'% contain '+(ini+dur).toFixed(3)+'%');
+  /* aqui no se aplica nada: cada animacion se guarda y la enciende armaBanda */
+  function pon(p,el,nombre,retraso,dur){
+    (entradas[p]||(entradas[p]=[])).push(
+      [el,'__'+nombre+' '+Math.round(dur)+'ms '+EASE+' '+Math.round(retraso)+'ms both']);
   }
   function num(el,v){return parseFloat(el.style.getPropertyValue(v))||0}
   Object.keys(INICIO).forEach(function(p){
     var b=document.querySelector('.'+p); if(!b)return;
-    var a=INICIO[p];
     /* p2 cruza una copia borrosa por una nitida; no lleva letras partidas */
     var soft=b.querySelector('.e-blur .soft'), sharp=b.querySelector('.e-blur .sharp');
-    if(soft&&sharp){ pon(soft,'sale',a,RAMPA); pon(sharp,'entra',a,RAMPA); }
+    if(soft&&sharp){ pon(p,soft,'sale',0,T_CRUCE); pon(p,sharp,'entra',0,T_CRUCE); }
     /* las letras y palabras, con su desorden propio congelado en el fotograma clave */
     [].forEach.call(b.querySelectorAll('.c,.w'),function(f){
       var th=num(f,'--th'), jx=num(f,'--jx'), jy=num(f,'--jy'), jr=num(f,'--jr');
       var esPalabra=f.classList.contains('w');
-      var dur=RAMPA/(esPalabra&&p==='p5'?3:2.6);
-      if(!jx&&!jy&&!jr){ pon(f,esPalabra?'sube':'entra',a+th*RAMPA,dur); return }
+      var dur=esPalabra&&p==='p5'?T_FRAG*0.85:T_FRAG;
+      if(!jx&&!jy&&!jr){ pon(p,f,esPalabra?'sube':'entra',th*T_ESCALON,dur); return }
       var nom='j'+(n++);
       css.push('@keyframes __'+nom+'{from{opacity:0;transform:translate('+jx+'px,'+jy+'px) rotate('+jr+'deg)}'
                +'to{opacity:1;transform:none}}');
-      pon(f,nom,a+th*RAMPA,dur);
+      pon(p,f,nom,th*T_ESCALON,dur);
     });
   });
   /* el subtitulo y el boton de la ultima banda, donde estaban --ks y --kb */
   var sub=document.querySelector('.p5 .sub'), cta=document.querySelector('.p5 .cta-row');
-  if(sub) pon(sub,'sube14',INICIO.p5+0.5*RAMPA,RAMPA/3);
-  if(cta) pon(cta,'sube14',INICIO.p5+0.72*RAMPA,RAMPA/4);
+  if(sub) pon('p5',sub,'sube14',0.5*T_ESCALON,T_FRAG*0.8);
+  if(cta) pon('p5',cta,'sube14',0.72*T_ESCALON,T_FRAG*0.7);
   css.push('@keyframes __entra{from{opacity:0}to{opacity:1}}');
   css.push('@keyframes __sale{from{opacity:1}to{opacity:0}}');
   css.push('@keyframes __sube{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}');
   css.push('@keyframes __sube14{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}');
   var e=document.createElement('style'); e.textContent=css.join(String.fromCharCode(10));
   document.head.appendChild(e);
+  /* la hoja se inyecta tarde a proposito (ver prepararTextoCSS): si para entonces
+     ya estamos dentro de alguna banda, hay que armarla ahora mismo */
+  armadas={};
+  disparaEntradas(heroProgress());
+}
+function armaBanda(p,on){
+  var lista=entradas[p]; if(!lista)return;
+  for(var i=0;i<lista.length;i++)lista[i][0].style.animation=on?lista[i][1]:'';
+}
+/* cuatro comparaciones por fotograma; el trabajo de verdad solo pasa al cruzar */
+function disparaEntradas(p){
+  for(var nom in INICIO){
+    var on=p>=INICIO[nom]/100;
+    if(on!==!!armadas[nom]){armadas[nom]=on;armaBanda(nom,on)}
+  }
 }
 var textoPreparado=false;
 function prepararTextoCSS(){
