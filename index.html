@@ -10,13 +10,27 @@
 <meta property="og:title" content="Hugo Galiana · Software que hace funcionar tu negocio">
 <meta property="og:description" content="Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.">
 <meta property="og:url" content="https://hugogaliana.com/">
-<meta property="og:image" content="https://hugogaliana.com/assets/hero-poster.jpg">
+<meta property="og:site_name" content="Hugo Galiana">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://hugogaliana.com/assets/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hugo Galiana, desarrollador full-stack. Angular, NestJS, TypeScript y MongoDB.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<!-- el primer fotograma hace de fondo del hero en tactil: 14 KB que conviene
+     pedir en cuanto se lee la cabecera, no cuando arranca el script -->
+<link rel="preload" as="image" href="assets/seq/f001.webp" media="(pointer:coarse)" fetchpriority="high">
+<!-- la hoja de un tercero bloqueaba el pintado y, con el, el DOMContentLoaded
+     del que cuelga el arranque del hero: entra como preload y asciende a hoja
+     de estilos en cuanto ha llegado -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"></noscript>
 <style>
 /* ============ tokens ============ */
 :root{
@@ -42,8 +56,10 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 html,body{overflow-x:hidden;overflow-x:clip;background:var(--canvas)}
-body{font-family:var(--fb);font-weight:400;color:var(--text-primary);line-height:1.6;font-size:17px;opacity:0;transition:opacity .8s var(--ease)}
-body.ready{opacity:1}
+/* el cuerpo ya no arranca invisible: mientras lo estaba, nada de la pagina
+   contaba como contenido pintado y el LCP esperaba a que JavaScript lo
+   revelase. La entrada la pone ahora el propio hero. */
+body{font-family:var(--fb);font-weight:400;color:var(--text-primary);line-height:1.6;font-size:17px}
 h1,h2,h3{font-family:var(--fd);font-weight:700;line-height:1.12;letter-spacing:-.015em}
 img{max-width:100%;display:block}
 a{color:var(--accent)}
@@ -65,6 +81,9 @@ a:hover{color:var(--accent-hover)}
 .env .f{position:absolute;top:-10%;width:1px;height:120%;background:linear-gradient(to bottom,transparent,rgba(143,216,218,.10) 30%,rgba(143,216,218,.16) 50%,rgba(143,216,218,.10) 70%,transparent)}
 .anim .env i{animation:drift 76s linear infinite}
 .anim .env .f{animation:fila 90s var(--ease-io) infinite}
+/* mientras el hero ocupa la pantalla, estas catorce animaciones quedan detras de
+   un escenario opaco: no se ven y solo cuestan mantenimiento por fotograma */
+body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:paused}
 @keyframes drift{0%{transform:translateY(0)}100%{transform:translateY(-110vh)}}
 @keyframes fila{0%,100%{opacity:.35}50%{opacity:.9}}
 /* ============ nav ============ */
@@ -109,6 +128,9 @@ a:hover{color:var(--accent-hover)}
 @keyframes chev{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(7px);opacity:1}}
 /* bands */
 .band{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;text-shadow:var(--tshadow)}
+/* la primera es la unica que se ve al cargar: su estado natural es visible, y
+   el motor de scrubbing la tapa en cuanto empiezas a desplazarte */
+.band[data-first]{opacity:1}
 .band .btn{text-shadow:none}
 .band::before{content:"";position:absolute;inset:-4%;pointer-events:none;opacity:calc(.25 + .75*var(--k,1));background:radial-gradient(ellipse 74% 62% at 50% 50%,rgba(5,5,10,.66) 0%,rgba(5,5,10,.44) 46%,rgba(5,5,10,0) 76%)}
 .band .inner{position:relative;max-width:900px;padding:0 24px;text-align:center;z-index:2}
@@ -149,7 +171,13 @@ a:hover{color:var(--accent-hover)}
 /* character entrances: transform+opacity only, driven by --k */
 .w{display:inline-block;white-space:pre}
 .c{display:inline-block;white-space:pre}
-.e-approach .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:scale(calc(.82 + .18*var(--kc)))}
+/* La entrada del titular ya no cuelga de --k, que JavaScript no escribe hasta
+   que el bucle lleva un rato corriendo: la lleva el compositor, empieza en el
+   primer fotograma y el escalonado sale del mismo --th de siempre. El estado
+   natural de la palabra es visible; de esconderla mientras entra se encarga la
+   animacion, asi que si no llega a ejecutarse se ve el texto. */
+@keyframes wApproach{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.e-approach .w{opacity:1;animation:wApproach .58s var(--ease) both;animation-delay:calc(var(--th,0)*760ms)}
 .e-blur .soft,.e-blur .sharp{display:block}
 .e-blur{position:relative}
 .e-blur .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0));will-change:opacity}
@@ -187,9 +215,15 @@ a:hover{color:var(--accent-hover)}
     <div class="poster" id="poster" aria-hidden="true"></div>
     <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
     <canvas id="hero-seq" width="450" height="800" aria-hidden="true"></canvas>
+    <!-- las hojas van sin src: solo la ruta tactil con lineas de tiempo las pide -->
+    <div class="sprite" id="hero-sprite" aria-hidden="true">
+      <div class="hoja1"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
+      <div class="hoja2"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
+      <div class="hoja3"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
+    </div>
     <div class="scrim" aria-hidden="true"></div>
 
-    <div class="band p1 e-approach" data-a="0" data-b="0.155" data-first="1">
+    <div class="band p1 e-approach" data-a="0.0000" data-b="0.1143" data-first="1">
       <div class="inner">
         <span class="kicker">Hugo Galiana · Full-stack · Valencia</span>
         <h1 data-split="w">Construyo el software que hace funcionar tu negocio.</h1>
@@ -198,7 +232,7 @@ a:hover{color:var(--accent-hover)}
       </div>
     </div>
 
-    <div class="band p2 e-blur" data-a="0.18" data-b="0.35">
+    <div class="band p2 e-blur" data-a="0.1543" data-b="0.3501">
       <div class="inner">
         <span class="kicker">Capa 01 · Interfaz</span>
         <h2 class="e-blur"><span class="soft" aria-hidden="true">Lo que ven tus clientes.</span><span class="sharp">Lo que ven tus clientes.</span></h2>
@@ -206,7 +240,7 @@ a:hover{color:var(--accent-hover)}
       </div>
     </div>
 
-    <div class="band p3 e-grid" data-a="0.405" data-b="0.575">
+    <div class="band p3 e-grid" data-a="0.3901" data-b="0.5612">
       <div class="inner">
         <span class="kicker">Capa 02 · Lógica</span>
         <h2 data-split="c" data-spread="0.42">Lo que trabaja por ti.</h2>
@@ -214,7 +248,7 @@ a:hover{color:var(--accent-hover)}
       </div>
     </div>
 
-    <div class="band p4 e-scatter" data-a="0.62" data-b="0.79">
+    <div class="band p4 e-scatter" data-a="0.6013" data-b="0.7917">
       <div class="inner">
         <span class="kicker">Capa 03 · Datos</span>
         <h2 data-split="c" data-jy="1">Lo que nunca se pierde.</h2>
@@ -222,7 +256,7 @@ a:hover{color:var(--accent-hover)}
       </div>
     </div>
 
-    <div class="band p5 e-rise" data-a="0.82" data-b="1" data-last="1">
+    <div class="band p5 e-rise" data-a="0.8317" data-b="1.0000" data-last="1">
       <div class="inner">
         <h2 data-split="w">Un sistema. Una pieza. Funcionando.</h2>
         <p class="sub">Cuéntame qué necesita tu negocio y te digo cómo lo construyo.</p>
@@ -244,7 +278,7 @@ a:hover{color:var(--accent-hover)}
   <div class="wrap about-wrap">
     <div class="rev">
       <div class="about-photo-box part" id="about-photo">
-        <img src="assets/hugo-retrato.jpg?v=3" width="1000" height="1000" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
+        <img src="assets/hugo-retrato.jpg?v=4" width="1000" height="1000" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
       </div>
     </div>
     <div class="rev">
@@ -584,7 +618,12 @@ a:hover{color:var(--accent-hover)}
 @media (max-width:860px){.about-wrap{grid-template-columns:1fr}.about-photo-box{max-width:min(320px,72vw);margin-inline:auto}}
 /* contacto */
 .contact{padding-bottom:120px;position:relative;isolation:isolate;overflow:hidden}
-.contact::before{content:"";position:absolute;inset:0;z-index:-1;background:url('assets/hero-ending.jpg') center/cover no-repeat;opacity:.15;-webkit-mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent);mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent)}
+/* 185 KB para un velo al 15% que esta cinco pantallas mas abajo, y se pedian
+   nada mas leer la hoja de estilos, por delante del propio hero. Ahora no
+   entran hasta que la seccion se acerca, con el mismo .in que ya pone el
+   observador (y que el modo de movimiento reducido tambien deja fijado). */
+.contact::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.15;-webkit-mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent);mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent)}
+.contact:has(.rev.in)::before{background:url('assets/hero-ending.jpg') center/cover no-repeat}
 .cform{margin-top:36px;display:grid;gap:12px}
 .cform label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary)}
 .cform-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -631,13 +670,120 @@ a:hover{color:var(--accent-hover)}
 .cards.rev.in .part:nth-child(3){transition-delay:.29s}
 .cards.rev.done .part:nth-child(n){transition-delay:0s}
 /* living whisper per section */
-.anim .glyph{animation:glowp 5.4s var(--ease-io) infinite}
+/* glowp anima filter y dotp anima background: ninguna de las dos es componible,
+   asi que cada paso obliga a recalcular estilo y repintar. Y eran infinitas y las
+   encendia la clase anim del body, o sea que corrian tambien mientras mirabas el
+   hero, cuatro pantallas mas arriba: 3,59 ms de cada fotograma se iban aqui.
+   Ahora solo laten mientras su seccion esta a la vista. */
+.anim .a-la-vista .glyph{animation:glowp 5.4s var(--ease-io) infinite}
 .anim .card:nth-child(2) .glyph{animation-delay:-1.8s}
 .anim .card:nth-child(3) .glyph{animation-delay:-3.6s}
 @keyframes glowp{0%,100%{filter:drop-shadow(0 0 0 rgba(143,216,218,0))}50%{filter:drop-shadow(0 0 7px rgba(143,216,218,.45))}}
-.anim .proof .browser-bar i:first-child{animation:dotp 6s var(--ease-io) infinite}
+.anim .proof.a-la-vista .browser-bar i:first-child{animation:dotp 6s var(--ease-io) infinite}
 @keyframes dotp{0%,100%{background:var(--line-strong)}50%{background:var(--accent)}}
 .static-sub,.static-cta{display:none}
+/* ================= hero movido por el compositor (tactil) =================
+   El motor de JavaScript si­ seguia al dedo, pero con 48 fotogramas repartidos
+   por 3.100 px de scroll cada uno aguantaba 65 px y se veia a saltos. Aqui van
+   72 fotogramas en tres hojas de 6x4, y no los mueve JavaScript: dos transform
+   encadenados sobre la linea de tiempo del propio hero, que resuelve el
+   compositor. Salen 22 px por fotograma sobre un hero de 288svh.
+   El numero de fotogramas lo fija la memoria, no el ancho de banda: un fotograma
+   de 360x640 son 0,88 MB ya decodificados, asi que 72 ocupan 63 MB. Con 144 a
+   450x800 eran 198 MB, no cabian, el navegador los descartaba y los volvia a
+   decodificar, y eso es lo que se veia parpadear entre paso y paso. */
+.sprite{display:none;position:absolute;inset:0;overflow:hidden;z-index:0;
+  --cw:max(100svw,calc(100svh * 450 / 800));--ch:calc(var(--cw) * 800 / 450)}
+.sprite>div{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.sp-y{position:absolute;left:calc(50% - var(--cw)/2);top:calc(50% - var(--ch)/2);
+  width:calc(var(--cw) * 6);height:calc(var(--ch) * 4)}
+.sp-x{width:100%;height:100%}
+.sp-x img{width:100%;height:100%;display:block}
+@keyframes spFila{from{transform:translateY(0)}to{transform:translateY(-75%)}}
+@keyframes spCol{from{transform:translateX(0)}to{transform:translateX(-83.3333%)}}
+/* Cada hoja se enciende y se apaga con su propia linea de tiempo, que cubre el
+   recorrido entero y avanza a saltos secos (step-end). Antes cada una vivia
+   solo dentro de su tercio con fill-mode:none, y en cuanto pasabas del final
+   del hero la animacion dejaba de aplicarse, la ultima hoja se ocultaba y te
+   quedabas con el fondo liso hasta volver a subir. Con el relleno en ambos
+   sentidos, por debajo del recorrido manda el primer fotograma clave y por
+   encima el ultimo: el ultimo fotograma se queda puesto.
+   El fotograma clave del 100% va explicito en las tres. Sin el, CSS se inventa
+   uno con el valor natural del elemento --que aqui es hidden-- y justo al pisar
+   el final del recorrido la hoja saltaba a el: se veia el fondo liso hasta que
+   volvias a subir. */
+@keyframes verHoja1{0%{visibility:visible}33.3333%{visibility:hidden}100%{visibility:hidden}}
+@keyframes verHoja2{0%{visibility:hidden}33.3333%{visibility:visible}66.6667%{visibility:hidden}100%{visibility:hidden}}
+@keyframes verHoja3{0%{visibility:hidden}66.6667%{visibility:visible}100%{visibility:visible}}
+@property --k{syntax:'<number>';initial-value:0;inherits:true}
+@property --ks{syntax:'<number>';initial-value:0;inherits:true}
+@property --kb{syntax:'<number>';initial-value:0;inherits:true}
+@keyframes rampaK{from{--k:0}to{--k:1}}
+@keyframes rampaKs{from{--ks:0}to{--ks:1}}
+@keyframes rampaKb{from{--kb:0}to{--kb:1}}
+@keyframes apareceFrag{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes apareceSimple{from{opacity:0}to{opacity:1}}
+@keyframes desapareceSimple{from{opacity:1}to{opacity:0}}
+@keyframes banda1{0%,9.4266%{opacity:1}11.4266%,100%{opacity:0}}
+@keyframes banda2{0%,15.4289%{opacity:0}17.4289%,33.0072%{opacity:1}35.0072%,100%{opacity:0}}
+@keyframes banda3{0%,39.0095%{opacity:0}41.0095%,54.1241%{opacity:1}56.1241%,100%{opacity:0}}
+@keyframes banda4{0%,60.1264%{opacity:0}62.1264%,77.1692%{opacity:1}79.1692%,100%{opacity:0}}
+@keyframes banda5{0%,83.1714%{opacity:0}85.1714%,100%{opacity:1}}
+
+@supports (animation-timeline: view()){
+ @media (pointer:coarse) and (prefers-reduced-motion: no-preference){
+  .hero{view-timeline:--hero block}
+  /* 288svh en vez de 470: con 72 fotogramas dan 22 px de scroll por fotograma,
+     que es la densidad que se siente fluida, y de paso el hero deja de ser
+     cinco pantallas que atravesar. Va con el selector de etiqueta porque la
+     regla de 470vh vive mas abajo en la hoja y si no gana ella por orden. */
+  header.hero{height:288svh}
+  .stage video,.stage canvas,.ringbox{display:none}
+  /* el poster (el fotograma 1, 14 KB) se queda debajo: cubre la primera
+     pantalla mientras la hoja 1 no ha llegado, y la hoja la tapa despues */
+  /* El fondo va aqui y no en JavaScript. En esta ruta applyHeroMode llama a
+     cargarHojas() y se salta initHeroOnce(), que era quien lo asignaba, asi que
+     la primera pantalla se quedaba lisa hasta que entraba la hoja 1: dos o tres
+     segundos de nada. Puesto en CSS lo encuentra el analizador de precarga. */
+  .poster{z-index:0;background-image:url('assets/seq/f001.webp')}
+  .sprite{display:block}
+  .band{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;
+    animation-timeline:--hero;animation-range:contain 0% contain 100%}
+  .hoja1{animation:verHoja1 1s step-end both;
+    animation-timeline:--hero;animation-range:contain 0% contain 100%}
+  .hoja1 .sp-y{animation:spFila 1s steps(4,jump-none) both;
+    animation-timeline:--hero;animation-range:contain 0% contain 33.3333%}
+  .hoja1 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
+    animation-timeline:--hero;animation-range:contain 0% contain 33.3333%}
+  .hoja2{animation:verHoja2 1s step-end both;
+    animation-timeline:--hero;animation-range:contain 0% contain 100%}
+  .hoja2 .sp-y{animation:spFila 1s steps(4,jump-none) both;
+    animation-timeline:--hero;animation-range:contain 33.3333% contain 66.6667%}
+  .hoja2 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
+    animation-timeline:--hero;animation-range:contain 33.3333% contain 66.6667%}
+  .hoja3{animation:verHoja3 1s step-end both;
+    animation-timeline:--hero;animation-range:contain 0% contain 100%}
+  .hoja3 .sp-y{animation:spFila 1s steps(4,jump-none) both;
+    animation-timeline:--hero;animation-range:contain 66.6667% contain 100%}
+  .hoja3 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
+    animation-timeline:--hero;animation-range:contain 66.6667% contain 100%}
+  /* La entrada palabra a palabra la movia --k, que escribia JavaScript. Aqui no
+     hay JavaScript, asi que --k se anima solo: registrado con @property para que
+     sea interpolable y heredado, para que lo vean las letras. Toda la aritmetica
+     de .e-grid, .e-scatter, .e-blur y .e-rise sigue intacta, con su escalonado
+     por --th; lo unico que cambia es quien mueve el numero.
+     (Lo intente antes metiendo el escalonado en animation-range con calc y var,
+     y no cuela: la declaracion se descarta entera y las letras acababan
+     desvaneciendose a lo largo de todo el hero en vez de encenderse.)
+     La rampa pasa de 2,5% a 7% del recorrido: con el hero acortado, 2,5% eran
+     40 px y la entrada no daba tiempo a verse. 7% son 111 px, como en escritorio. */
+  .p1{animation-name:banda1}
+  .p2{animation-name:banda2}
+  .p3{animation-name:banda3}
+  .p4{animation-name:banda4}
+  .p5{animation-name:banda5}
+ }
+}
 /* ============ hero en pantallas táctiles / estrechas ============ */
 /* El scrub sigue activo: solo cambia la composición para que quepa y se lea. */
 @media (max-width:820px){
@@ -683,113 +829,6 @@ a:hover{color:var(--accent-hover)}
 .static-sub{margin-top:18px;font-size:clamp(16px,4vw,19px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
 .static-cta{margin-top:28px}
 /* reduced motion: full stop */
-/* ---- movil: el relato sin encadenarlo al scroll ----
-   En iOS el desplazamiento lo lleva un hilo aparte del de JavaScript, asi que
-   cualquier animacion atada a la posicion del scroll llega por detras del dedo.
-   Aqui el escenario deja de ser pegajoso: cada banda es una seccion normal de
-   una pantalla y aparece al entrar en vista con una transicion de opacidad y
-   desplazamiento, que van sobre el compositor y no cuestan trabajo por frame. */
-@keyframes fragEntra{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
-/* Escape: si una banda llega a estar en pantalla con su texto aun invisible
-   --una linea de tiempo que no se activa, un navegador que no ejecuta la
-   animacion-- se le quitan las animaciones y queda su estado natural, visible. */
-.band.sin-anim .w,.band.sin-anim .c,.band.sin-anim .e-blur .sharp,
-.band.sin-anim .kicker,.band.sin-anim .sub,.band.sin-anim .static-sub,
-.band.sin-anim .static-cta,.band.sin-anim .cta-row{animation:none}
-/* ---- movil: la aparicion ligada al dedo, como en escritorio ----
-   En escritorio las palabras van saliendo conforme desplazas. Atar eso al
-   scroll desde JavaScript es justo lo que no puede ir fino en iOS, porque el
-   desplazamiento va en otro hilo. Con animation-timeline lo lleva el
-   compositor: el progreso lo marca la posicion de la banda en pantalla, sin
-   una sola linea de JavaScript por medio.
-   La primera banda queda fuera: al cargar ya esta a la vista, nunca llegaria a
-   "entrar" y se quedaria congelada en su primer fotograma. Esa conserva la
-   entrada por tiempo. */
-@supports (animation-timeline: view()){
-  @media (pointer:coarse){
-    .band:not([data-first]) .w,.band:not([data-first]) .c,
-    .band:not([data-first]) .e-blur .sharp,
-    .band:not([data-first]).in .w,.band:not([data-first]).in .c,
-    .band:not([data-first]).in .e-blur .sharp{
-      animation-name:fragEntra;animation-timing-function:linear;
-      animation-fill-mode:both;animation-duration:auto;
-      animation-timeline:view();
-      animation-range:entry calc(8% + var(--o,0%)) entry calc(52% + var(--o,0%));
-      animation-delay:0s}
-    .band:not([data-first]) .kicker,.band:not([data-first]).in .kicker{
-      animation-name:fragEntra;animation-timing-function:linear;
-      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
-      animation-range:entry 2% entry 34%;animation-delay:0s}
-    .band:not([data-first]) .sub,.band:not([data-first]).in .sub{
-      animation-name:fragEntra;animation-timing-function:linear;
-      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
-      animation-range:entry 46% entry 82%;animation-delay:0s}
-    .band:not([data-first]) .cta-row,.band:not([data-first]).in .cta-row{
-      animation-name:fragEntra;animation-timing-function:linear;
-      animation-fill-mode:both;animation-duration:auto;animation-timeline:view();
-      animation-range:entry 58% entry 92%;animation-delay:0s}
-  }
-}
-@media (pointer:coarse){
-  .hero{height:auto}
-  .stage{position:relative;height:auto;overflow:visible;background:var(--canvas)}
-  /* la foto ocupa solo la primera pantalla: con el escenario de cinco pantallas,
-     un 'cover' la ampliaba hasta convertirla en un borron */
-  .stage::after{content:"";position:absolute;left:0;right:0;top:0;height:100svh;z-index:0;background:url('assets/hero-static.jpg') center/cover no-repeat;-webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent);mask-image:linear-gradient(to bottom,#000 62%,transparent)}
-  .stage video,.stage canvas,.poster,.ringbox{display:none}
-  /* el velo cubria el video a pantalla completa; con el escenario de cinco
-     pantallas se convertia en una capa de 4.200 px que iOS tiene que
-     rasterizar entera, asi que se limita a la pantalla de la foto */
-  .scrim{position:absolute;left:0;right:0;top:0;height:100svh}
-  /* la colocacion por banda (p1..p5) obedecia a los capitulos de luz del video;
-     apiladas como secciones, lo natural es centrarlas */
-  .band{align-items:center;justify-content:center;position:relative;inset:auto;opacity:1;transform:none;pointer-events:auto}
-  /* solo la primera ocupa la pantalla entera, que es la que lleva la foto.
-     Las demas son frases cortas: darles una pantalla a cada una convertia el
-     hero en cinco pantallas de hueco que hay que atravesar. */
-  .band[data-first]{min-height:100svh;padding:12svh 0}
-  .band:not([data-first]){min-height:auto;padding:14svh 0}
-  /* La animacion no la calcula JavaScript ni sigue a la posicion del scroll:
-     se dispara una vez, al entrar la banda, y la ejecuta el compositor sobre
-     opacidad y transform. Por eso no puede desincronizarse del dedo en iOS.
-     El escalonado palabra a palabra conserva el caracter del hero original. */
-  /* Direccion del fallo: el texto NO parte de opacidad 0. Su estado natural es
-     visible, y de ocultarlo se encarga la propia animacion mientras corre
-     (fill backwards cubre el retardo). Asi, si la animacion no llega a
-     ejecutarse --pestaña en segundo plano, movimiento reducido, un ajuste del
-     navegador-- se ve el texto, que es el fallo bueno. Antes se quedaba en
-     blanco, que es el malo. */
-  .band.in .kicker{animation:fragEntra .5s var(--ease) both}
-  .band.in .w,.band.in .c,.band.in .e-blur .sharp{
-    animation:fragEntra .55s var(--ease) both;
-    animation-delay:calc(90ms + var(--i,0)*var(--step,30ms))}
-  .band.in .sub,.band.in .static-sub{animation:fragEntra .6s var(--ease) both;animation-delay:var(--d2,320ms)}
-  .band.in .static-cta,.band.in .cta-row{animation:fragEntra .6s var(--ease) both;animation-delay:calc(var(--d2,320ms) + 110ms)}
-  /* cada banda traia su colocacion a medida (p2 arriba a la izquierda, p3 abajo
-     a la izquierda, p4 abajo a la derecha...) para componer sobre el metraje.
-     Apiladas en una pantalla estrecha eso deja el texto descuadrado y pegado a
-     un borde distinto en cada una: se normaliza. */
-  .band .inner{margin:0 auto;text-align:center;max-width:640px}
-  /* cinco degradados a pantalla completa mas: daban profundidad sobre el
-     metraje, sobre fondo plano solo cuestan pintura */
-  .band::before{display:none}
-  /* salvo en la primera, que es la unica sobre la foto: ahi el degradado es lo
-     que mantiene legible el texto contra la roca */
-  /* z-index 1: la foto va en 0 y el texto en 2, asi que sin esto el velo
-     quedaba pintado por debajo de la propia foto y no servia de nada */
-  .band[data-first]::before{display:block;z-index:1;opacity:1;background:linear-gradient(to bottom,rgba(4,6,9,.30) 0%,rgba(4,6,9,.72) 42%,rgba(4,6,9,.86) 100%)}
-  /* los efectos por letra se neutralizan: en tactil el texto se muestra entero */
-/* Imprescindible: las reglas del motor de scrubbing atan la opacidad de estos
-     elementos a --k (opacity:var(--kc), var(--ks), var(--kb)). En tactil el
-     scrubbing esta apagado y --k nunca se escribe, asi que sin esto todos
-     valen 0 y el hero se queda sin texto. Su estado natural es visible; de
-     ocultarlos mientras entra se encarga la animacion. */
-  .band .w,.band .c,.band .e-blur .sharp,.band .kicker,.band .sub,
-  .band .static-sub,.band .static-cta,.band .cta-row{opacity:1;transform:none}
-  .e-blur .soft{display:none}
-  .static-sub,.static-cta{display:block}
-}
-
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none !important;transition:none !important;transition-delay:0s !important}
@@ -994,9 +1033,9 @@ function tick(now){
   updateCaptions(shown,now);
 }
 function onScroll(){
-  /* El observador del hero llama aqui al cargar, sin pasar por la puerta: sin
-     esta guarda el motor daba una pasada y dejaba opacity/visibility en linea
-     sobre las bandas, que luego pisaban al CSS del modo tactil. */
+  /* El observador del hero llama aqui al cargar, sin pasar por la puerta: con
+     movimiento reducido el motor daba una pasada y dejaba opacity/visibility
+     en linea sobre las bandas, pisando al CSS del hero estatico. */
   if(!scrubOn)return;
   lastScroll=performance.now();
   /* Al despertar el bucle refrescamos las medidas: en iOS la barra de direcciones
@@ -1006,19 +1045,26 @@ function onScroll(){
   target=heroProgress();
   if(rafId===null&&heroOnScreen)rafId=requestAnimationFrame(tick);
 }
-new IntersectionObserver(function(en){heroOnScreen=en[0].isIntersecting;if(heroOnScreen)onScroll()}).observe(hero);
+new IntersectionObserver(function(en){
+  heroOnScreen=en[0].isIntersecting;
+  document.body.classList.toggle('hero-a-la-vista',heroOnScreen);
+  if(heroOnScreen)onScroll();
+}).observe(hero);
 
 /* carga con anillo de progreso honesto */
 var heroInit=false;
+var POSTER=LIGHT?SEQ_DIR+'f001.webp':'assets/hero-poster.jpg';
 function initHeroOnce(){
   if(heroInit)return;heroInit=true;
-  poster.style.backgroundImage="url('assets/hero-poster.jpg')";
+  /* en movil el primer fotograma ya hace de poster y pesa 14 KB en vez de 173:
+     ademas es la misma imagen que el motor necesita de todas formas */
+  poster.style.backgroundImage="url('"+POSTER+"')";
   var started=false;
   function start(){
     if(started)return;started=true;
     (LIGHT?loadSequence():loadHeroBlob()).catch(failVideo);
   }
-  var pi=new Image();pi.onload=start;pi.onerror=start;pi.src='assets/hero-poster.jpg';
+  var pi=new Image();pi.onload=start;pi.onerror=start;pi.src=POSTER;
   setTimeout(start,4000);
 }
 
@@ -1142,7 +1188,102 @@ video.addEventListener('error',failVideo);
 /* ---------- gates del hero estático (mismas cadenas que en el CSS) ----------
    El scrub va también en móvil: lo único que lo apaga es que el sistema
    pida menos movimiento. */
-var GATES=['(prefers-reduced-motion: reduce)','(pointer:coarse)'];
+/* Con lineas de tiempo de scroll el hero tactil no necesita JavaScript: lo
+   mueve el compositor. Aqui solo se decide el modo y se traen las hojas. */
+var CSSDRIVEN=matchMedia('(pointer:coarse)').matches &&
+  !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+  !!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()'));
+/* --- la entrada del texto, al compositor ---------------------------------
+   Antes la movia --k, una propiedad personalizada registrada con @property. Eso
+   no se puede componer: cada paso invalidaba el estilo de los 68 fragmentos que
+   heredan la variable, 0,84 ms de cada fotograma. Aqui cada fragmento lleva su
+   propia animacion de opacity y transform, que si van por el compositor.
+   Lo que impedia hacerlo directamente en CSS es que animation-range descarta la
+   declaracion si lleva var(), y el escalonado vive en --th. Se rodea calculando
+   los numeros aqui y escribiendolos ya resueltos: JavaScript corre una vez al
+   cargar, no una vez por fotograma. */
+var RAMPA=7;                       /* % del recorrido que dura la entrada */
+var INICIO={p2:15.43,p3:39.01,p4:60.13,p5:83.17};
+function textoAlCompositor(){
+  var css=[],n=0;
+  function pon(el,nombre,ini,dur){
+    el.style.setProperty('animation','__'+nombre+' 1s linear both');
+    el.style.setProperty('animation-timeline','--hero');
+    el.style.setProperty('animation-range','contain '+ini.toFixed(3)+'% contain '+(ini+dur).toFixed(3)+'%');
+  }
+  function num(el,v){return parseFloat(el.style.getPropertyValue(v))||0}
+  Object.keys(INICIO).forEach(function(p){
+    var b=document.querySelector('.'+p); if(!b)return;
+    var a=INICIO[p];
+    /* p2 cruza una copia borrosa por una nitida; no lleva letras partidas */
+    var soft=b.querySelector('.e-blur .soft'), sharp=b.querySelector('.e-blur .sharp');
+    if(soft&&sharp){ pon(soft,'sale',a,RAMPA); pon(sharp,'entra',a,RAMPA); }
+    /* las letras y palabras, con su desorden propio congelado en el fotograma clave */
+    [].forEach.call(b.querySelectorAll('.c,.w'),function(f){
+      var th=num(f,'--th'), jx=num(f,'--jx'), jy=num(f,'--jy'), jr=num(f,'--jr');
+      var esPalabra=f.classList.contains('w');
+      var dur=RAMPA/(esPalabra&&p==='p5'?3:2.6);
+      if(!jx&&!jy&&!jr){ pon(f,esPalabra?'sube':'entra',a+th*RAMPA,dur); return }
+      var nom='j'+(n++);
+      css.push('@keyframes __'+nom+'{from{opacity:0;transform:translate('+jx+'px,'+jy+'px) rotate('+jr+'deg)}'
+               +'to{opacity:1;transform:none}}');
+      pon(f,nom,a+th*RAMPA,dur);
+    });
+  });
+  /* el subtitulo y el boton de la ultima banda, donde estaban --ks y --kb */
+  var sub=document.querySelector('.p5 .sub'), cta=document.querySelector('.p5 .cta-row');
+  if(sub) pon(sub,'sube14',INICIO.p5+0.5*RAMPA,RAMPA/3);
+  if(cta) pon(cta,'sube14',INICIO.p5+0.72*RAMPA,RAMPA/4);
+  css.push('@keyframes __entra{from{opacity:0}to{opacity:1}}');
+  css.push('@keyframes __sale{from{opacity:1}to{opacity:0}}');
+  css.push('@keyframes __sube{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}');
+  css.push('@keyframes __sube14{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}');
+  var e=document.createElement('style'); e.textContent=css.join(String.fromCharCode(10));
+  document.head.appendChild(e);
+}
+var hojasPedidas=false;
+function cargarHojas(){
+  if(hojasPedidas)return;hojasPedidas=true;
+  var imgs=[].slice.call(document.querySelectorAll('#hero-sprite img'));
+  if(!imgs.length)return;
+  /* La primera pantalla solo necesita la hoja 1. Las otras cinco suman 1,8 MB:
+     pedirlas junto a ella le robaba el ancho de banda al arranque y el LCP se
+     iba de 1,4 s a 5,7 s en 4G simulada. Asi que la 1 va de inmediato y el
+     resto espera a que la pagina este en pie, o a que el dedo se mueva, lo que
+     ocurra antes. Cada hoja no hace falta hasta su sexto del recorrido, y para
+     llegar al segundo hay que deslizar mas de 500 px. */
+  var abierto=false, ultima=-1;
+  function pon(i){
+    if(i>=imgs.length||i<=ultima)return;
+    ultima=i;
+    var im=imgs[i];
+    im.onload=im.onerror=function(){im.onload=im.onerror=null;if(abierto)pon(i+1)};
+    im.src='assets/hero-h'+(i+1)+'.webp';
+  }
+  /* Ninguna hoja se pide en la carga. Rasterizar 8,6 Mpx en la primera pantalla
+     retrasaba el pintado y el LCP se iba de 1,4 s a 3,2 s aunque los bytes ya
+     estuvieran. Mientras tanto se ve el poster, que es el fotograma 1.
+     El resto arranca con el primer desplazamiento, no antes: hasta que no te
+     mueves no hacen falta, y pidiendolas en la carga le quitaban al arranque el
+     ancho de banda que necesita. Del primer desplazamiento a necesitar la hoja
+     2 hay mas de 500 px de recorrido, tiempo de sobra para que llegue. */
+  function abrirElResto(){
+    if(abierto)return;abierto=true;
+    /* Aqui y no en DOMContentLoaded: inyectar la hoja de estilos generada justo
+       antes del primer pintado costaba 0,7 s de FCP y de LCP. Nada de esto hace
+       falta hasta la banda 2, que esta a 286 px de haber empezado a deslizar. */
+    textoAlCompositor();
+    pon(0);
+  }
+  addEventListener('scroll',abrirElResto,{passive:true,once:true});
+  addEventListener('touchstart',abrirElResto,{passive:true,once:true});
+  /* y si no tocas nada, entran solas cuando el hilo principal esta libre, para
+     que el scrub no arranque en frio cuando por fin te decidas a deslizar */
+  var enReposo=window.requestIdleCallback||function(f){return setTimeout(f,1200)};
+  if(document.readyState==='complete')enReposo(abrirElResto,{timeout:1500});
+  else addEventListener('load',function(){enReposo(abrirElResto,{timeout:1500})},{once:true});
+}
+var GATES=['(prefers-reduced-motion: reduce)'];
 var scrubOn=false;
 function enableScrub(){
   if(scrubOn)return;scrubOn=true;
@@ -1159,8 +1300,9 @@ function disableScrub(){
   if(rafId!==null){cancelAnimationFrame(rafId);rafId=null}
 }
 function applyHeroMode(){
-  if(GATES.some(function(q){return matchMedia(q).matches}))disableScrub();
-  else enableScrub();
+  if(GATES.some(function(q){return matchMedia(q).matches})){disableScrub();return}
+  if(CSSDRIVEN){disableScrub();cargarHojas();return}
+  enableScrub();
 }
 var MQLS=GATES.map(function(q){return matchMedia(q)});
 MQLS.forEach(function(m){m.addEventListener('change',applyHeroMode)});
@@ -1176,72 +1318,13 @@ var io=new IntersectionObserver(function(entries){
   });
 },{threshold:0,rootMargin:'0px 0px -12% 0px'});
 document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)});
-/* en tactil las bandas del hero son secciones normales: aparecen al entrar en
-   vista, igual que el resto de la pagina, en vez de seguir al scroll */
-if(matchMedia('(pointer:coarse)').matches){
-  /* Sin IntersectionObserver y sin requestAnimationFrame: la aparicion se
-     decide comparando posiciones, que es lo unico que no puede dejar de
-     funcionar. El observador se saltaba en algunos casos y el hero se quedaba
-     en blanco, porque toda la visibilidad colgaba de el. */
-  var bandasT=[].slice.call(document.querySelectorAll('.band'));
-  bandasT.forEach(function(el){
-    el.style.removeProperty('opacity');
-    el.style.removeProperty('visibility');
-    el.style.removeProperty('--k');
-    var frag=el.querySelectorAll('.w,.c,.e-blur .sharp');
-    frag.forEach(function(f,i){f.style.setProperty('--i',i)});
-    /* el escalonado completo se acota a ~320 ms tenga los fragmentos que tenga */
-    var paso=Math.min(34,Math.round(320/Math.max(1,frag.length)));
-    el.style.setProperty('--step',paso+'ms');
-    /* mismo escalonado, pero medido en recorrido de scroll para la version
-       ligada al dedo: el conjunto se reparte en un 34% del rango */
-    frag.forEach(function(f,i){f.style.setProperty('--o',(i*34/Math.max(1,frag.length)).toFixed(2)+'%')});
-    el.style.setProperty('--d2',(90+frag.length*paso+110)+'ms');
-  });
-  var pendientes=bandasT.slice();
-  function revisarBandas(){
-    /* Se dispara justo cuando la banda asoma por abajo, no una pantalla y media
-       antes: si se adelanta demasiado, la entrada termina fuera de pantalla y
-       llegas a la frase con todo ya puesto. */
-    var limite=innerHeight;
-    for(var i=pendientes.length-1;i>=0;i--){
-      if(pendientes[i].getBoundingClientRect().top<limite){
-        var banda=pendientes[i];
-        banda.classList.add('in');
-        vigilarBanda(banda);
-        pendientes.splice(i,1);
-      }
-    }
-    if(!pendientes.length){
-      removeEventListener('scroll',alScrollBandas);
-      clearInterval(vigilante);
-    }
-  }
-  function vigilarBanda(banda){
-    /* A los 2,5 s: si la banda esta en pantalla y su texto sigue invisible, es
-       que la animacion no se ha ejecutado. Se desactiva y queda el texto. */
-    setTimeout(function(){
-      var r=banda.getBoundingClientRect();
-      if(r.bottom<0||r.top>innerHeight)return;
-      var f=banda.querySelector('.w,.c,.e-blur .sharp');
-      if(f&&parseFloat(getComputedStyle(f).opacity)<0.1)banda.classList.add('sin-anim');
-    },2500);
-  }
-  var pedido=false;
-  function alScrollBandas(){
-    if(pedido)return;pedido=true;
-    setTimeout(function(){pedido=false;revisarBandas()},80);
-  }
-  addEventListener('scroll',alScrollBandas,{passive:true});
-  addEventListener('resize',alScrollBandas,{passive:true});
-  revisarBandas();
-  setTimeout(revisarBandas,400);
-  /* Red de seguridad por si los eventos de scroll fallaran: cinco comparaciones
-     de posicion cada 700 ms, que no cuestan nada, y se detiene sola al terminar.
-     Antes esto marcaba todas las bandas de golpe a los 6 s, con lo que su
-     entrada se ejecutaba fuera de pantalla y no se llegaba a ver. */
-  var vigilante=setInterval(revisarBandas,700);
-}
+/* Los adornos infinitos (glowp, dotp) se encienden y se apagan con su seccion.
+   A diferencia del observador de arriba, este no deja de mirar: la clase entra y
+   sale, porque el objetivo es que no corran cuando no se ven. */
+var ambiente=new IntersectionObserver(function(en){
+  en.forEach(function(e){e.target.classList.toggle('a-la-vista',e.isIntersecting)});
+},{rootMargin:'150px 0px'});
+document.querySelectorAll('#servicios,#prueba').forEach(function(el){ambiente.observe(el)});
 
 /* ---------- hold moment ---------- */
 var pad=document.getElementById('holdpad');
@@ -1422,7 +1505,6 @@ function boot(){
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.body.classList.add('anim');
   else pinToFinalStates();
   applyHeroMode();
-  requestAnimationFrame(function(){document.body.classList.add('ready')});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

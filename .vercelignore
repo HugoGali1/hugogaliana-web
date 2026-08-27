@@ -1,0 +1,5 @@
+.vercel
+node_modules
+# binarios sueltos que no forman parte del sitio
+*.exe
+*.winmd

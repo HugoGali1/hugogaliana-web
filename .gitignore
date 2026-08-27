@@ -1,2 +1,6 @@
 .vercel
 node_modules
+
+# binarios sueltos que aparecieron en assets/ y no forman parte del sitio
+*.exe
+*.winmd
