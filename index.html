@@ -215,12 +215,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     <div class="poster" id="poster" aria-hidden="true"></div>
     <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
     <canvas id="hero-seq" width="450" height="800" aria-hidden="true"></canvas>
-    <!-- las hojas van sin src: solo la ruta tactil con lineas de tiempo las pide -->
-    <div class="sprite" id="hero-sprite" aria-hidden="true">
-      <div class="hoja1"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
-      <div class="hoja2"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
-      <div class="hoja3"><div class="sp-y"><div class="sp-x"><img alt="" decoding="async" width="2160" height="2560"></div></div></div>
-    </div>
     <div class="scrim" aria-hidden="true"></div>
 
     <div class="band p1 e-approach" data-a="0.0000" data-b="0.1143" data-first="1">
@@ -682,39 +676,21 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .anim .proof.a-la-vista .browser-bar i:first-child{animation:dotp 6s var(--ease-io) infinite}
 @keyframes dotp{0%,100%{background:var(--line-strong)}50%{background:var(--accent)}}
 .static-sub,.static-cta{display:none}
-/* ================= hero movido por el compositor (tactil) =================
-   El motor de JavaScript si­ seguia al dedo, pero con 48 fotogramas repartidos
-   por 3.100 px de scroll cada uno aguantaba 65 px y se veia a saltos. Aqui van
-   72 fotogramas en tres hojas de 6x4, y no los mueve JavaScript: dos transform
-   encadenados sobre la linea de tiempo del propio hero, que resuelve el
-   compositor. Salen 22 px por fotograma sobre un hero de 288svh.
-   El numero de fotogramas lo fija la memoria, no el ancho de banda: un fotograma
-   de 360x640 son 0,88 MB ya decodificados, asi que 72 ocupan 63 MB. Con 144 a
-   450x800 eran 198 MB, no cabian, el navegador los descartaba y los volvia a
-   decodificar, y eso es lo que se veia parpadear entre paso y paso. */
-.sprite{display:none;position:absolute;inset:0;overflow:hidden;z-index:0;
-  --cw:max(100svw,calc(100svh * 450 / 800));--ch:calc(var(--cw) * 800 / 450)}
-.sprite>div{position:absolute;inset:0;overflow:hidden;visibility:hidden}
-.sp-y{position:absolute;left:calc(50% - var(--cw)/2);top:calc(50% - var(--ch)/2);
-  width:calc(var(--cw) * 6);height:calc(var(--ch) * 4)}
-.sp-x{width:100%;height:100%}
-.sp-x img{width:100%;height:100%;display:block}
-@keyframes spFila{from{transform:translateY(0)}to{transform:translateY(-75%)}}
-@keyframes spCol{from{transform:translateX(0)}to{transform:translateX(-83.3333%)}}
-/* Cada hoja se enciende y se apaga con su propia linea de tiempo, que cubre el
-   recorrido entero y avanza a saltos secos (step-end). Antes cada una vivia
-   solo dentro de su tercio con fill-mode:none, y en cuanto pasabas del final
-   del hero la animacion dejaba de aplicarse, la ultima hoja se ocultaba y te
-   quedabas con el fondo liso hasta volver a subir. Con el relleno en ambos
-   sentidos, por debajo del recorrido manda el primer fotograma clave y por
-   encima el ultimo: el ultimo fotograma se queda puesto.
-   El fotograma clave del 100% va explicito en las tres. Sin el, CSS se inventa
-   uno con el valor natural del elemento --que aqui es hidden-- y justo al pisar
-   el final del recorrido la hoja saltaba a el: se veia el fondo liso hasta que
-   volvias a subir. */
-@keyframes verHoja1{0%{visibility:visible}33.3333%{visibility:hidden}100%{visibility:hidden}}
-@keyframes verHoja2{0%{visibility:hidden}33.3333%{visibility:visible}66.6667%{visibility:hidden}100%{visibility:hidden}}
-@keyframes verHoja3{0%{visibility:hidden}66.6667%{visibility:visible}100%{visibility:visible}}
+/* ============ metraje del hero en tactil ============
+   Aqui vivian tres hojas de sprites de 2160x2560 movidas por el compositor.
+   La idea era buena y la geometria no: cada fotograma es de 360x640 y en un
+   movil se pinta a 1424x2532 px de dispositivo, un reescalado de x3,96. Con la
+   hoja entera pintada a 2849x3376 px CSS son 86,5 Mpx --346 MB de superficie--
+   por hoja, y las tres estaban vivas a la vez, porque visibility:hidden no
+   libera el rasterizado. De ahi el parpadeo: el navegador tiraba texturas y las
+   volvia a subir a mitad del recorrido.
+   No tiene arreglo por esa via. Para no reescalar harian falta 1424x2532 px por
+   fotograma, o sea un atlas de 8544x30384 para 72 fotogramas, y MAX_TEXTURE_SIZE
+   son 16384. El atlas no cabe con ningun reparto.
+   Lo mueve el canvas, que ya estaba escrito: su backing store son 450x800 y el
+   escalado a pantalla completa lo hace la GPU, asi que el coste por fotograma es
+   un drawImage y no un rasterizado de pantalla entera. El compositor se queda
+   con lo que si­ se le da bien y no cuesta memoria: el texto. */
 @property --k{syntax:'<number>';initial-value:0;inherits:true}
 @property --ks{syntax:'<number>';initial-value:0;inherits:true}
 @property --kb{syntax:'<number>';initial-value:0;inherits:true}
@@ -733,40 +709,13 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @supports (animation-timeline: view()){
  @media (pointer:coarse) and (prefers-reduced-motion: no-preference){
   .hero{view-timeline:--hero block}
-  /* 288svh en vez de 470: con 72 fotogramas dan 22 px de scroll por fotograma,
-     que es la densidad que se siente fluida, y de paso el hero deja de ser
-     cinco pantallas que atravesar. Va con el selector de etiqueta porque la
-     regla de 470vh vive mas abajo en la hoja y si no gana ella por orden. */
-  header.hero{height:288svh}
-  .stage video,.stage canvas,.ringbox{display:none}
-  /* el poster (el fotograma 1, 14 KB) se queda debajo: cubre la primera
-     pantalla mientras la hoja 1 no ha llegado, y la hoja la tapa despues */
-  /* El fondo va aqui y no en JavaScript. En esta ruta applyHeroMode llama a
-     cargarHojas() y se salta initHeroOnce(), que era quien lo asignaba, asi que
-     la primera pantalla se quedaba lisa hasta que entraba la hoja 1: dos o tres
-     segundos de nada. Puesto en CSS lo encuentra el analizador de precarga. */
+  .stage video,.ringbox{display:none}
+  /* El poster (el fotograma 1, 14 KB) se queda debajo del canvas: cubre la
+     primera pantalla mientras la secuencia no ha llegado. Va en CSS y no en
+     JavaScript para que lo encuentre el analizador de precarga. */
   .poster{z-index:0;background-image:url('assets/seq/f001.webp')}
-  .sprite{display:block}
   .band{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;
     animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  .hoja1{animation:verHoja1 1s step-end both;
-    animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  .hoja1 .sp-y{animation:spFila 1s steps(4,jump-none) both;
-    animation-timeline:--hero;animation-range:contain 0% contain 33.3333%}
-  .hoja1 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
-    animation-timeline:--hero;animation-range:contain 0% contain 33.3333%}
-  .hoja2{animation:verHoja2 1s step-end both;
-    animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  .hoja2 .sp-y{animation:spFila 1s steps(4,jump-none) both;
-    animation-timeline:--hero;animation-range:contain 33.3333% contain 66.6667%}
-  .hoja2 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
-    animation-timeline:--hero;animation-range:contain 33.3333% contain 66.6667%}
-  .hoja3{animation:verHoja3 1s step-end both;
-    animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  .hoja3 .sp-y{animation:spFila 1s steps(4,jump-none) both;
-    animation-timeline:--hero;animation-range:contain 66.6667% contain 100%}
-  .hoja3 .sp-x{animation:spCol 1s steps(6,jump-none) both;animation-iteration-count:4;
-    animation-timeline:--hero;animation-range:contain 66.6667% contain 100%}
   /* La entrada palabra a palabra la movia --k, que escribia JavaScript. Aqui no
      hay JavaScript, asi que --k se anima solo: registrado con @property para que
      sea interpolable y heredado, para que lo vean las letras. Toda la aritmetica
@@ -787,7 +736,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 /* ============ hero en pantallas táctiles / estrechas ============ */
 /* El scrub sigue activo: solo cambia la composición para que quepa y se lea. */
 @media (max-width:820px){
-  .hero{height:470vh}
+  .hero{height:288svh}
   .band .inner{max-width:none;padding:0 26px}
   .p1 .inner{margin-top:15svh;max-width:none}
   .p1 h1{font-size:clamp(28px,7.4vw,42px)}
@@ -808,6 +757,12 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .p5::before{background:radial-gradient(ellipse 120% 54% at 50% 78%,rgba(4,6,9,.74) 0%,rgba(4,6,9,.48) 50%,rgba(4,6,9,0) 80%)}
   .ringbox{bottom:26px}
 }
+/* El motor del metraje entra con cualquier puntero grueso o pantalla estrecha
+   --la misma condicion que LIGHT en el script--, asi que la altura del hero
+   tiene que seguir el mismo criterio y no solo el ancho. Si no, una tablet
+   tactil ancha se quedaba con los 640vh de escritorio: 5.530 px de recorrido
+   para 48 fotogramas, o sea 115 px por fotograma, a saltos. */
+@media (pointer:coarse),(max-width:900px){.hero{height:288svh}}
 /* apaisado bajo: menos recorrido para que el hero no se eternice */
 @media (orientation:landscape) and (max-height:560px){
   .hero{height:380vh}
@@ -914,10 +869,15 @@ var FPS=24;
 /* la secuencia va recortada a 9:16, que es justo lo que el móvil ve con cover */
 var SEQ_DIR='assets/seq/';
 var SEQ_TOTAL=48;
-/* en móviles con poca memoria pintamos la mitad de fotogramas: la mitad de
-   bitmaps en RAM y la animación sigue leyéndose bien */
+/* En moviles con poca memoria se pintaban la mitad de los fotogramas. Ahorraba
+   RAM, pero al acortar el hero a 288svh esa mitad son 66 px de scroll por
+   fotograma y se ve a saltos: justo el defecto que veniamos a arreglar. Se
+   quedan los 48 y lo que baja es la resolucion de cada uno. A 225x400 son
+   17 MB en vez de 69, y como el lienzo ya se amplia a pantalla completa, medio
+   fotograma menos de nitidez no se nota; medio fotograma menos de cadencia si. */
 var LOWMEM=(navigator.deviceMemory||4)<=3;
-var SEQ_STEP=LOWMEM?2:1;
+var SEQ_STEP=1;
+var SEQ_ESCALA=LOWMEM?0.5:1;
 /* En tactil el recalculo de estilo de las letras partidas es lo que mas cuesta
    del frame (medido: x3 en los picos al actualizar varias bandas a la vez).
    Subir el escalon reduce esos recalculos sin que el ojo note la diferencia:
@@ -941,6 +901,11 @@ function heroProgress(){
   return clamp((scrollY-heroTop)/heroTotal,0,1);
 }
 function updateCaptions(p,now){
+  /* Cuando el texto lo mueve el compositor, escribir aqui opacity y --k pisaria
+     sus animaciones y volveria a meter en cada fotograma el recalculo de estilo
+     de los 68 fragmentos que costaba 0,84 ms. El bucle sigue vivo para el
+     metraje; el texto no pasa por aqui. */
+  if(TEXTO_CSS)return;
   for(var i=0;i<bands.length;i++){
     var b=bands[i];
     var f=Math.min(0.02,(b.b-b.a)/3);
@@ -1104,8 +1069,11 @@ async function loadSequence(){
       var r=await fetch(url);
       if(!r.ok)throw new Error(r.status);
       var blob=await r.blob();
+      var opciones=SEQ_ESCALA<1
+        ? {resizeWidth:Math.round(seq.width*SEQ_ESCALA),resizeHeight:Math.round(seq.height*SEQ_ESCALA),resizeQuality:'medium'}
+        : undefined;
       bitmaps[slot]=self.createImageBitmap
-        ? await createImageBitmap(blob)
+        ? await createImageBitmap(blob,opciones)
         : await new Promise(function(ok,no){
             var im=new Image();im.onload=function(){ok(im)};im.onerror=no;im.src=URL.createObjectURL(blob);
           });
@@ -1188,9 +1156,11 @@ video.addEventListener('error',failVideo);
 /* ---------- gates del hero estático (mismas cadenas que en el CSS) ----------
    El scrub va también en móvil: lo único que lo apaga es que el sistema
    pida menos movimiento. */
-/* Con lineas de tiempo de scroll el hero tactil no necesita JavaScript: lo
-   mueve el compositor. Aqui solo se decide el modo y se traen las hojas. */
-var CSSDRIVEN=matchMedia('(pointer:coarse)').matches &&
+/* El reparto en tactil: el metraje lo pinta el canvas y el texto lo mueve el
+   compositor. Antes el compositor llevaba las dos cosas y el metraje iba en
+   hojas de sprites, que es lo que reventaba la memoria; el texto, en cambio, no
+   cuesta nada ahi y no puede ir con retraso, asi que se queda donde estaba. */
+var TEXTO_CSS=matchMedia('(pointer:coarse)').matches &&
   !matchMedia('(prefers-reduced-motion: reduce)').matches &&
   !!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()'));
 /* --- la entrada del texto, al compositor ---------------------------------
@@ -1241,47 +1211,21 @@ function textoAlCompositor(){
   var e=document.createElement('style'); e.textContent=css.join(String.fromCharCode(10));
   document.head.appendChild(e);
 }
-var hojasPedidas=false;
-function cargarHojas(){
-  if(hojasPedidas)return;hojasPedidas=true;
-  var imgs=[].slice.call(document.querySelectorAll('#hero-sprite img'));
-  if(!imgs.length)return;
-  /* La primera pantalla solo necesita la hoja 1. Las otras cinco suman 1,8 MB:
-     pedirlas junto a ella le robaba el ancho de banda al arranque y el LCP se
-     iba de 1,4 s a 5,7 s en 4G simulada. Asi que la 1 va de inmediato y el
-     resto espera a que la pagina este en pie, o a que el dedo se mueva, lo que
-     ocurra antes. Cada hoja no hace falta hasta su sexto del recorrido, y para
-     llegar al segundo hay que deslizar mas de 500 px. */
-  var abierto=false, ultima=-1;
-  function pon(i){
-    if(i>=imgs.length||i<=ultima)return;
-    ultima=i;
-    var im=imgs[i];
-    im.onload=im.onerror=function(){im.onload=im.onerror=null;if(abierto)pon(i+1)};
-    im.src='assets/hero-h'+(i+1)+'.webp';
-  }
-  /* Ninguna hoja se pide en la carga. Rasterizar 8,6 Mpx en la primera pantalla
-     retrasaba el pintado y el LCP se iba de 1,4 s a 3,2 s aunque los bytes ya
-     estuvieran. Mientras tanto se ve el poster, que es el fotograma 1.
-     El resto arranca con el primer desplazamiento, no antes: hasta que no te
-     mueves no hacen falta, y pidiendolas en la carga le quitaban al arranque el
-     ancho de banda que necesita. Del primer desplazamiento a necesitar la hoja
-     2 hay mas de 500 px de recorrido, tiempo de sobra para que llegue. */
-  function abrirElResto(){
-    if(abierto)return;abierto=true;
-    /* Aqui y no en DOMContentLoaded: inyectar la hoja de estilos generada justo
-       antes del primer pintado costaba 0,7 s de FCP y de LCP. Nada de esto hace
-       falta hasta la banda 2, que esta a 286 px de haber empezado a deslizar. */
-    textoAlCompositor();
-    pon(0);
-  }
-  addEventListener('scroll',abrirElResto,{passive:true,once:true});
-  addEventListener('touchstart',abrirElResto,{passive:true,once:true});
-  /* y si no tocas nada, entran solas cuando el hilo principal esta libre, para
-     que el scrub no arranque en frio cuando por fin te decidas a deslizar */
+var textoPreparado=false;
+function prepararTextoCSS(){
+  if(textoPreparado)return;textoPreparado=true;
+  /* Aqui vivia tambien la carga de las tres hojas de sprites, 1,06 MB que ya no
+     se piden. Queda solo el texto, y con el su motivo original para no correr en
+     DOMContentLoaded: inyectar la hoja de estilos generada justo antes del primer
+     pintado costaba 0,7 s de FCP y de LCP, y nada de esto hace falta hasta la
+     banda 2, que esta a 286 px de haber empezado a deslizar. */
+  var listo=false;
+  function abrir(){if(listo)return;listo=true;textoAlCompositor()}
+  addEventListener('scroll',abrir,{passive:true,once:true});
+  addEventListener('touchstart',abrir,{passive:true,once:true});
   var enReposo=window.requestIdleCallback||function(f){return setTimeout(f,1200)};
-  if(document.readyState==='complete')enReposo(abrirElResto,{timeout:1500});
-  else addEventListener('load',function(){enReposo(abrirElResto,{timeout:1500})},{once:true});
+  if(document.readyState==='complete')enReposo(abrir,{timeout:1500});
+  else addEventListener('load',function(){enReposo(abrir,{timeout:1500})},{once:true});
 }
 var GATES=['(prefers-reduced-motion: reduce)'];
 var scrubOn=false;
@@ -1301,7 +1245,11 @@ function disableScrub(){
 }
 function applyHeroMode(){
   if(GATES.some(function(q){return matchMedia(q).matches})){disableScrub();return}
-  if(CSSDRIVEN){disableScrub();cargarHojas();return}
+  /* El motor del metraje corre siempre: antes en tactil se apagaba entero y el
+     hero lo movia el compositor con hojas de sprites, que es lo que no cabia en
+     memoria. Ahora el canvas pinta los fotogramas y, si el navegador sabe de
+     lineas de tiempo, el texto lo sigue moviendo el compositor. */
+  if(TEXTO_CSS)prepararTextoCSS();
   enableScrub();
 }
 var MQLS=GATES.map(function(q){return matchMedia(q)});
