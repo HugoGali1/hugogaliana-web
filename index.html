@@ -945,17 +945,19 @@ function updateCaptions(p,now){
 /* ---- motor A: lienzo con la secuencia (móvil) ---- */
 var seq=document.getElementById('hero-seq');
 var sctx=null,seqFrames=[],seqReady=false,lastI=-1,lastG=-1;
-/* Los 48 fotogramas se reparten unos 1.900 px de recorrido: 40 px de dedo por
+/* Los 48 fotogramas se reparten unos 1.300 px de recorrido: 27 px de dedo por
    fotograma. Saltar de uno al siguiente hacía que el metraje avanzase a tirones
-   --los pasos--, aunque el scroll fuese perfectamente fluido. La salida es
-   cruzar cada fotograma con el siguiente, pero un cruce que dure todo el
-   intervalo no deja ver nunca una imagen limpia: dos fotogramas superpuestos al
-   50% se leen como desenfoque. Asi que el cruce se comprime al centro del
-   intervalo (MEZCLA) y los extremos se ven nitidos, y al pararse el dedo se
-   retira del todo (nitidez): lo que se queda en pantalla mientras se lee el
-   texto es siempre un fotograma limpio. */
-var MEZCLA=0.5;                    /* fraccion del intervalo que dura el cruce */
-var NITIDO_MS=220;                 /* lo que tarda en enfocar tras soltar */
+   --los pasos--, aunque el scroll fuese perfectamente fluido. Cada fotograma se
+   cruza con el siguiente, y el cruce ocupa el intervalo entero: mientras el dedo
+   se mueve, la imagen se mueve con el, sin un solo tramo congelado. Comprimirlo
+   al centro dejaba nitidos los extremos, pero a cambio la mitad del recorrido no
+   respondia al dedo, que es peor: se deslizaba y la imagen llegaba despues.
+   La nitidez no se compra ahi sino al parar: 140 ms despues del ultimo
+   movimiento el cruce se retira sobre el fotograma mas cercano, asi que lo que
+   se queda en pantalla mientras se lee el texto es siempre una imagen limpia. */
+var MEZCLA=1;                      /* fraccion del intervalo que dura el cruce */
+var NITIDO_ESPERA=140;             /* quietud que hace falta para empezar a enfocar */
+var NITIDO_MS=220;                 /* lo que tarda en enfocar */
 var nitidez=0;
 function frameCercano(i){
   for(var d=1;d<seqFrames.length;d++){
@@ -1041,10 +1043,13 @@ function tick(now){
      con una banda a medio montar, o la frase se congelaria hasta el proximo
      gesto. En tactil el texto lo mueve el compositor y esto nunca se activa. */
   var enReposo=(TACTIL?(now-lastScroll>500):(Math.abs(target-shown)<0.0005))&&!entradaViva;
-  /* El bucle no se duerme en cuanto llega al reposo: se queda los 220 ms que
-     tarda el cruce entre fotogramas en retirarse. Es lo que convierte el ultimo
-     fotograma en una imagen limpia, y se lee como un enfoque, no como un salto. */
-  nitidez=enReposo?Math.min(1,nitidez+dt/NITIDO_MS):0;
+  /* Enfocar no espera al medio segundo que tarda el bucle en dormirse: con 140 ms
+     sin movimiento ya se retira el cruce. Asi, en cuanto paras, la imagen se
+     asienta; y mientras deslizas --aunque sea despacio-- los eventos de scroll no
+     paran de llegar y el cruce sigue puesto, que es lo que la mantiene pegada al
+     dedo. El bucle, ademas, no se duerme con el enfoque a medias. */
+  var quieto=TACTIL?(now-lastScroll>NITIDO_ESPERA):(Math.abs(target-shown)<0.0005);
+  nitidez=(quieto&&!entradaViva)?Math.min(1,nitidez+dt/NITIDO_MS):0;
   if(enReposo&&loadK>=1&&nitidez>=1){shown=target;rafId=null;lastTick=0}
   else{rafId=requestAnimationFrame(tick)}
   renderMedia(shown);
@@ -1232,9 +1237,9 @@ var EASE='cubic-bezier(.22,.75,.25,1)';   /* el mismo --ease de la hoja */
    tramo, el texto se monta entero por su cuenta con el reloj del compositor,
    aunque el dedo se haya parado. Sigue siendo reversible: al volver por encima
    del disparador la banda se desarma y se monta otra vez al cruzarlo. */
-var T_FRAG=580;                    /* lo que tarda cada letra o palabra */
-var T_ESCALON=760;                 /* del primer fragmento al ultimo */
-var T_CRUCE=900;                   /* el cruce borroso/nitido de la banda 2 */
+var T_FRAG=300;                    /* lo que tarda cada letra o palabra */
+var T_ESCALON=260;                 /* del primer fragmento al ultimo */
+var T_CRUCE=380;                   /* el cruce borroso/nitido de la banda 2 */
 var T_ENTRADA=T_ESCALON+T_FRAG;    /* la banda entera, de la primera letra a la ultima */
 var INICIO={p2:15.43,p3:39.01,p4:60.13,p5:83.17};
 var entradas={},armadas={};
