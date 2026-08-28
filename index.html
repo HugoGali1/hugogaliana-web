@@ -607,6 +607,11 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .faq[open] summary::after{transform:translateY(-52%) rotate(45deg)}
 .faq[open] summary{color:var(--accent)}
 .faq p{padding:0 22px 20px;color:var(--text-secondary);font-size:15.5px;max-width:70ch}
+/* las preguntas son el bloque mas corto de la pagina, y con el hueco estandar
+   debajo el salto al formulario se leia como un vacio. Se recorta solo por
+   abajo: el de arriba de la seccion de contacto hace falta para que entre la
+   imagen de fondo, que empieza justo ahi y arranca desvanecida. */
+#faq{padding-bottom:clamp(40px,5vh,64px)}
 /* quien soy */
 .about-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,5vw,60px);align-items:center}
 .about-photo-box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1;max-width:380px;box-shadow:0 26px 74px rgba(0,0,0,.45)}
