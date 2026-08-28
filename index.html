@@ -505,6 +505,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
       <input type="checkbox" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true">
       <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
       <input type="hidden" name="from_name" value="Formulario de hugogaliana.com">
+      <label class="consent part" for="f-legal">
+        <input id="f-legal" name="privacidad" type="checkbox" required>
+        <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. Tus datos se usan solo para responderte a este mensaje.</span>
+      </label>
       <div class="cform-row part">
         <button class="btn btn-solid" id="send-btn" type="submit">Enviar mi proyecto</button>
       </div>
@@ -522,7 +526,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 <footer class="foot">
   <div class="wrap foot-row">
     <p>© 2026 Hugo Galiana Real · Valencia</p>
-    <p class="mono"><a href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Brasa y Ascuas</a> · <a href="https://aperturetechnologies.es" target="_blank" rel="noopener">Aperture</a> · <a href="https://hugogaliana.com/topnote" target="_blank" rel="noopener">Top Note</a></p>
+    <p class="mono"><a href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Brasa y Ascuas</a> · <a href="https://aperturetechnologies.es" target="_blank" rel="noopener">Aperture</a> · <a href="https://hugogaliana.com/topnote" target="_blank" rel="noopener">Top Note</a> · <a href="/privacidad">Privacidad</a></p>
   </div>
 </footer>
 <style>
@@ -628,6 +632,18 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .cform textarea{resize:vertical;padding:16px 18px}
 .cform input:focus,.cform textarea:focus{outline:none;border-color:var(--accent)}
 .cform [aria-invalid="true"]{border-color:#E0917F}
+/* consentimiento: es una etiqueta dentro de .cform, asi que hay que deshacer
+   el versalita-espaciado que llevan las demas etiquetas del formulario */
+.cform label.consent{display:flex;gap:12px;align-items:flex-start;cursor:pointer;margin-top:4px;
+         font-size:13.5px;line-height:1.55;letter-spacing:0;text-transform:none;color:var(--text-secondary)}
+.consent input{appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;margin-top:2px;
+               border:1px solid var(--line-strong);border-radius:5px;background:var(--panel-2);cursor:pointer;
+               transition:border-color .25s var(--ease),background .25s var(--ease)}
+.consent input:checked{background:var(--accent);border-color:var(--accent)}
+.consent input:checked::after{content:"";display:block;width:5px;height:9px;margin:1px auto 0;
+                              border:solid #07131A;border-width:0 2px 2px 0;transform:rotate(43deg)}
+.consent a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-muted)}
+.consent a:hover{border-color:var(--accent)}
 .cform button:disabled{opacity:.6;cursor:progress}
 .cform.sent .cform-grid,.cform.sent .cform-row,.cform.sent label,.cform.sent textarea,.cform.sent .cnote{display:none}
 .form-ok{display:flex;align-items:center;gap:16px;border:1px solid var(--accent-muted);background:rgba(143,216,218,.06);border-radius:16px;padding:22px 24px}
@@ -1434,6 +1450,7 @@ var fName=document.getElementById('f-name');
 var fMail=document.getElementById('f-mail');
 var fMsg=document.getElementById('f-msg');
 var fTel=document.getElementById('f-tel');
+var fLegal=document.getElementById('f-legal');
 var botcheck=cform.querySelector('[name="botcheck"]');
 var NOTE_DEFAULT='Llega directo a mi correo y te respondo al tuyo.';
 
@@ -1451,6 +1468,10 @@ function fieldError(el,t){noteMsg(t,true);el.setAttribute('aria-invalid','true')
     el.removeAttribute('aria-invalid');
     if(cnote.classList.contains('bad'))noteMsg(NOTE_DEFAULT,false);
   });
+});
+if(fLegal)fLegal.addEventListener('change',function(){
+  fLegal.removeAttribute('aria-invalid');
+  if(cnote.classList.contains('bad'))noteMsg(NOTE_DEFAULT,false);
 });
 function mailtoFallback(n,m,t){
   var body=encodeURIComponent('Hola Hugo, soy '+n+' ('+m+').\n\n'+t);
@@ -1478,6 +1499,8 @@ cform.addEventListener('submit',function(ev){
   if(!n)return fieldError(fName,'Dime tu nombre y le doy salida.');
   if(!isMail(m))return fieldError(fMail,'Revisa el correo: sin él no puedo responderte.');
   if(t.length<10)return fieldError(fMsg,'Cuéntame un poco más de tu proyecto, aunque sea en dos líneas.');
+  /* el consentimiento es la base legal del envio: sin casilla, no sale nada */
+  if(fLegal&&!fLegal.checked)return fieldError(fLegal,'Marca la casilla de la política de privacidad para poder enviarlo.');
 
   if(!KEY_OK){
     if(window.console&&console.error)console.error('[contacto] Falta la access key de Web3Forms en <input id="w3f-key">. Es gratis: https://web3forms.com');
@@ -1507,6 +1530,9 @@ cform.addEventListener('submit',function(ev){
       message:t,
       phone:tel||'No indicado',
       replyto:m,
+      /* prueba del consentimiento: llega en el propio correo, que es donde
+         vive el registro. Sin base de datos que mantener. */
+      privacidad:'Política de privacidad aceptada el '+new Date().toISOString(),
       from_name:'Formulario de hugogaliana.com',
       subject:'Nuevo proyecto desde hugogaliana.com — '+n
     })

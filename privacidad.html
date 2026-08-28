@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidad · Hugo Galiana</title>
+<meta name="description" content="Qué datos trato cuando usas hugogaliana.com, para qué, durante cuánto tiempo y qué derechos tienes sobre ellos.">
+<meta name="theme-color" content="#0B141A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Política de privacidad · Hugo Galiana">
+<meta property="og:description" content="Qué datos trato cuando usas hugogaliana.com, para qué y qué derechos tienes sobre ellos.">
+<meta property="og:url" content="https://hugogaliana.com/privacidad">
+<meta property="og:site_name" content="Hugo Galiana">
+<meta property="og:locale" content="es_ES">
+<link rel="canonical" href="https://hugogaliana.com/privacidad">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"></noscript>
+<style>
+/* ============ tokens (mismos que la portada) ============ */
+:root{
+  --canvas:#0B141A;
+  --panel:#122029;
+  --panel-2:#0E1A21;
+  --accent:#8FD8DA;
+  --accent-hover:#B0E7E6;
+  --accent-muted:rgba(143,216,218,.16);
+  --line:rgba(150,168,180,.18);
+  --line-strong:rgba(150,168,180,.44);
+  --text-secondary:#96A8B3;
+  --text-primary:#EEF3F4;
+  --ease:cubic-bezier(.22,.75,.25,1);
+  --fd:'Sora',sans-serif;
+  --fb:'Instrument Sans',sans-serif;
+  --fm:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{background:var(--canvas)}
+body{font-family:var(--fb);font-weight:400;color:var(--text-primary);line-height:1.6;font-size:17px}
+h1,h2,h3{font-family:var(--fd);font-weight:700;line-height:1.14;letter-spacing:-.015em}
+a{color:var(--accent)}
+a:hover{color:var(--accent-hover)}
+::selection{background:var(--accent-muted);color:var(--text-primary)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--fm)}
+.wrap{width:min(100% - 40px,760px);margin-inline:auto}
+
+/* barra superior: sin scroll-spy ni animaciones, solo la vuelta a casa */
+.nav{position:sticky;top:0;z-index:20;padding:14px 0;background:rgba(11,20,26,.88);
+     backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--fd);font-weight:600;font-size:15px;
+       color:var(--text-primary);text-decoration:none}
+.brand img{width:22px;height:22px;object-fit:contain;display:block}
+.back{font-family:var(--fm);font-size:13px;text-decoration:none;color:var(--text-secondary);
+      border-bottom:1px solid transparent;padding-bottom:2px;transition:color .3s var(--ease),border-color .3s var(--ease)}
+.back:hover{color:var(--accent);border-color:var(--accent-muted)}
+
+main{padding:clamp(46px,8vh,80px) 0 clamp(60px,10vh,100px)}
+.kicker{font-family:var(--fm);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
+.updated{margin-top:16px;font-family:var(--fm);font-size:13px;color:var(--text-secondary)}
+.lede{margin-top:26px;color:var(--text-secondary);max-width:62ch;font-size:18px}
+
+.doc section{padding-top:44px;scroll-margin-top:72px}
+.doc h2{font-size:clamp(20px,2.5vw,25px);margin-bottom:16px;display:flex;gap:14px;align-items:baseline}
+.doc h2 .n{font-family:var(--fm);font-weight:400;font-size:14px;color:var(--accent);flex:none}
+.doc h3{font-size:16.5px;margin:26px 0 8px;letter-spacing:0}
+.doc p{margin-bottom:14px;max-width:66ch}
+.doc p:last-child{margin-bottom:0}
+.doc ul{margin:0 0 14px;padding-left:0;list-style:none;max-width:66ch}
+.doc li{position:relative;padding-left:22px;margin-bottom:9px}
+.doc li::before{content:"";position:absolute;left:4px;top:12px;width:6px;height:1px;background:var(--accent);opacity:.75}
+.doc strong{color:var(--text-primary);font-weight:500}
+.doc a{text-decoration:none;border-bottom:1px solid var(--accent-muted);transition:border-color .3s var(--ease)}
+.doc a:hover{border-color:var(--accent)}
+
+.card{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);border:1px solid var(--line);
+      border-radius:16px;padding:24px}
+.card dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;align-items:baseline}
+.card dt{font-family:var(--fm);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary)}
+.card dd{color:var(--text-primary)}
+@media (max-width:560px){
+  .card dl{grid-template-columns:1fr;gap:0}
+  .card dd{margin-bottom:12px}
+  .card dd:last-child{margin-bottom:0}
+}
+
+.note{border-left:2px solid var(--accent-muted);padding:2px 0 2px 18px;margin:20px 0 0;
+      color:var(--text-secondary);max-width:66ch}
+
+.foot{border-top:1px solid var(--line);padding:30px 0 42px;margin-top:clamp(56px,9vh,90px)}
+.foot-row{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline;
+          color:var(--text-secondary);font-size:14px}
+.foot a{color:var(--text-secondary);text-decoration:none}
+.foot a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Hugo Galiana, inicio">
+      <img src="assets/logo-hg.png" alt="" aria-hidden="true" width="22" height="22" decoding="async">
+      Hugo Galiana
+    </a>
+    <a class="back" href="/">&larr; Volver al inicio</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <span class="kicker">Legal</span>
+    <h1>Política de privacidad</h1>
+    <p class="updated">Última actualización: 28 de agosto de 2026</p>
+    <p class="lede">Esta web recoge pocos datos y no te sigue por internet. Aquí tienes, sin rodeos, qué trato, para qué, cuánto tiempo lo guardo y qué puedes exigirme sobre ello.</p>
+
+    <div class="doc">
+
+      <section aria-labelledby="s1">
+        <h2 id="s1"><span class="n">01</span> Quién es el responsable</h2>
+        <p>El responsable del tratamiento de tus datos soy yo, a título personal.</p>
+        <div class="card">
+          <dl>
+            <dt>Responsable</dt><dd>Hugo Galiana Real</dd>
+            <dt>Contacto</dt><dd><a href="mailto:hgalianareal@gmail.com">hgalianareal@gmail.com</a></dd>
+            <dt>Sitio web</dt><dd>hugogaliana.com</dd>
+          </dl>
+        </div>
+        <p class="note">No hay delegado de protección de datos: por el volumen y el tipo de tratamiento no es obligatorio. Escríbeme directamente a mí para cualquier cosa relacionada con tus datos.</p>
+      </section>
+
+      <section aria-labelledby="s2">
+        <h2 id="s2"><span class="n">02</span> Qué datos trato y para qué</h2>
+
+        <h3>Si me escribes por el formulario de contacto</h3>
+        <p>Recojo tu <strong>nombre</strong>, tu <strong>correo electrónico</strong>, tu <strong>teléfono</strong> (opcional) y el <strong>mensaje</strong> que escribas. La única finalidad es leer lo que me cuentas, responderte y, si decides seguir adelante, preparar y comentar contigo un presupuesto.</p>
+        <p>No uso esos datos para enviarte publicidad, no te apunto a ninguna lista de correo y no los vendo ni los cedo a nadie con fines comerciales.</p>
+        <p><strong>Base legal:</strong> tu consentimiento, que das al marcar la casilla antes de enviar el formulario (art. 6.1.a del RGPD). Si de esa conversación nace un encargo, el tratamiento pasa a apoyarse en la aplicación de medidas precontractuales y en la ejecución del contrato (art. 6.1.b).</p>
+
+        <h3>Cuando simplemente navegas por la web</h3>
+        <p>El servidor que aloja esta web registra automáticamente datos técnicos de cada visita: <strong>dirección IP</strong>, fecha y hora, página solicitada, navegador y sistema operativo. Es el funcionamiento normal de cualquier servidor web y sirve para servir el sitio correctamente, detectar errores y protegerlo frente a abusos.</p>
+        <p><strong>Base legal:</strong> mi interés legítimo en mantener la web funcionando y segura (art. 6.1.f del RGPD).</p>
+
+        <h3>Si usas la demo de Top Note</h3>
+        <p>En la demo pública de Top Note (<span class="mono">/topnote</span>), el texto de la búsqueda que escribes se envía a la API de Google Gemini para generar la recomendación. <strong>No escribas ahí datos personales ni información confidencial</strong>: es una demostración técnica, no un servicio.</p>
+        <p>Además, guardo temporalmente tu dirección IP en la memoria del servidor para limitar el número de búsquedas por visitante y que la demo no se dispare de coste. Ese registro dura minutos y no se almacena en ninguna base de datos.</p>
+        <p>Tus favoritos y tu historial dentro de la demo se guardan <strong>en tu propio navegador</strong> y no viajan a ningún servidor. Puedes borrarlos limpiando los datos del sitio desde tu navegador.</p>
+        <p><strong>Base legal:</strong> tu consentimiento al usar voluntariamente la demo, y mi interés legítimo en evitar el abuso del servicio.</p>
+      </section>
+
+      <section aria-labelledby="s3">
+        <h2 id="s3"><span class="n">03</span> Cuánto tiempo los conservo</h2>
+        <ul>
+          <li><strong>Mensajes del formulario:</strong> mientras dure la conversación y, si no acabamos trabajando juntos, hasta <strong>un año</strong> desde el último contacto. Después los borro.</li>
+          <li><strong>Si llegamos a trabajar juntos:</strong> durante toda la relación y, después, el tiempo que exijan las obligaciones legales aplicables (fiscales, contables o de responsabilidad civil).</li>
+          <li><strong>Registros técnicos del servidor:</strong> el plazo de retención que aplique mi proveedor de alojamiento, del orden de días o pocas semanas.</li>
+          <li><strong>Datos de la demo de Top Note:</strong> la IP, unos minutos; lo que se guarda en tu navegador, hasta que tú lo borres.</li>
+        </ul>
+        <p>Puedes pedirme que borre tus datos antes de esos plazos en cualquier momento, y lo haré.</p>
+      </section>
+
+      <section aria-labelledby="s4">
+        <h2 id="s4"><span class="n">04</span> Con quién se comparten</h2>
+        <p>No vendo ni cedo tus datos a terceros. Sí me apoyo en proveedores que los tratan por mi cuenta para que la web funcione. Son estos, todos ellos:</p>
+        <ul>
+          <li><strong>Vercel Inc.</strong> — alojamiento de la web. Trata los registros técnicos de conexión descritos arriba.</li>
+          <li><strong>Web3Forms</strong> — recibe el envío del formulario y me lo reenvía a mi correo.</li>
+          <li><strong>Google (Gmail)</strong> — es mi proveedor de correo, así que tu mensaje termina en mi buzón.</li>
+          <li><strong>Google Fonts</strong> — las tipografías de la web se sirven desde servidores de Google, que reciben tu dirección IP al cargarlas.</li>
+          <li><strong>Google (API de Gemini)</strong> — solo si usas la demo de Top Note, y solo con el texto de tu búsqueda.</li>
+        </ul>
+        <p>También podría comunicar datos a las autoridades públicas cuando una norma me obligue a ello.</p>
+      </section>
+
+      <section aria-labelledby="s5">
+        <h2 id="s5"><span class="n">05</span> Transferencias fuera de la Unión Europea</h2>
+        <p>Algunos de esos proveedores son empresas estadounidenses o pueden procesar los datos fuera del Espacio Económico Europeo. En esos casos la transferencia se ampara en las garantías previstas en el capítulo V del RGPD: el marco de adecuación <em>EU-US Data Privacy Framework</em> cuando el proveedor está adherido, o las cláusulas contractuales tipo aprobadas por la Comisión Europea.</p>
+      </section>
+
+      <section aria-labelledby="s6">
+        <h2 id="s6"><span class="n">06</span> Cookies</h2>
+        <p><strong>Esta web no usa cookies.</strong> No hay analítica, ni píxeles de seguimiento, ni publicidad, ni elaboración de perfiles. Por eso tampoco verás un banner de cookies: no habría nada que consentir.</p>
+        <p>Lo único que se guarda en tu dispositivo es el almacenamiento local de la demo de Top Note, estrictamente necesario para que la demo funcione. No se comparte con nadie ni sirve para identificarte.</p>
+      </section>
+
+      <section aria-labelledby="s7">
+        <h2 id="s7"><span class="n">07</span> Tus derechos</h2>
+        <p>El RGPD te reconoce una serie de derechos sobre tus datos, y puedes ejercerlos todos escribiéndome a <a href="mailto:hgalianareal@gmail.com">hgalianareal@gmail.com</a>:</p>
+        <ul>
+          <li><strong>Acceso</strong> — saber qué datos tuyos tengo y qué hago con ellos.</li>
+          <li><strong>Rectificación</strong> — corregir los que sean inexactos o estén incompletos.</li>
+          <li><strong>Supresión</strong> — pedir que los borre cuando ya no sean necesarios.</li>
+          <li><strong>Oposición</strong> — oponerte a los tratamientos basados en mi interés legítimo.</li>
+          <li><strong>Limitación</strong> — pedir que los conserve pero deje de usarlos mientras se resuelve una reclamación.</li>
+          <li><strong>Portabilidad</strong> — recibir tus datos en un formato estructurado y de uso común.</li>
+          <li><strong>Retirar el consentimiento</strong> — en cualquier momento, sin que ello afecte a la licitud del tratamiento anterior.</li>
+        </ul>
+        <p>Te responderé en el plazo máximo de un mes. Ejercer cualquiera de estos derechos es gratuito.</p>
+        <p>Si crees que no he atendido bien tu petición o que estoy tratando tus datos indebidamente, puedes reclamar ante la <strong>Agencia Española de Protección de Datos</strong>: <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>, C/ Jorge Juan 6, 28001 Madrid.</p>
+      </section>
+
+      <section aria-labelledby="s8">
+        <h2 id="s8"><span class="n">08</span> Seguridad</h2>
+        <p>La web se sirve siempre cifrada por HTTPS y aplica cabeceras de seguridad que limitan lo que el navegador permite hacer en ella. Los mensajes que recibo quedan en un buzón protegido con verificación en dos pasos. Ningún sistema es infalible, pero mantengo medidas técnicas y organizativas razonables y proporcionadas al volumen de datos que trato.</p>
+      </section>
+
+      <section aria-labelledby="s9">
+        <h2 id="s9"><span class="n">09</span> Menores de edad</h2>
+        <p>Esta web se dirige a personas y negocios que buscan servicios de desarrollo de software. No está pensada para menores de 14 años y no recojo sus datos de forma consciente. Si detectase que he recibido datos de un menor sin la autorización de quien ejerza su tutela, los eliminaría.</p>
+      </section>
+
+      <section aria-labelledby="s10">
+        <h2 id="s10"><span class="n">10</span> Cambios en esta política</h2>
+        <p>Si cambio las herramientas de la web o la forma en que trato los datos, actualizaré este texto y la fecha que aparece arriba. Te recomiendo revisarlo si vuelves a escribirme pasado un tiempo.</p>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <p>© 2026 Hugo Galiana Real · Valencia</p>
+    <p class="mono"><a href="/">Inicio</a> · <a href="/#contacto">Contacto</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
