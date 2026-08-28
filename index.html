@@ -18,6 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Hugo Galiana, desarrollador full-stack. Angular, NestJS, TypeScript y MongoDB.">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://hugogaliana.com/">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -189,6 +190,85 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-height:560px){.ringbox{display:none}}
 </style>
+<!-- Datos estructurados: le dicen a Google que aqui hay una persona concreta,
+     no una cadena de texto. El correo se deja fuera a proposito: ya es alcanzable
+     por el formulario y ponerlo aqui es servirselo a los rastreadores de spam. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://hugogaliana.com/#hugo",
+      "name": "Hugo Galiana Real",
+      "url": "https://hugogaliana.com/",
+      "jobTitle": "Desarrollador full-stack",
+      "description": "Desarrollador full-stack en Valencia. Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Valencia",
+        "addressRegion": "Comunidad Valenciana",
+        "addressCountry": "ES"
+      },
+      "knowsAbout": [
+        "Desarrollo web full-stack",
+        "Angular",
+        "NestJS",
+        "TypeScript",
+        "MongoDB",
+        "Aplicaciones a medida para comercios"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hugogaliana.com/#web",
+      "url": "https://hugogaliana.com/",
+      "name": "Hugo Galiana",
+      "inLanguage": "es-ES",
+      "publisher": { "@id": "https://hugogaliana.com/#hugo" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hugogaliana.com/#faq",
+      "isPartOf": { "@id": "https://hugogaliana.com/#web" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuánto cuesta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depende del tamaño del proyecto, y por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto tarda?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La fecha de entrega va cerrada en la propuesta, junto al precio. Si me comprometo a un día, es ese día."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Podré actualizarla yo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Te entrego un panel para cambiar tus textos, precios y fotos sin tocar código, y te enseño a usarlo el día de la entrega."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Y si ya tengo una web?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
