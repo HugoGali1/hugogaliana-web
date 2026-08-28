@@ -506,7 +506,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
       <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
       <input type="hidden" name="from_name" value="Formulario de hugogaliana.com">
       <label class="consent part" for="f-legal">
-        <input id="f-legal" name="privacidad" type="checkbox" required>
+        <span class="cbox">
+          <input id="f-legal" name="privacidad" type="checkbox" required>
+          <svg class="tick" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 9.4l3 3 6-6"/></svg>
+        </span>
         <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. Tus datos se usan solo para responderte a este mensaje.</span>
       </label>
       <div class="cform-row part">
@@ -636,12 +639,21 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
    el versalita-espaciado que llevan las demas etiquetas del formulario */
 .cform label.consent{display:flex;gap:12px;align-items:flex-start;cursor:pointer;margin-top:4px;
          font-size:13.5px;line-height:1.55;letter-spacing:0;text-transform:none;color:var(--text-secondary)}
-.consent input{appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;margin-top:2px;
+.consent .cbox{position:relative;flex:none;width:18px;height:18px;margin-top:2px}
+.consent input{appearance:none;-webkit-appearance:none;display:block;width:18px;height:18px;margin:0;
                border:1px solid var(--line-strong);border-radius:5px;background:var(--panel-2);cursor:pointer;
                transition:border-color .25s var(--ease),background .25s var(--ease)}
 .consent input:checked{background:var(--accent);border-color:var(--accent)}
-.consent input:checked::after{content:"";display:block;width:5px;height:9px;margin:1px auto 0;
-                              border:solid #07131A;border-width:0 2px 2px 0;transform:rotate(43deg)}
+/* la marca es un trazo de 13 unidades que arranca fuera de vista: al marcar, el
+   dashoffset cae a 0 y el trazo se descubre de izquierda a derecha. Los 60 ms de
+   espera dejan que el bloque de color asiente antes de que empiece a dibujarse.
+   Con movimiento reducido, el alto global de mas abajo corta la transicion y la
+   marca aparece de golpe, que es justo lo que se quiere. */
+.consent .tick{position:absolute;inset:0;width:18px;height:18px;pointer-events:none}
+.consent .tick path{fill:none;stroke:#07131A;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+                    stroke-dasharray:13;stroke-dashoffset:13;
+                    transition:stroke-dashoffset .26s var(--ease) .06s}
+.consent input:checked ~ .tick path{stroke-dashoffset:0}
 .consent a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-muted)}
 .consent a:hover{border-color:var(--accent)}
 .cform button:disabled{opacity:.6;cursor:progress}
