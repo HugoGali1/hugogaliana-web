@@ -1,8 +1,8 @@
 # Contexto de trabajo — hugogaliana.com
 
 Ultima sesion: **15 de septiembre de 2026**.
-Estado: **7 commits en la rama `preparar-despliegue`. Preview desplegado y
-verificado. Solo falta activar Web Analytics en el panel y fusionar a `main`.**
+Estado: **9 commits en la rama `preparar-despliegue`. Preview verificado y
+Web Analytics activo. Listo para fusionar a `main`.**
 Base: `main` en `ae7be8a`.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
@@ -13,11 +13,11 @@ Base: `main` en `ae7be8a`.
 ## 1. Lo primero al volver
 
 ```bash
-git log --oneline main..preparar-despliegue   # los 7 commits
+git log --oneline main..preparar-despliegue   # los 9 commits
 npm run build:topnote                          # solo si tocas topnote/src/app.jsx
 ```
 
-Queda **una cosa** en el panel de Vercel, y fusionar. Seccion 2.
+Solo queda el repaso visual y fusionar. Seccion 2.
 
 ---
 
@@ -44,7 +44,7 @@ Vercel iniciada, entra sola. Desde la terminal hace falta `vercel curl`, porque
 | `/topnote/app.js` | 200, 141 KB |
 | `/topnote/data/catalog.json` | 200, 3,39 MB |
 | `/_vercel/speed-insights/script.js` | 200, ya activo |
-| `/_vercel/insights/script.js` | **404**, falta activarlo |
+| `/_vercel/insights/script.js` | 200, activo desde el 15/09 |
 
 **Resuelta la duda de `package.json`.** `vercel inspect` lista
 `lambda api/recommendations/rank (6.21KB)` entre los builds: la funcion se detecta
@@ -53,15 +53,27 @@ y se construye pese a tener `package.json` excluido en `.vercelignore`, porque
 
 ### Lo unico que queda
 
-- [ ] **Activar Web Analytics** en el panel de Vercel, en la pestana Analytics del
-      proyecto. La etiqueta ya esta en las cuatro paginas, pero
-      `/_vercel/insights/script.js` da 404 hasta que se active, asi que no se
-      recoge nada. Speed Insights si esta activo y funcionando.
-- [ ] **Fusionar `preparar-despliegue` a `main`** tras darle un repaso visual.
+- [ ] **Repaso visual del preview**: que el menu de movil abra y cierre, que la
+      demo monte y pinte los 5.000 perfumes, y que los apartados 02, 04 y 06 de
+      `/privacidad` digan lo que quieres que digan.
+- [ ] **Fusionar `preparar-despliegue` a `main`**. Eso despliega a produccion.
+
+### Cuidado con la cache al tocar `/_vercel/`
+
+Activar Web Analytics en el panel **no basto**: `/_vercel/insights/script.js`
+seguia devolviendo 404 con `X-Vercel-Cache: HIT`. La causa estaba en
+`vercel.json`: la regla de cabeceras cazaba **cualquier** ruta acabada en `.js`,
+incluidas las de plataforma, y habia cacheado el 404 anterior con `max-age` de
+una hora y `stale-while-revalidate` de una semana.
+
+Arreglado en `3f17647` excluyendo el prefijo `_vercel/` del patron. Ahora esas
+rutas las cachea Vercel (31 dias) y el resto del sitio conserva su regla: se
+comprobo que `/topnote/app.js` y el logo siguen con 3600 y el catalogo con
+86400.
 
 ---
 
-## 3. Los 7 commits de la rama
+## 3. Los 9 commits de la rama
 
 ```
 cb93167 perf(topnote)  compilar el JSX en local y quitar Babel del navegador
@@ -71,6 +83,8 @@ b992178 feat(portada)  menu de movil, ficha de servicio en JSON-LD, CTA antes
 b13a1ea feat(analitica) Vercel Analytics + Speed Insights, y privacidad al dia
 07bf9a7 chore(seo)     sitemap con las fechas de esta revision
 72838f6 docs           actualizar la nota de trabajo al estado de la rama
+828b972 docs           resultado de verificar el preview
+3f17647 fix(cache)     no aplicar la cache del sitio a las rutas /_vercel/
 ```
 
 Los cuatro primeros son el trabajo que ya estaba en el indice; los tres ultimos
