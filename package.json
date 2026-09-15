@@ -1,0 +1,23 @@
+{
+  "name": "hugo-galiana-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio estatico. El unico paso de construccion es compilar el JSX de la demo de Top Note; el resto se sirve tal cual.",
+  "scripts": {
+    "build:topnote": "node scripts/build-topnote.mjs"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.5",
+    "@babel/preset-react": "^8.0.1",
+    "terser": "^5.51.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoGali1/hugogaliana-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HugoGali1/hugogaliana-web/issues"
+  },
+  "homepage": "https://github.com/HugoGali1/hugogaliana-web#readme",
+  "license": "ISC"
+}

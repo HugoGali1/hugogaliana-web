@@ -117,7 +117,7 @@ h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
   <div class="wrap">
     <span class="kicker">Legal</span>
     <h1>Política de privacidad</h1>
-    <p class="updated">Última actualización: 28 de agosto de 2026</p>
+    <p class="updated">Última actualización: 15 de septiembre de 2026</p>
     <p class="lede">Esta web recoge pocos datos y no te sigue por internet. Aquí tienes, sin rodeos, qué trato, para qué, cuánto tiempo lo guardo y qué puedes exigirme sobre ello.</p>
 
     <div class="doc">
@@ -147,6 +147,11 @@ h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
         <p>El servidor que aloja esta web registra automáticamente datos técnicos de cada visita: <strong>dirección IP</strong>, fecha y hora, página solicitada, navegador y sistema operativo. Es el funcionamiento normal de cualquier servidor web y sirve para servir el sitio correctamente, detectar errores y protegerlo frente a abusos.</p>
         <p><strong>Base legal:</strong> mi interés legítimo en mantener la web funcionando y segura (art. 6.1.f del RGPD).</p>
 
+        <h3>La medición de visitas</h3>
+        <p>Uso la analítica de Vercel para saber cuánta gente visita la web, qué páginas lee y cuánto tarda en cargar. Es una medición <strong>sin cookies</strong>: no guarda nada en tu dispositivo y no te sigue fuera de esta web. Registra la página visitada, de dónde vienes, tu país, el tipo de dispositivo y el navegador, más las métricas de velocidad de carga.</p>
+        <p>Para distinguir una visita de otra sin identificarte, Vercel calcula una huella cifrada a partir de los datos de tu conexión y la renueva cada día, de modo que no es posible reconstruir quién eres ni seguirte de un día para otro. No hay perfiles, ni publicidad, ni datos que se vendan a nadie.</p>
+        <p><strong>Base legal:</strong> mi interés legítimo en entender si la web cumple su función y en detectar páginas lentas o rotas (art. 6.1.f del RGPD).</p>
+
         <h3>Si usas la demo de Top Note</h3>
         <p>En la demo pública de Top Note (<span class="mono">/topnote</span>), el texto de la búsqueda que escribes se envía a la API de Google Gemini para generar la recomendación. <strong>No escribas ahí datos personales ni información confidencial</strong>: es una demostración técnica, no un servicio.</p>
         <p>Además, guardo temporalmente tu dirección IP en la memoria del servidor para limitar el número de búsquedas por visitante y que la demo no se dispare de coste. Ese registro dura minutos y no se almacena en ninguna base de datos.</p>
@@ -169,7 +174,7 @@ h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
         <h2 id="s4"><span class="n">04</span> Con quién se comparten</h2>
         <p>No vendo ni cedo tus datos a terceros. Sí me apoyo en proveedores que los tratan por mi cuenta para que la web funcione. Son estos, todos ellos:</p>
         <ul>
-          <li><strong>Vercel Inc.</strong> — alojamiento de la web. Trata los registros técnicos de conexión descritos arriba.</li>
+          <li><strong>Vercel Inc.</strong> — alojamiento de la web y medición de visitas. Trata los registros técnicos de conexión y los datos de analítica descritos arriba.</li>
           <li><strong>Web3Forms</strong> — recibe el envío del formulario y me lo reenvía a mi correo.</li>
           <li><strong>Google (Gmail)</strong> — es mi proveedor de correo, así que tu mensaje termina en mi buzón.</li>
           <li><strong>Google Fonts</strong> — las tipografías de la web se sirven desde servidores de Google, que reciben tu dirección IP al cargarlas.</li>
@@ -185,7 +190,8 @@ h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
 
       <section aria-labelledby="s6">
         <h2 id="s6"><span class="n">06</span> Cookies</h2>
-        <p><strong>Esta web no usa cookies.</strong> No hay analítica, ni píxeles de seguimiento, ni publicidad, ni elaboración de perfiles. Por eso tampoco verás un banner de cookies: no habría nada que consentir.</p>
+        <p><strong>Esta web no usa cookies.</strong> No hay píxeles de seguimiento, ni publicidad, ni elaboración de perfiles, ni nada que te siga de un sitio a otro. Por eso tampoco verás un banner de cookies: no se guarda en tu dispositivo nada que requiera tu consentimiento.</p>
+        <p>Sí mido las visitas, pero con una herramienta que funciona sin cookies y cuenta páginas, no personas. Te lo explico en el apartado <a href="#s2">02</a>.</p>
         <p>Lo único que se guarda en tu dispositivo es el almacenamiento local de la demo de Top Note, estrictamente necesario para que la demo funcione. No se comparte con nadie ni sirve para identificarte.</p>
       </section>
 
@@ -230,6 +236,11 @@ h1{font-size:clamp(30px,4.6vw,46px);margin:14px 0 0;max-width:20ch}
     <p class="mono"><a href="/">Inicio</a> · <a href="/#contacto">Contacto</a></p>
   </div>
 </footer>
+
+<!-- Vercel Web Analytics y Speed Insights: las rutas /_vercel/* las sirve la
+     plataforma, asi que en local devuelven 404 sin consecuencias. -->
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 
 </body>
 </html>
