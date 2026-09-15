@@ -107,6 +107,43 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @media (max-width:1180px){.nav ul{gap:20px}.nav li[data-lvl="3"]{display:none}}
 @media (max-width:980px){.nav li[data-lvl="2"]{display:none}}
 @media (max-width:780px){.nav li[data-lvl="1"]{display:none}}
+/* ---- menu de movil ----
+   Por debajo de 780px se caia el ultimo enlace y la barra se quedaba en marca y
+   CTA: el visitante de movil --que es la mayoria-- no tenia como saltar a
+   Proyectos ni a Preguntas frecuentes. El mismo <ul> se convierte en panel, asi
+   que no hay una segunda lista de enlaces que mantener en paralelo. */
+.nav-toggle{display:none;background:none;border:0;cursor:pointer;color:var(--text-primary);padding:11px;margin:-11px;border-radius:10px;line-height:0}
+.nav-burger{display:block;position:relative;width:22px;height:16px}
+.nav-burger i{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:currentColor;transition:transform .32s var(--ease),opacity .18s var(--ease)}
+.nav-burger i:nth-child(1){top:0}
+.nav-burger i:nth-child(2){top:7px}
+.nav-burger i:nth-child(3){top:14px}
+[data-menu="abierto"] .nav-burger i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+[data-menu="abierto"] .nav-burger i:nth-child(2){opacity:0}
+[data-menu="abierto"] .nav-burger i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media (max-width:780px){
+  .nav{align-items:center}
+  .nav-toggle{display:inline-flex}
+  /* la marca y el boton se quedan por encima del panel que baja */
+  .brand,.nav-toggle{position:relative;z-index:2}
+  .nav ul{
+    position:fixed;left:0;right:0;top:0;z-index:1;
+    flex-direction:column;align-items:stretch;gap:0;
+    padding:80px clamp(20px,6vw,40px) 30px;
+    /* opaco del todo: a .97 el h1 del hero se transparentaba, y ademas obliga a
+       componer el panel contra un fondo que cambia en cada fotograma */
+    background:#090E14;border-bottom:1px solid var(--line);
+    transform:translateY(-102%);visibility:hidden;
+    transition:transform .42s var(--ease),visibility .42s var(--ease);
+  }
+  /* dentro del panel sobra sitio: vuelven los seis que la barra habia soltado */
+  #nav-menu li{display:block}
+  .nav ul a{display:block;padding:15px 2px;font-size:14px;border-bottom:1px solid var(--line)}
+  .nav ul li:last-child a{border-bottom:0;margin-top:6px;font-size:15px}
+  [data-menu="abierto"] .nav ul{transform:translateY(0);visibility:visible}
+  /* con el panel abierto, el fondo no se mueve */
+  html[data-menu="abierto"]{overflow:hidden}
+}
 /* ============ hero scrub ============ */
 .hero{position:relative;height:640vh}
 .stage{position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden}
@@ -269,6 +306,60 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
           }
         }
       ]
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://hugogaliana.com/#servicio",
+      "name": "Hugo Galiana · Software a medida para comercios",
+      "url": "https://hugogaliana.com/",
+      "image": "https://hugogaliana.com/assets/og.jpg",
+      "description": "Desarrollo de webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando. Valencia y toda España en remoto.",
+      "inLanguage": "es-ES",
+      "isPartOf": { "@id": "https://hugogaliana.com/#web" },
+      "provider": { "@id": "https://hugogaliana.com/#hugo" },
+      "founder": { "@id": "https://hugogaliana.com/#hugo" },
+      "email": "hgalianareal@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Valencia",
+        "addressRegion": "Comunidad Valenciana",
+        "addressCountry": "ES"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Valencia" },
+        { "@type": "AdministrativeArea", "name": "Comunidad Valenciana" },
+        { "@type": "Country", "name": "España" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Qué construyo",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Una web que trae clientes",
+              "description": "Rápida, clara y preparada para aparecer en Google, para que quien te busque te encuentre y sepa en diez segundos qué ofreces y cómo contactarte."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pedidos, reservas y pagos",
+              "description": "Cobra desde tu propia web o app, sin depender de plataformas que se llevan comisión de cada venta."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Herramientas internas",
+              "description": "Paneles y aplicaciones para tu día a día: inventario, turnos, comandas, lo que tu negocio necesite controlar."
+            }
+          }
+        ]
+      }
     }
   ]
 }
@@ -283,7 +374,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     <img src="assets/logo-hg.png" alt="" aria-hidden="true" width="22" height="22" decoding="async">
     Hugo Galiana
   </a>
-  <ul>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir el menú">
+    <span class="nav-burger" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+  <ul id="nav-menu">
     <li data-lvl="1"><a href="#sobre-mi">Quién soy</a></li>
     <li data-lvl="2"><a href="#prueba">Mi mejor proyecto</a></li>
     <li data-lvl="2"><a href="#servicios">Qué construyo</a></li>
@@ -381,7 +475,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     <div class="proof-grid rev">
       <figure class="shot part" id="shot-buffet">
         <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">buffet.hugogaliana.com</span></div>
-        <div class="shot-img"><img src="assets/shot-buffet-panel.jpg" alt="Panel de comandas de Brasa y Ascuas con los pedidos de cada mesa en tiempo real" loading="lazy" decoding="async"></div><div class="shot-phone" aria-hidden="false"><img src="assets/shot-buffet-movil.jpg" alt="Carta de Brasa y Ascuas vista desde el móvil del cliente" loading="lazy" decoding="async"></div>
+        <div class="shot-img"><img src="assets/shot-buffet-panel.jpg" width="1400" height="689" alt="Panel de comandas de Brasa y Ascuas con los pedidos de cada mesa en tiempo real" loading="lazy" decoding="async"></div><div class="shot-phone" aria-hidden="false"><img src="assets/shot-buffet-movil.jpg" width="393" height="859" alt="Carta de Brasa y Ascuas vista desde el móvil del cliente" loading="lazy" decoding="async"></div>
       </figure>
       <ul class="chips part" aria-label="Qué incluye">
         <li class="chip">Pedidos por QR</li>
@@ -494,7 +588,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         </div>
         <figure class="shot small part" id="shot-buffet-2">
           <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">buffet.hugogaliana.com</span></div>
-          <div class="shot-img"><img src="assets/shot-buffet-panel.jpg" alt="Panel de comandas de Brasa y Ascuas" loading="lazy" decoding="async"></div>
+          <div class="shot-img"><img src="assets/shot-buffet-panel.jpg" width="1400" height="689" alt="Panel de comandas de Brasa y Ascuas" loading="lazy" decoding="async"></div>
         </figure>
       </article>
       <article class="proj flip rev">
@@ -506,19 +600,19 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         </div>
         <figure class="shot small part" id="shot-aperture">
           <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">aperturetechnologies.es</span></div>
-          <div class="shot-img"><img src="assets/shot-aperture.jpg?v=2" alt="Web corporativa de Aperture Technologies" loading="lazy" decoding="async"></div>
+          <div class="shot-img"><img src="assets/shot-aperture.jpg?v=2" width="1400" height="700" alt="Web corporativa de Aperture Technologies" loading="lazy" decoding="async"></div>
         </figure>
       </article>
       <article class="proj rev">
         <div class="proj-info">
           <span class="mono tag part">Con IA</span>
           <h3 class="part">Top Note</h3>
-          <p class="part">Buscador inteligente sobre un catálogo de 30.000 perfumes: describes lo que buscas con tus palabras y la IA te recomienda con razones. La misma tecnología sirve para cualquier catálogo de productos.</p>
+          <p class="part">Buscador inteligente sobre un catálogo de 30.000 perfumes: describes lo que buscas con tus palabras y la IA te recomienda con razones. La demo pública corre sobre 5.000 de ellos. La misma tecnología sirve para cualquier catálogo de productos.</p>
           <p class="part"><a class="alink" href="https://hugogaliana.com/topnote" target="_blank" rel="noopener">Ver la demo ↗</a></p>
         </div>
         <figure class="shot small part" id="shot-topnote">
           <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">hugogaliana.com/topnote</span></div>
-          <div class="shot-img"><img src="assets/shot-topnote.jpg" alt="Buscador de fragancias Top Note con búsqueda en lenguaje natural" loading="lazy" decoding="async"></div>
+          <div class="shot-img"><img src="assets/shot-topnote.jpg" width="1600" height="800" alt="Buscador de fragancias Top Note con búsqueda en lenguaje natural" loading="lazy" decoding="async"></div>
         </figure>
       </article>
     </div>
@@ -634,8 +728,17 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .shot-img img{width:100%;height:100%;object-fit:cover;object-position:top center}
 .shot{position:relative}
 .shot-phone{position:absolute;right:3.5%;bottom:-7%;width:19%;min-width:104px;border-radius:14px;overflow:hidden;border:1px solid var(--line-strong);box-shadow:0 20px 50px rgba(0,0,0,.6);background:var(--panel-2)}
-.shot-phone img{width:100%;display:block}
-@media (max-width:640px){.shot-phone{display:none}}
+.shot-phone img{width:100%;height:auto;display:block}
+/* El movil del cliente es la mitad de lo que cuenta esta seccion --el QR, la
+   carta, el pago-- y se ocultaba entero por debajo de 640px. Lo que quedaba era
+   una franja del panel recortada a 2:1: a 342 px de ancho son 171 px de alto de
+   un tablero denso, que no se lee ni se reconoce. En vertical se queda el movil,
+   proporcionalmente mas grande que en escritorio, y el panel gana altura. */
+@media (max-width:640px){
+  .proof .shot-img{aspect-ratio:4/3}
+  .shot-phone{width:38%;right:4.5%;bottom:-5%}
+  .proof .shot{margin-bottom:60px}
+}
 .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none}
 .chip{background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:8px 14px;font-family:var(--fm);font-size:12.5px;color:var(--text-secondary)}
 /* cards */
@@ -805,7 +908,18 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @keyframes glowp{0%,100%{filter:drop-shadow(0 0 0 rgba(143,216,218,0))}50%{filter:drop-shadow(0 0 7px rgba(143,216,218,.45))}}
 .anim .proof.a-la-vista .browser-bar i:first-child{animation:dotp 6s var(--ease-io) infinite}
 @keyframes dotp{0%,100%{background:var(--line-strong)}50%{background:var(--accent)}}
-.static-sub,.static-cta{display:none}
+/* El subtitulo y el boton ya no esperan al final del scrub: son lo que
+     convierte, y hasta ahora vivian en la banda p5, a 6,4 pantallas del
+     visitante. Se quedan en p1, debajo del h1, y se van con la banda.
+     La banda entera es pointer-events:none --el scrub no debe tragarse los
+     clics--, asi que el boton se rehabilita a si mismo. Cuando la banda se
+     apaga, el JS le pone visibility:hidden y deja de recibir clics solo. */
+.static-sub,.static-cta{display:block}
+.static-cta{pointer-events:auto}
+/* entra detras de la ultima palabra del h1: el reparto cascada termina sobre
+   los 1.000 ms (--th llega a ~0,55 y el retardo es --th*760ms + 580ms) */
+.static-sub{animation:apareceFrag .5s var(--ease) both .88s}
+.static-cta{animation:apareceFrag .5s var(--ease) both 1.04s}
 /* ============ metraje del hero en tactil ============
    Aqui vivian tres hojas de sprites de 2160x2560 movidas por el compositor.
    La idea era buena y la geometria no: cada fotograma es de 360x640 y en un
@@ -904,7 +1018,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .band[data-first]{display:flex;opacity:1;--k:1;pointer-events:auto;align-items:flex-start}
   .band[data-first] .inner{transform:none;margin:20svh auto 0;text-align:center;max-width:900px;padding:0 26px}
   .band[data-first] h1{font-size:clamp(32px,7vw,54px)}
-  .static-sub,.static-cta{display:block}
 }
 .static-sub{margin-top:18px;font-size:clamp(16px,4vw,19px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
 .static-cta{margin-top:28px}
@@ -940,6 +1053,32 @@ h+='<span class="f" style="left:22%;animation-delay:-12s"></span><span class="f"
 /* ---------- nav ---------- */
 var nav=document.getElementById('nav');
 addEventListener('scroll',function(){var s=scrollY>40;if(s!==nav.classList.contains('solid'))nav.classList.toggle('solid',s)},{passive:true});
+
+/* El panel de movil. El estado vive en <html> y no en el <nav> porque ahi lo
+   necesita tambien el bloqueo del scroll del fondo. */
+var navToggle=document.getElementById('nav-toggle');
+var navMenu=document.getElementById('nav-menu');
+var raiz=document.documentElement;
+function menuVisible(){return raiz.getAttribute('data-menu')==='abierto'}
+/* con el panel encima, lo que queda detras no debe poder tabularse: si no, el
+   foco se va a enlaces tapados y el visitante lo pierde de vista */
+var trasElPanel=[].slice.call(document.querySelectorAll('.hero,#main,.foot'));
+function menu(abrir){
+  if(abrir)raiz.setAttribute('data-menu','abierto');else raiz.removeAttribute('data-menu');
+  navToggle.setAttribute('aria-expanded',abrir?'true':'false');
+  navToggle.setAttribute('aria-label',abrir?'Cerrar el menú':'Abrir el menú');
+  trasElPanel.forEach(function(el){el.inert=abrir});
+}
+navToggle.addEventListener('click',function(){menu(!menuVisible())});
+/* los enlaces son anclas de la propia pagina: si el panel no se cierra solo,
+   el visitante salta de seccion y sigue viendo el menu encima */
+navMenu.addEventListener('click',function(e){if(e.target.closest('a'))menu(false)});
+addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&menuVisible()){menu(false);navToggle.focus()}
+});
+/* al girar el movil o ensanchar la ventana el panel deja de existir como tal:
+   si se queda marcado como abierto, el scroll del fondo sigue bloqueado */
+matchMedia('(min-width:781px)').addEventListener('change',function(e){if(e.matches)menu(false)});
 
 /* ---------- text splitting (seeded) ---------- */
 document.querySelectorAll('[data-split]').forEach(function(el,ei){
@@ -1680,5 +1819,10 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
+<!-- Vercel Web Analytics y Speed Insights: las rutas /_vercel/* las sirve la
+     plataforma, asi que en local devuelven 404 sin consecuencias. -->
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+
 </body>
 </html>

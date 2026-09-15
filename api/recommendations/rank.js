@@ -16,7 +16,9 @@
  *
  * Límite de uso: best-effort. El contador vive en memoria del proceso, así que
  * cada instancia lleva su cuenta y se pierde en los arranques en frío. Para un
- * límite real hace falta un almacén compartido — ver docs/topnote-demo.md.
+ * límite real hace falta un almacén compartido (Redis del marketplace de Vercel,
+ * o Vercel BotID delante del endpoint). Mientras tanto, el techo de verdad es el
+ * límite de gasto de la propia cuenta de Google.
  */
 
 const MODEL = 'gemini-2.5-flash-lite';
@@ -27,6 +29,16 @@ const MAX_PER_IP = 5;
 const MAX_PER_INSTANCE = 400;
 const MAX_CANDIDATES = 120;
 const UPSTREAM_TIMEOUT_MS = 55000;
+/* Lo que se le manda al modelo lo escribe el cliente, y al modelo se le paga por
+   token. Sin estos topes bastaba un curl con la cabecera Origin correcta y 120
+   candidatos inflados para escribir un prompt de varios megas a nuestra cuenta.
+   Los numeros salen del catalogo real: la consulta mas larga de los ejemplos no
+   llega a 60 caracteres y ninguna piramide olfativa pasa de 12 notas. */
+const MAX_QUERY_CHARS = 400;
+/* el id mas largo del catalogo real mide 86 caracteres */
+const MAX_ID_CHARS = 120;
+const MAX_TEXTO = 80;
+const MAX_LISTA = 12;
 
 const ALLOWED_HOSTS = new Set([
   'hugogaliana.com',
@@ -125,20 +137,48 @@ const RESPONSE_SCHEMA = {
   },
 };
 
+/* Cada campo entra recortado: lo que llega es de fuera y acaba en el prompt. */
+function texto(v, max = MAX_TEXTO) {
+  return typeof v === 'string' && v ? v.slice(0, max) : undefined;
+}
+function lista(v, max = MAX_LISTA) {
+  if (!Array.isArray(v)) return undefined;
+  const out = v.slice(0, max).map((x) => texto(String(x), 40)).filter(Boolean);
+  return out.length ? out : undefined;
+}
+function numero(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
+function compactNotas(n) {
+  if (!n || typeof n !== 'object' || Array.isArray(n)) return undefined;
+  const out = {};
+  for (const k of ['salida', 'corazon', 'corazón', 'fondo', 'base']) {
+    const v = lista(n[k]);
+    if (v) out[texto(k, 20)] = v;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 function compactCandidate(c) {
   return {
-    id: c.id,
-    nombre: c.nombre,
-    casa: c.casa,
-    'año': c.ano !== undefined ? c.ano : c['año'],
-    notas: c.notas,
-    familia: c.familia,
-    acordes: c.acordes,
-    temporada: c.temporada,
-    genero: c.genero,
-    rating: c.rating,
-    rating_count: c.rating_count,
-    similares_a: c.similares_a,
+    /* El id NO se recorta como el resto: es la unica llave que une lo que
+       devuelve el modelo con el catalogo. A 40 caracteres se cortaban 543 de
+       los 5.000 perfumes --los de id largo, 'pf_calvin_klein_ck_one_...'--, el
+       modelo devolvia el id recortado y parseRanked lo descartaba contra
+       validIds. Se perdia el 11% de las recomendaciones en silencio. */
+    id: texto(c.id, MAX_ID_CHARS),
+    nombre: texto(c.nombre),
+    casa: texto(c.casa),
+    'año': numero(c.ano !== undefined ? c.ano : c['año']),
+    notas: compactNotas(c.notas),
+    familia: texto(c.familia, 40),
+    acordes: lista(c.acordes),
+    temporada: typeof c.temporada === 'string' ? texto(c.temporada, 40) : lista(c.temporada),
+    genero: texto(c.genero, 20),
+    rating: numero(c.rating),
+    rating_count: numero(c.rating_count),
+    similares_a: lista(c.similares_a, 6),
   };
 }
 
@@ -218,6 +258,11 @@ module.exports = async function handler(req, res) {
   if (!dto || typeof dto.query !== 'string' || !dto.query.trim()) {
     return res.status(400).json({ message: 'Falta la consulta.' });
   }
+  if (dto.query.length > MAX_QUERY_CHARS) {
+    return res.status(400).json({
+      message: `Describe lo que buscas en menos de ${MAX_QUERY_CHARS} caracteres.`,
+    });
+  }
   if (!Array.isArray(dto.candidates) || dto.candidates.length === 0) {
     return res.status(400).json({ message: 'No hay candidatos para rankear.' });
   }
@@ -230,7 +275,7 @@ module.exports = async function handler(req, res) {
 "${dto.query}"
 
 FILTROS UI (ya aplicados, contexto):
-${JSON.stringify(dto.filters || {})}
+${JSON.stringify(dto.filters || {}).slice(0, 500)}
 
 CANDIDATOS PRE-FILTRADOS (${compact.length}):
 ${JSON.stringify(compact)}`;

@@ -3,3 +3,17 @@ node_modules
 # binarios sueltos que no forman parte del sitio
 *.exe
 *.winmd
+
+# el sitio se despliega estatico: la cadena de construccion de topnote/app.js
+# es solo local y no debe hacer que Vercel se crea un proyecto de Node
+package.json
+package-lock.json
+scripts
+topnote/src
+
+graphify-out
+index-original.html
+index-movil.html
+
+# nota de trabajo, no forma parte del sitio
+CONTEXTO.md
