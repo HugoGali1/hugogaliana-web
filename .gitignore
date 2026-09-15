@@ -4,3 +4,10 @@ node_modules
 # binarios sueltos que aparecieron en assets/ y no forman parte del sitio
 *.exe
 *.winmd
+
+# salida de graphify: analisis local, no forma parte del sitio
+graphify-out
+
+# copias de trabajo de la portada
+index-original.html
+index-movil.html
