@@ -537,12 +537,24 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     </div>
     <div class="hold-right rev">
       <button class="holdpad part" id="holdpad" type="button" aria-label="Mantén pulsado para ensamblar las tres capas">
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <g class="layer l1"><rect x="24" y="18" width="72" height="10" rx="5"/></g>
-          <g class="layer l2"><rect x="24" y="55" width="72" height="10" rx="5"/></g>
-          <g class="layer l3"><rect x="24" y="92" width="72" height="10" rx="5"/></g>
+        <svg class="hold-ring" viewBox="0 0 320 320" aria-hidden="true"><rect x="1" y="1" width="318" height="318" rx="21" pathLength="1"/></svg>
+        <svg class="hold-art" viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <path id="cap-a" d="M28 42H92a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H68l-4 4H56l-4-4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
+            <path id="cap-b" d="M28 54h24l4 4h8l4-4h24a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H68l-4 4H56l-4-4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
+            <path id="cap-c" d="M28 66h24l4 4h8l4-4h24a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
+            <linearGradient id="cap-soldadura" x1="0" y1="42" x2="0" y2="78" gradientUnits="userSpaceOnUse">
+              <stop class="s1" offset="0"/><stop class="s2" offset=".5"/><stop class="s3" offset="1"/>
+            </linearGradient>
+          </defs>
+          <g class="slots"><use href="#cap-a"/><use href="#cap-c"/></g>
+          <g class="layer l1"><use href="#cap-a"/></g>
+          <g class="layer l2"><use href="#cap-b"/></g>
+          <g class="layer l3"><use href="#cap-c"/></g>
+          <rect class="soldadura" x="24" y="42" width="72" height="36" rx="6"/>
         </svg>
         <span class="hold-label mono" id="hold-label">Mantén pulsado</span>
+        <span class="hold-again mono" id="hold-again" aria-hidden="true">Pulsa para repetir</span>
       </button>
     </div>
   </div>
@@ -761,16 +773,50 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .hold-list{list-style:none;margin-top:26px;display:grid;gap:12px}
 .hold-list li{display:flex;gap:14px;align-items:baseline;color:var(--text-secondary);opacity:.4;transform:translateX(-6px);transition:opacity .5s var(--ease),transform .5s var(--ease),color .5s var(--ease)}
 .hold-list li.on{opacity:1;color:var(--text-primary);transform:none}
-.hold-list .mono{color:var(--accent);font-size:12px}
-.holdpad{width:min(320px,100%);aspect-ratio:1;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:radial-gradient(circle at 50% 42%,rgba(143,216,218,.07),transparent 62%),var(--panel-2);border:1px solid var(--line);border-radius:22px;cursor:pointer;transition:border-color .4s var(--ease),transform .2s var(--ease);touch-action:none;-webkit-user-select:none;user-select:none}
+.hold-list .mono{font-size:12px;color:var(--accent)}
+.hold-list li[data-li="0"] .mono{color:var(--accent-hover)}
+.hold-list li[data-li="2"] .mono{color:var(--stone)}
+.holdpad{position:relative;isolation:isolate;width:min(320px,100%);aspect-ratio:1;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:6.875%;cursor:pointer;transition:border-color .4s var(--ease),transform .2s var(--ease);touch-action:none;-webkit-user-select:none;user-select:none}
+.holdpad::before,.holdpad::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0}
+.holdpad::before{background:linear-gradient(rgba(150,168,180,.075) 1px,transparent 1px) 0 0/100% 20px,linear-gradient(90deg,rgba(150,168,180,.075) 1px,transparent 1px) 0 0/20px 100%;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 20%,transparent 66%);mask-image:radial-gradient(circle at 50% 50%,#000 20%,transparent 66%);opacity:calc(.4 + .6*var(--hp,0))}
+.holdpad::after{background:radial-gradient(circle at 50% 50%,rgba(143,216,218,.13),transparent 60%);opacity:calc(.35 + .65*var(--hp,0))}
 .holdpad:hover{border-color:var(--line-strong)}
 .holdpad:active{transform:scale(.985)}
-.holdpad svg{width:64%;height:auto;overflow:visible}
-.layer rect{fill:none;stroke:var(--accent);stroke-width:3}
-.layer{transition:none;transform:translateY(calc(var(--hp,0)*var(--dy,0px))) scaleX(calc(.86 + .14*var(--hp,0)));transform-origin:center;opacity:calc(.45 + .55*var(--hp,0))}
-.l1{--dy:37px}.l3{--dy:-37px}
-.holdpad.done .layer rect{stroke:var(--accent-hover);filter:drop-shadow(0 0 10px rgba(143,216,218,.5))}
-.hold-label{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary)}
+.hold-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+/* Sin vector-effect: con non-scaling-stroke Chrome mide el dasharray en pixeles
+   de pantalla y el pathLength en unidades del viewBox, y el borde se rompia en
+   segmentos sueltos. Asi el trazo recorre el marco entero y lo cierra. */
+.hold-ring rect{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--hp,0))}
+.hold-art{position:relative;z-index:1;width:64%;height:auto;overflow:visible}
+.slots use{fill:none;stroke:var(--line-strong);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:3 5;opacity:calc(.6 - .6*var(--hp,0))}
+.layer use{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.layer{transition:none;transform:scaleX(calc(.88 + .12*var(--hp,0)));transform-origin:center;opacity:calc(.42 + .58*var(--hp,0))}
+/* La 01 y la 03 son un unico movimiento: comparten regla y comparten curva
+   (--cierre, un smoothstep sobre el progreso), asi que salen a la vez, cierran
+   a la vez y tocan la 02 en el mismo instante, como una pinza. */
+.holdpad,.layer{--cierre:calc(var(--hp,0)*var(--hp,0)*(3 - 2*var(--hp,0)))}
+.l1,.l3{transform:translateY(calc((1 - var(--cierre,0))*var(--dy,0px))) scaleX(calc(.88 + .12*var(--hp,0)))}
+.l1{--dy:-28px;color:var(--accent-hover)}
+.l2{color:var(--accent)}
+.l3{--dy:28px;color:var(--stone)}
+/* Al terminar el ensamblado las tres piezas se funden: las costuras se apagan y
+   queda un unico recuadro cerrado, con el degradado que conserva los tres tonos. */
+.soldadura{fill:none;stroke:url(#cap-soldadura);stroke-width:2.6;stroke-linejoin:round;opacity:0;transition:opacity .22s var(--ease)}
+.s1{stop-color:var(--accent-hover)}
+.s2{stop-color:var(--accent)}
+.s3{stop-color:var(--stone)}
+.holdpad.done .soldadura{opacity:1;filter:drop-shadow(0 0 9px var(--accent))}
+.holdpad.done .layer{opacity:0;transition:opacity .3s var(--ease) .1s}
+.holdpad.done .hold-art{animation:holdsnap .46s var(--ease) 1}
+@keyframes holdsnap{0%{transform:scale(1,1)}28%{transform:scale(1.025,.938)}62%{transform:scale(.996,1.012)}100%{transform:scale(1,1)}}
+.holdpad.done{animation:holdflash .85s var(--ease) 1}
+@keyframes holdflash{0%{box-shadow:0 0 0 0 rgba(143,216,218,.3)}100%{box-shadow:0 0 0 26px rgba(143,216,218,0)}}
+.hold-label{position:relative;z-index:1;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);transition:color .4s var(--ease)}
+.holdpad.done .hold-label{color:var(--accent-hover)}
+.holdpad:not(.done):not(.holding) .hold-label{animation:holdhint 3.4s ease-in-out infinite}
+@keyframes holdhint{0%,100%{opacity:.6}50%{opacity:1}}
+.hold-again{position:absolute;left:0;right:0;bottom:18px;z-index:1;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);opacity:0;transition:opacity .5s var(--ease)}
+.holdpad.done .hold-again{opacity:.55;transition-delay:1.1s}
 @media (max-width:860px){.hold-wrap{grid-template-columns:1fr}}
 /* steps */
 .steps{margin-top:44px;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
@@ -1033,7 +1079,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .rev .part{opacity:1;transform:none}
   .dl{stroke-dashoffset:0}
   .hold-list li{opacity:1;color:var(--text-primary);transform:none}
-  .layer{--hp:1}
+  .holdpad,.layer{--hp:1}
   body{opacity:1}
 }
 </style>
@@ -1635,34 +1681,49 @@ document.querySelectorAll('#servicios,#prueba').forEach(function(el){ambiente.ob
 var pad=document.getElementById('holdpad');
 var label=document.getElementById('hold-label');
 var lis=[].slice.call(document.querySelectorAll('.hold-list li'));
-var hp=0,holding=false,holdRaf=null,holdDone=false,lastHp=-1;
+var hp=0,holding=false,holdRaf=null,holdDone=false,lastHp=-1,armReset=false;
+var LBL_IDLE='Mantén pulsado',LBL_RUN='Ensamblando',LBL_DONE='Ensamblado';
+function setLabel(t){if(label.textContent!==t)label.textContent=t}
 function setHp(v){
   hp=clamp(v,0,1);
   if(Math.abs(hp-lastHp)>0.006){lastHp=hp;pad.style.setProperty('--hp',hp.toFixed(3))}
+  if(!holdDone)setLabel(hp>0.05?LBL_RUN:LBL_IDLE);
 }
 function holdTick(){
-  setHp(hp+(holding?0.024:-0.035));
+  setHp(hp+(holding?0.021:-0.035));
   if(hp>=1&&!holdDone){completeHold(false);return}
-  if((holding&&hp<1)||(!holding&&hp>0)){holdRaf=requestAnimationFrame(holdTick)}else{holdRaf=null}
+  if((holding&&hp<1)||(!holding&&hp>0)){holdRaf=requestAnimationFrame(holdTick)}else{holdRaf=null;if(!holding)pad.classList.remove('holding')}
 }
-function startHold(ev){if(holdDone)return;ev.preventDefault();holding=true;if(!holdRaf)holdRaf=requestAnimationFrame(holdTick)}
+function startHold(ev){if(holdDone)return;ev.preventDefault();holding=true;pad.classList.add('holding');if(!holdRaf)holdRaf=requestAnimationFrame(holdTick)}
 function endHold(){holding=false;if(!holdDone&&!holdRaf&&hp>0)holdRaf=requestAnimationFrame(holdTick)}
 function completeHold(instant){
   holdDone=true;holding=false;setHp(1);
-  pad.classList.add('done');label.textContent='Ensamblado';
+  pad.classList.remove('holding');pad.classList.add('done');setLabel(LBL_DONE);
+  pad.setAttribute('aria-label','Las tres capas están ensambladas. Pulsa para repetir.');
   lis.forEach(function(li,i){setTimeout(function(){li.classList.add('on')},instant?0:220*i)});
   if(holdRaf){cancelAnimationFrame(holdRaf);holdRaf=null}
 }
 function resetHold(){
-  holdDone=false;holding=false;setHp(0);
-  pad.classList.remove('done');label.textContent='Mantén pulsado';
+  holdDone=false;holding=false;armReset=false;setHp(0);
+  pad.classList.remove('done','holding');setLabel(LBL_IDLE);
+  pad.setAttribute('aria-label','Mantén pulsado para ensamblar las tres capas');
   lis.forEach(function(li){li.classList.remove('on')});
 }
-pad.addEventListener('pointerdown',startHold);
+pad.addEventListener('pointerdown',function(ev){armReset=holdDone;startHold(ev)});
 addEventListener('pointerup',endHold);
 pad.addEventListener('pointercancel',endHold);
-pad.addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&!e.repeat)startHold(e)});
-pad.addEventListener('keyup',function(e){if(e.key===' '||e.key==='Enter')endHold()});
+pad.addEventListener('click',function(){if(armReset&&holdDone){armReset=false;resetHold()}});
+pad.addEventListener('keydown',function(e){
+  if(e.key!==' '&&e.key!=='Enter')return;
+  if(e.key===' ')e.preventDefault();
+  if(e.repeat)return;
+  armReset=holdDone;if(!holdDone)startHold(e);
+});
+pad.addEventListener('keyup',function(e){
+  if(e.key!==' '&&e.key!=='Enter')return;
+  if(armReset&&holdDone){armReset=false;resetHold();return}
+  endHold();
+});
 
 /* ---------- reduced motion, live and both directions ---------- */
 var userCompletedHold=false;
