@@ -122,5 +122,10 @@
 
 <!-- la aplicacion entra por /topnote/app.js, diferida desde la cabecera -->
 
+<!-- Vercel Web Analytics y Speed Insights: las rutas /_vercel/* las sirve la
+     plataforma, asi que en local devuelven 404 sin consecuencias. -->
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+
 </body>
 </html>
