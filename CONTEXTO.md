@@ -1,8 +1,8 @@
 # Contexto de trabajo — hugogaliana.com
 
 Ultima sesion: **15 de septiembre de 2026**.
-Estado: **6 commits en la rama `preparar-despliegue`, ya subida. Falta mirar el
-preview de Vercel y fusionar a `main`.**
+Estado: **7 commits en la rama `preparar-despliegue`. Preview desplegado y
+verificado. Solo falta activar Web Analytics en el panel y fusionar a `main`.**
 Base: `main` en `ae7be8a`.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
@@ -13,40 +13,55 @@ Base: `main` en `ae7be8a`.
 ## 1. Lo primero al volver
 
 ```bash
-git log --oneline main..preparar-despliegue   # los 6 commits
+git log --oneline main..preparar-despliegue   # los 7 commits
 npm run build:topnote                          # solo si tocas topnote/src/app.jsx
 ```
 
-Quedan **tres cosas por cerrar**, todas en la seccion 2.
+Queda **una cosa** en el panel de Vercel, y fusionar. Seccion 2.
 
 ---
 
-## 2. Lo que falta para dar esto por subido
+## 2. Estado del preview
 
-**a) Mirar el preview.** Vercel genera uno al empujar la rama. Hay que comprobar
-tres cosas en el, que en local no se pueden ver:
+Desplegado y **verificado** el 15 de septiembre. URL estable de la rama:
 
-- Que `/api/recommendations/rank` responde. Era la duda de la sesion anterior,
-  con `package.json` excluido en `.vercelignore`. **Riesgo bajo**: se comprobo que
-  `rank.js` no tiene ni un `import` ni un `require` y exporta con `module.exports`,
-  asi que Vercel lo despliega como funcion zero-config sin necesitar el manifiesto.
-  Si aun asi fallara, quitar `package.json` de `.vercelignore`.
-- Que la demo de Top Note monta y carga los 5.000 perfumes.
-- Que `/_vercel/insights/script.js` devuelve 200 y no 404 (ver punto c).
+```
+https://hugogaliana-web-git-preparar-despliegue-hugo-gali1-s-projects.vercel.app
+```
 
-Si todo va, fusionar `preparar-despliegue` a `main`.
+Lleva la proteccion de despliegue de Vercel: en el navegador, con la sesion de
+Vercel iniciada, entra sola. Desde la terminal hace falta `vercel curl`, porque
+`curl` a secas devuelve un 302 al SSO. Ojo: `vercel curl` ignora `-o`, `-D` y
+`-w`; usa `-I` para ver cabeceras.
 
-**b) `GEMINI_API_KEY`.** Sigue sin tocarse ni verse. Confirmar que esta configurada
-en el proyecto de Vercel para el entorno al que se despliegue, o la demo devolvera
-el 503 de “el perfumista no esta configurado”.
+### Comprobado
 
-**c) Activar Analytics y Speed Insights en el panel de Vercel.** Las etiquetas ya
-estan en las cuatro paginas, pero las rutas `/_vercel/*` no existen hasta que los
-dos productos se activan en el proyecto. Sin eso no se recoge nada.
+| Que | Resultado |
+|---|---|
+| `/api/recommendations/rank` | **Vive.** Un GET devuelve `405 Solo se admite POST` |
+| `GEMINI_API_KEY` | **Configurada** en Production y Preview, tipo Sensitive |
+| `/` , `/topnote` , `/privacidad` | 200 |
+| `/topnote/app.js` | 200, 141 KB |
+| `/topnote/data/catalog.json` | 200, 3,39 MB |
+| `/_vercel/speed-insights/script.js` | 200, ya activo |
+| `/_vercel/insights/script.js` | **404**, falta activarlo |
+
+**Resuelta la duda de `package.json`.** `vercel inspect` lista
+`lambda api/recommendations/rank (6.21KB)` entre los builds: la funcion se detecta
+y se construye pese a tener `package.json` excluido en `.vercelignore`, porque
+`rank.js` no tiene ni un `import` ni un `require`. **No hay que tocar nada.**
+
+### Lo unico que queda
+
+- [ ] **Activar Web Analytics** en el panel de Vercel, en la pestana Analytics del
+      proyecto. La etiqueta ya esta en las cuatro paginas, pero
+      `/_vercel/insights/script.js` da 404 hasta que se active, asi que no se
+      recoge nada. Speed Insights si esta activo y funcionando.
+- [ ] **Fusionar `preparar-despliegue` a `main`** tras darle un repaso visual.
 
 ---
 
-## 3. Los 6 commits de la rama
+## 3. Los 7 commits de la rama
 
 ```
 cb93167 perf(topnote)  compilar el JSX en local y quitar Babel del navegador
@@ -55,9 +70,10 @@ b992178 feat(portada)  menu de movil, ficha de servicio en JSON-LD, CTA antes
 91012c8 chore          quitar 3,1 MB de assets muertos y no publicar copias
 b13a1ea feat(analitica) Vercel Analytics + Speed Insights, y privacidad al dia
 07bf9a7 chore(seo)     sitemap con las fechas de esta revision
+72838f6 docs           actualizar la nota de trabajo al estado de la rama
 ```
 
-Los cuatro primeros son el trabajo que ya estaba en el indice; los dos ultimos
+Los cuatro primeros son el trabajo que ya estaba en el indice; los tres ultimos
 salieron de esta sesion.
 
 ### Lo que hay detras, en corto
