@@ -23,8 +23,10 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       Sin dependencias nuevas en lo que se publica.
 
 ## T2 · Migrar los tres proyectos a archivos de contenido
-- [ ] Escribir el archivo de Top Note, Brasa y Ascuas y Aperture Technologies,
+- [x] Escribir el archivo de Top Note, Brasa y Ascuas y Aperture Technologies,
       con los datos de «Datos acordados» y el texto de sus casos de estudio.
+      El caso de Aperture se queda en dos apartados: es lo único verificable
+      desde fuera. Pendiente de ampliar con lo que cuente Hugo.
 - **Alcance**: contenido e imágenes. Nada de maquetación.
 - **Criterios**: los tres archivos pasan la validación de T1. Cada dato es
       verificable: año, papel, tecnologías y enlaces son los de la spec, y
