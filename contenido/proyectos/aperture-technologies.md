@@ -15,8 +15,9 @@ demo: https://aperturetechnologies.es
 ## Qué es
 
 La cara en internet de Aperture Technologies, una empresa que desarrolla
-software para operadores de gestión de residuos. La diseñé, la construí y la
-publiqué durante mis prácticas del grado, y hoy sigue en producción.
+software para operadores de gestión de residuos. Me pidieron una web para vender
+sus servicios y la hice de cero: diseño, desarrollo y publicación, durante mis
+prácticas del grado. Hoy sigue en producción y es su web oficial.
 
 ## Qué incluye
 
