@@ -5,7 +5,8 @@
   "description": "Sitio estatico. El unico paso de construccion es compilar el JSX de la demo de Top Note; el resto se sirve tal cual.",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "build:topnote": "node scripts/build-topnote.mjs"
+    "build:topnote": "node scripts/build-topnote.mjs",
+    "build:proyectos": "node scripts/build-proyectos.mjs"
   },
   "devDependencies": {
     "@babel/core": "^8.0.5",

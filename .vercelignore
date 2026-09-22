@@ -15,6 +15,10 @@ graphify-out
 index-original.html
 index-movil.html
 
+# fuentes de los proyectos: lo que se publica es lo que genera
+# `npm run build:proyectos`, no estos archivos
+contenido
+
 # nota de trabajo, no forma parte del sitio
 CONTEXTO.md
 
