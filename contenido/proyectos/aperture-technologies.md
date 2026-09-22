@@ -25,3 +25,14 @@ Una portada que explica a qué se dedica la empresa, sus servicios y su forma de
 trabajar; un formulario de contacto con validación de correo y teléfono,
 consentimiento expreso y mensajes de error propios para cada caso; y las páginas
 legales de privacidad y cookies.
+
+## Lo que me costó
+
+El diseño. La parte técnica de una web corporativa está resuelta desde hace
+años; lo difícil era decidir qué se ve, en qué orden y con qué aspecto para una
+empresa que vende software a un sector muy concreto. Es también donde más
+aprendí.
+
+## Qué haría distinto
+
+Hoy la construiría con Angular en lugar de React.
