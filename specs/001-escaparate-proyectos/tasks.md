@@ -36,7 +36,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       el README de `HugoGali1/TFG`. Dato que no se pueda verificar, se pregunta.
 
 ## T3 · Páginas de proyecto en `/proyectos/<identificador>`
-- [ ] Generar la página de cada proyecto con caso de estudio.
+- [x] Generar la página de cada proyecto con caso de estudio.
 - **Criterios**: RF-11, RF-16 a RF-23, RF-47, RF-48.
 - **Comprobar en el preview**: las tres páginas responden 200, una dirección
       inventada bajo `/proyectos/` responde 404, el enlace «siguiente» recorre
