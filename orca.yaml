@@ -1,0 +1,14 @@
+# Configuración de Orca (https://github.com/stablyai/orca) para este repo.
+# Orca la lee al crear cada worktree. Si el archivo tiene cualquier error o
+# una clave repetida, Orca lo descarta entero sin avisar: tras editarlo,
+# crea un worktree de prueba y mira que el setup corre.
+#
+# setup: en Windows cada línea se ejecuta con cmd.exe y se para en el primer
+# fallo. Instala node_modules, que solo hace falta para compilar la demo de
+# Top Note; las pruebas (npm test) no tienen dependencias.
+scripts:
+  setup: |
+    npm ci --no-audit --no-fund
+
+# El agente no arranca hasta que el setup termina.
+setupAgentStartupPolicy: wait-for-setup

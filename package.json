@@ -4,6 +4,7 @@
   "private": true,
   "description": "Sitio estatico. El unico paso de construccion es compilar el JSX de la demo de Top Note; el resto se sirve tal cual.",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "build:topnote": "node scripts/build-topnote.mjs"
   },
   "devDependencies": {

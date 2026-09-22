@@ -17,3 +17,15 @@ index-movil.html
 
 # nota de trabajo, no forma parte del sitio
 CONTEXTO.md
+
+# flujo de trabajo con agentes: documentacion, specs, pruebas y configuracion,
+# no forman parte del sitio
+AGENTS.md
+CLAUDE.md
+orca.yaml
+docs
+specs
+tests
+.claude
+.agents
+.codex
