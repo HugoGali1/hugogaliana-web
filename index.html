@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hugo Galiana · Software que hace funcionar tu negocio</title>
-<meta name="description" content="Desarrollador full-stack en Valencia. Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.">
+<title>Hugo Galiana · Desarrollador full-stack en Valencia</title>
+<meta name="description" content="Desarrollador full-stack en Valencia. Construyo software de principio a fin y aquí enseño lo que he hecho, cómo lo hice y por qué.">
 <meta name="theme-color" content="#0B141A">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hugo Galiana · Software que hace funcionar tu negocio">
-<meta property="og:description" content="Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.">
+<meta property="og:title" content="Hugo Galiana · Desarrollador full-stack en Valencia">
+<meta property="og:description" content="Construyo software de principio a fin. Aquí enseño lo que he hecho, cómo lo hice y por qué.">
 <meta property="og:url" content="https://hugogaliana.com/">
 <meta property="og:site_name" content="Hugo Galiana">
 <meta property="og:locale" content="es_ES">
@@ -97,16 +97,12 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .nav ul a{display:inline-block;white-space:nowrap;font-family:var(--fm);font-size:12.5px;letter-spacing:.08em;text-decoration:none;color:var(--text-secondary);transition:color .3s var(--ease)}
 .nav ul a:hover{color:var(--text-primary)}
 .nav ul a.cta{color:var(--accent)}
-/* el menú se va soltando lastre para no partirse nunca en dos líneas */
 /* desenfocar la barra sobre un hero que cambia en cada frame obliga a la GPU
    del móvil a rehacer el blur constantemente: ahí va opaca */
 @media (pointer:coarse){
   .nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(9,14,20,.94)}
 }
-@media (max-width:1320px){.nav li[data-lvl="4"]{display:none}}
-@media (max-width:1180px){.nav ul{gap:20px}.nav li[data-lvl="3"]{display:none}}
-@media (max-width:980px){.nav li[data-lvl="2"]{display:none}}
-@media (max-width:780px){.nav li[data-lvl="1"]{display:none}}
+@media (max-width:1180px){.nav ul{gap:20px}}
 /* ---- menu de movil ----
    Por debajo de 780px se caia el ultimo enlace y la barra se quedaba en marca y
    CTA: el visitante de movil --que es la mayoria-- no tenia como saltar a
@@ -177,27 +173,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .p1 .inner{margin-top:10vh;max-width:1140px}
 .p1 h1{font-size:clamp(30px,3.4vw,46px)}
 .p1::before{background:radial-gradient(ellipse 92% 46% at 50% 16%,rgba(4,6,9,.70) 0%,rgba(4,6,9,.46) 46%,rgba(4,6,9,0) 76%)}
-.p2{align-items:flex-start;justify-content:flex-start}
-.p2 .inner{margin:8.5vh 0 0 clamp(24px,7vw,110px);text-align:left;max-width:560px}
-.p2 h2{font-size:clamp(24px,2.6vw,38px)}
-.p2 .sub,.p3 .sub,.p4 .sub{margin-left:0;margin-top:12px;font-size:clamp(15px,1.35vw,18px);max-width:40ch}
-.p2::before{background:radial-gradient(ellipse 64% 48% at 24% 18%,rgba(4,6,9,.70) 0%,rgba(4,6,9,.47) 46%,rgba(4,6,9,0) 76%)}
-.p3{align-items:flex-end;justify-content:flex-start}
-.p3 .inner{margin:0 0 6vh clamp(24px,7vw,110px);text-align:left;max-width:540px}
-.p3 h2,.p4 h2{font-size:clamp(26px,3vw,42px)}
-.p3::before{background:radial-gradient(ellipse 64% 52% at 24% 84%,rgba(4,6,9,.70) 0%,rgba(4,6,9,.47) 46%,rgba(4,6,9,0) 76%)}
-.p4{align-items:flex-end;justify-content:flex-end}
-.p4 .inner{margin:0 clamp(24px,7vw,110px) 6vh 0;text-align:left;max-width:540px}
-.p4::before{background:radial-gradient(ellipse 64% 52% at 76% 84%,rgba(4,6,9,.70) 0%,rgba(4,6,9,.47) 46%,rgba(4,6,9,0) 76%)}
-.p5{align-items:flex-end}
-.p5 .inner{margin-bottom:7vh}
-.p5::before{background:radial-gradient(ellipse 78% 56% at 50% 80%,rgba(4,6,9,.68) 0%,rgba(4,6,9,.45) 46%,rgba(4,6,9,0) 76%)}
 .band h1{font-size:clamp(34px,5.4vw,64px);color:var(--text-primary)}
 .band h2{font-size:clamp(30px,4.6vw,54px)}
 .band .sub{margin-top:18px;font-size:clamp(16px,1.6vw,20px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
-.band.side .sub{margin-left:0}
 .band .kicker{display:inline-block;margin-bottom:16px}
-.band .cta-row{margin-top:30px;opacity:var(--kb,0);transform:translateY(calc((1 - var(--kb,0))*14px))}
 .btn{background:transparent;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--fd);font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;text-decoration:none;transition:transform .35s var(--ease),background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
 .btn-solid{background:var(--accent);color:#07131A}
 .btn-ghost{border:1px solid var(--line-strong);color:var(--text-primary)}
@@ -216,14 +195,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
    animacion, asi que si no llega a ejecutarse se ve el texto. */
 @keyframes wApproach{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
 .e-approach .w{opacity:1;animation:wApproach .58s var(--ease) both;animation-delay:calc(var(--th,0)*760ms)}
-.e-blur .soft,.e-blur .sharp{display:block}
-.e-blur{position:relative}
-.e-blur .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0));will-change:opacity}
-.e-blur .sharp{opacity:var(--k,0)}
-.e-grid .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
-.e-scatter .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translate(calc((1 - var(--kc))*var(--jx,0px)),calc((1 - var(--kc))*var(--jy,0px))) rotate(calc((1 - var(--kc))*var(--jr,0deg)))}
-.e-rise .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*22px))}
-.e-rise .sub{opacity:var(--ks,0);transform:translateY(calc((1 - var(--ks,0))*14px))}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-height:560px){.ringbox{display:none}}
 </style>
@@ -244,7 +215,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         "https://github.com/HugoGali1",
         "https://www.linkedin.com/in/hugo-galiana-real-8a1831329/"
       ],
-      "description": "Desarrollador full-stack en Valencia. Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.",
+      "description": "Desarrollador full-stack en Valencia. Construyo software de principio a fin y aquí enseño lo que he hecho, cómo lo hice y por qué.",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Valencia",
@@ -259,8 +230,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         "TypeScript",
         "Spring Boot",
         "SQL",
-        "MongoDB",
-        "Aplicaciones a medida para comercios"
+        "MongoDB"
       ]
     },
     {
@@ -270,99 +240,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
       "name": "Hugo Galiana",
       "inLanguage": "es-ES",
       "publisher": { "@id": "https://hugogaliana.com/#hugo" }
-    },
-    {
-      "@type": "FAQPage",
-      "@id": "https://hugogaliana.com/#faq",
-      "isPartOf": { "@id": "https://hugogaliana.com/#web" },
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "¿Cuánto cuesta?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Depende del tamaño del proyecto, y por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Cuánto tarda?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "La fecha de entrega va cerrada en la propuesta, junto al precio. Si me comprometo a un día, es ese día."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Podré actualizarla yo?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí. Te entrego un panel para cambiar tus textos, precios y fotos sin tocar código, y te enseño a usarlo el día de la entrega."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Y si ya tengo una web?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré."
-          }
-        }
-      ]
-    },
-    {
-      "@type": "ProfessionalService",
-      "@id": "https://hugogaliana.com/#servicio",
-      "name": "Hugo Galiana · Software a medida para comercios",
-      "url": "https://hugogaliana.com/",
-      "image": "https://hugogaliana.com/assets/og.jpg",
-      "description": "Desarrollo de webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando. Valencia y toda España en remoto.",
-      "inLanguage": "es-ES",
-      "isPartOf": { "@id": "https://hugogaliana.com/#web" },
-      "provider": { "@id": "https://hugogaliana.com/#hugo" },
-      "founder": { "@id": "https://hugogaliana.com/#hugo" },
-      "email": "hgalianareal@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Valencia",
-        "addressRegion": "Comunidad Valenciana",
-        "addressCountry": "ES"
-      },
-      "areaServed": [
-        { "@type": "City", "name": "Valencia" },
-        { "@type": "AdministrativeArea", "name": "Comunidad Valenciana" },
-        { "@type": "Country", "name": "España" }
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Qué construyo",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Una web que trae clientes",
-              "description": "Rápida, clara y preparada para aparecer en Google, para que quien te busque te encuentre y sepa en diez segundos qué ofreces y cómo contactarte."
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Pedidos, reservas y pagos",
-              "description": "Cobra desde tu propia web o app, sin depender de plataformas que se llevan comisión de cada venta."
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Herramientas internas",
-              "description": "Paneles y aplicaciones para tu día a día: inventario, turnos, comandas, lo que tu negocio necesite controlar."
-            }
-          }
-        ]
-      }
     }
   ]
 }
@@ -381,12 +258,9 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     <span class="nav-burger" aria-hidden="true"><i></i><i></i><i></i></span>
   </button>
   <ul id="nav-menu">
-    <li data-lvl="1"><a href="#sobre-mi">Quién soy</a></li>
-    <li data-lvl="2"><a href="#servicios">Qué construyo</a></li>
-    <li data-lvl="3"><a href="#proceso">Cómo trabajo</a></li>
-    <li data-lvl="3"><a href="#proyectos">Proyectos</a></li>
-    <li data-lvl="4"><a href="#faq">Preguntas frecuentes</a></li>
-    <li><a class="cta" href="#contacto">Cuéntame tu proyecto</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#como-trabajo">Cómo trabajo</a></li>
+    <li><a class="cta" href="#contacto">Contacto</a></li>
   </ul>
 </nav>
 
@@ -399,44 +273,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
     <div class="band p1 e-approach" data-a="0.0000" data-b="0.1143" data-first="1">
       <div class="inner">
-        <span class="kicker">Hugo Galiana · Full-stack · Valencia</span>
-        <h1 data-split="w">Construyo el software que hace funcionar tu negocio.</h1>
-        <p class="static-sub">Webs y aplicaciones a medida para comercios: pedidos, reservas y pagos, entregados funcionando.</p>
-        <div class="static-cta"><a class="btn btn-solid" href="#contacto">Cuéntame tu proyecto</a></div>
-      </div>
-    </div>
-
-    <div class="band p2 e-blur" data-a="0.1543" data-b="0.3501">
-      <div class="inner">
-        <span class="kicker">Capa 01 · Interfaz</span>
-        <h2 class="e-blur"><span class="soft" aria-hidden="true">Lo que ven tus clientes.</span><span class="sharp">Lo que ven tus clientes.</span></h2>
-        <p class="sub">Una web rápida y clara, que da confianza y aparece en Google.</p>
-      </div>
-    </div>
-
-    <div class="band p3 e-grid" data-a="0.3901" data-b="0.5612">
-      <div class="inner">
-        <span class="kicker">Capa 02 · Lógica</span>
-        <h2 data-split="c" data-spread="0.42">Lo que trabaja por ti.</h2>
-        <p class="sub">Pedidos, reservas y pagos, en tiempo real.</p>
-      </div>
-    </div>
-
-    <div class="band p4 e-scatter" data-a="0.6013" data-b="0.7917">
-      <div class="inner">
-        <span class="kicker">Capa 03 · Datos</span>
-        <h2 data-split="c" data-jy="1">Lo que nunca se pierde.</h2>
-        <p class="sub">Tus datos y tus clientes, tuyos. Sin comisiones de terceros.</p>
-      </div>
-    </div>
-
-    <div class="band p5 e-rise" data-a="0.8317" data-b="1.0000" data-last="1">
-      <div class="inner">
-        <h2 data-split="w">Un sistema. Una pieza. Funcionando.</h2>
-        <p class="sub">Cuéntame qué necesita tu negocio y te digo cómo lo construyo.</p>
-        <div class="cta-row">
-          <a class="btn btn-solid" href="#contacto">Cuéntame tu proyecto</a>
-        </div>
+        <span class="kicker">Desarrollador full-stack · Valencia</span>
+        <h1 data-split="w">Hugo Galiana.</h1>
+        <p class="static-sub">Construyo software de principio a fin. Aquí enseño lo que he hecho, cómo lo hice y por qué.</p>
+        <div class="static-cta"><a class="btn btn-solid" href="#proyectos">Ver proyectos</a><a class="btn btn-ghost" href="#contacto">Escríbeme</a></div>
       </div>
     </div>
 
@@ -447,121 +287,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 </header>
 <main id="main" tabindex="-1">
 
-<!-- ============ 1 · Quién soy ============ -->
-<section class="sec about" id="sobre-mi" aria-labelledby="h-about">
-  <div class="wrap about-wrap">
-    <div class="rev">
-      <div class="about-photo-box part" id="about-photo">
-        <img src="assets/hugo-retrato.jpg?v=4" width="1000" height="1000" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
-      </div>
-    </div>
-    <div class="rev">
-      <span class="kicker part">Quién soy</span>
-      <h2 id="h-about" class="part">Hugo Galiana Real.</h2>
-      <p class="part">Soy desarrollador full-stack en Valencia, orientado al desarrollo de aplicaciones web y soluciones digitales.</p>
-      <p class="part">He completado el Grado Superior en Desarrollo de Aplicaciones Multiplataforma, desarrollando proyectos completos con tecnologías como Angular, Ionic, NestJS, TypeScript, Spring Boot y bases de datos SQL y NoSQL.</p>
-      <p class="part">Mi experiencia incluye el desarrollo de un sistema de pedidos y pagos, la creación y puesta en producción de la web corporativa de Aperture Technologies y el desarrollo de un buscador integrado con inteligencia artificial.</p>
-      <p class="part">Me involucro en todas las fases del desarrollo, desde la definición de la solución y la arquitectura hasta la implementación, integración y despliegue.</p>
-    </div>
-  </div>
-</section>
-
-<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
-
-<!-- ============ 3 · Qué construyo ============ -->
-<section class="sec" id="servicios" aria-labelledby="h-serv">
-  <div class="wrap">
-    <div class="rev">
-      <span class="kicker part">Qué construyo</span>
-      <h2 id="h-serv" class="part">Tres cosas, hechas a medida.</h2>
-    </div>
-    <div class="cards rev">
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="10" width="32" height="24" rx="4"/><path d="M8 18h32M14 26h12"/></svg>
-        <h3>Una web que trae clientes</h3>
-        <p>Rápida, clara y preparada para aparecer en Google, para que quien te busque te encuentre y sepa en diez segundos qué ofreces y cómo contactarte.</p>
-      </article>
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="6" width="20" height="36" rx="5"/><path d="M20 34h8M24 12v10l6 4"/></svg>
-        <h3>Pedidos, reservas y pagos</h3>
-        <p>Cobra desde tu propia web o app, sin depender de plataformas que se llevan comisión de cada venta.</p>
-      </article>
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 14h28M10 24h28M10 34h28"/><circle cx="34" cy="14" r="3"/><circle cx="18" cy="24" r="3"/><circle cx="28" cy="34" r="3"/></svg>
-        <h3>Herramientas internas</h3>
-        <p>Paneles y aplicaciones para tu día a día: inventario, turnos, comandas, lo que tu negocio necesite controlar.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 4 · Ensámblalo ============ -->
-<section class="sec hold-sec" id="ensamblar" aria-labelledby="h-hold">
-  <div class="wrap hold-wrap">
-    <div class="hold-left rev">
-      <span class="kicker part">La idea, en tus manos</span>
-      <h2 id="h-hold" class="part">Todo software son tres capas.</h2>
-      <p class="lede part">Lo que se ve, lo que trabaja y lo que se guarda. Mi oficio es construir las tres y entregarlas encajadas. Mantén pulsado y ensámblalo tú.</p>
-      <ul class="hold-list" aria-live="polite">
-        <li data-li="0"><span class="mono">01</span> Interfaz, lo que ven tus clientes</li>
-        <li data-li="1"><span class="mono">02</span> Lógica, lo que trabaja por ti</li>
-        <li data-li="2"><span class="mono">03</span> Datos, lo que nunca se pierde</li>
-      </ul>
-    </div>
-    <div class="hold-right rev">
-      <button class="holdpad part" id="holdpad" type="button" aria-label="Mantén pulsado para ensamblar las tres capas">
-        <svg class="hold-ring" viewBox="0 0 320 320" aria-hidden="true"><rect x="1" y="1" width="318" height="318" rx="21" pathLength="1"/></svg>
-        <svg class="hold-art" viewBox="0 0 120 120" aria-hidden="true">
-          <defs>
-            <path id="cap-a" d="M28 42H92a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H68l-4 4H56l-4-4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
-            <path id="cap-b" d="M28 54h24l4 4h8l4-4h24a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H68l-4 4H56l-4-4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
-            <path id="cap-c" d="M28 66h24l4 4h8l4-4h24a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z"/>
-            <linearGradient id="cap-soldadura" x1="0" y1="42" x2="0" y2="78" gradientUnits="userSpaceOnUse">
-              <stop class="s1" offset="0"/><stop class="s2" offset=".5"/><stop class="s3" offset="1"/>
-            </linearGradient>
-          </defs>
-          <g class="slots"><use href="#cap-a"/><use href="#cap-c"/></g>
-          <g class="layer l1"><use href="#cap-a"/></g>
-          <g class="layer l2"><use href="#cap-b"/></g>
-          <g class="layer l3"><use href="#cap-c"/></g>
-          <rect class="soldadura" x="24" y="42" width="72" height="36" rx="6"/>
-        </svg>
-        <span class="hold-label mono" id="hold-label">Mantén pulsado</span>
-        <span class="hold-again mono" id="hold-again" aria-hidden="true">Pulsa para repetir</span>
-      </button>
-    </div>
-  </div>
-</section>
-
-<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
-
-<!-- ============ 5 · Cómo trabajo ============ -->
-<section class="sec" id="proceso" aria-labelledby="h-proc">
-  <div class="wrap">
-    <div class="rev">
-      <span class="kicker part">Cómo trabajo</span>
-      <h2 id="h-proc" class="part">Sin sorpresas, de principio a fin.</h2>
-    </div>
-    <ol class="steps rev">
-      <li class="step part">
-        <span class="n mono">01</span>
-        <h3>Hablamos y me cuentas qué necesitas.</h3>
-        <p>Me cuentas tu negocio y lo que te falta. Yo traduzco eso a una solución concreta.</p>
-      </li>
-      <li class="step part">
-        <span class="n mono">02</span>
-        <h3>Te doy precio y fecha por escrito, cerrados.</h3>
-        <p>Sabes lo que cuesta y cuándo lo tienes antes de decidir nada. Sin contadores que corren.</p>
-      </li>
-      <li class="step part">
-        <span class="n mono">03</span>
-        <h3>Te lo entrego y te enseño cómo usarlo.</h3>
-        <p>El código y el dominio son tuyos desde el día uno. Podrás contactarme en cualquier momento si me necesitas.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-<!-- ============ 6 · Proyectos ============ -->
+<!-- ============ 1 · Proyectos ============ -->
 <section class="sec" id="proyectos" aria-labelledby="h-proy">
   <div class="wrap">
     <div class="rev">
@@ -611,36 +337,30 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-
-<!-- ============ 7 · FAQ ============ -->
-<section class="sec" id="faq" aria-labelledby="h-faq">
-  <div class="wrap narrow">
+<!-- ============ 2 · Cómo trabajo ============ -->
+<section class="sec about" id="como-trabajo" aria-labelledby="h-como">
+  <div class="wrap about-wrap">
     <div class="rev">
-      <span class="kicker part">Preguntas honestas</span>
-      <h2 id="h-faq" class="part">Lo que todo el mundo pregunta antes de escribir.</h2>
+      <div class="about-photo-box part">
+        <img src="assets/hugo-retrato.jpg?v=4" width="1000" height="1000" alt="Retrato de Hugo Galiana Real" loading="lazy" decoding="async">
+      </div>
     </div>
-    <div class="faqs rev">
-      <details class="faq part">
-        <summary>¿Cuánto cuesta?</summary>
-        <p>Depende del tamaño del proyecto, y por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Cuánto tarda?</summary>
-        <p>La fecha de entrega va cerrada en la propuesta, junto al precio. Si me comprometo a un día, es ese día.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Podré actualizarla yo?</summary>
-        <p>Sí. Te entrego un panel para cambiar tus textos, precios y fotos sin tocar código, y te enseño a usarlo el día de la entrega.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Y si ya tengo una web?</summary>
-        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré.</p>
-      </details>
+    <div class="rev">
+      <span class="kicker part">Cómo trabajo</span>
+      <h2 id="h-como" class="part">De la idea al despliegue, sin saltarme pasos.</h2>
+      <p class="part">Soy técnico superior en Desarrollo de Aplicaciones Multiplataforma. Me gusta encargarme de todo el recorrido: entender el problema, decidir la arquitectura, construirlo y ponerlo en producción.</p>
+      <ol class="steps part">
+        <li><span class="mono">01</span>Entiendo qué hay que resolver antes de escribir código.</li>
+        <li><span class="mono">02</span>Decido la arquitectura y dejo escrito por qué.</li>
+        <li><span class="mono">03</span>Lo construyo, lo mido y lo despliego.</li>
+      </ol>
     </div>
   </div>
 </section>
 
-<!-- ============ 8 · Contacto ============ -->
+<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
+
+<!-- ============ 3 · Contacto ============ -->
 <section class="sec contact" id="contacto" aria-labelledby="h-cont">
   <div class="wrap narrow">
     <div class="rev">
@@ -709,73 +429,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 /* chips: hoy solo las usan las tecnologias de una tarjeta de proyecto */
 .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none}
 .chip{background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:8px 14px;font-family:var(--fm);font-size:12.5px;color:var(--text-secondary)}
-/* cards */
-.cards{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);border:1px solid var(--line);border-radius:16px;padding:28px 24px;transition:transform .45s var(--ease),border-color .45s var(--ease)}
-@media (hover:hover){.card:hover{transform:translateY(-5px);border-color:var(--line-strong)}}
-/* en táctil no hay hover: la tarjeta se marca al entrar en pantalla */
-@media (hover:none){.cards.rev.in .card{border-color:var(--line-strong)}.card:active{transform:scale(.99)}}
-.card h3{font-size:19px;margin:16px 0 10px}
-.card p{color:var(--text-secondary);font-size:15.5px}
-.glyph{width:44px;height:44px;fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-@media (max-width:860px){.cards{grid-template-columns:1fr}}
-/* hold moment */
-.hold-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
-.hold-list{list-style:none;margin-top:26px;display:grid;gap:12px}
-.hold-list li{display:flex;gap:14px;align-items:baseline;color:var(--text-secondary);opacity:.4;transform:translateX(-6px);transition:opacity .5s var(--ease),transform .5s var(--ease),color .5s var(--ease)}
-.hold-list li.on{opacity:1;color:var(--text-primary);transform:none}
-.hold-list .mono{font-size:12px;color:var(--accent)}
-.hold-list li[data-li="0"] .mono{color:var(--accent-hover)}
-.hold-list li[data-li="2"] .mono{color:var(--stone)}
-.holdpad{position:relative;isolation:isolate;width:min(320px,100%);aspect-ratio:1;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:6.875%;cursor:pointer;transition:border-color .4s var(--ease),transform .2s var(--ease);touch-action:none;-webkit-user-select:none;user-select:none}
-.holdpad::before,.holdpad::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0}
-.holdpad::before{background:linear-gradient(rgba(150,168,180,.075) 1px,transparent 1px) 0 0/100% 20px,linear-gradient(90deg,rgba(150,168,180,.075) 1px,transparent 1px) 0 0/20px 100%;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 20%,transparent 66%);mask-image:radial-gradient(circle at 50% 50%,#000 20%,transparent 66%);opacity:calc(.4 + .6*var(--hp,0))}
-.holdpad::after{background:radial-gradient(circle at 50% 50%,rgba(143,216,218,.13),transparent 60%);opacity:calc(.35 + .65*var(--hp,0))}
-.holdpad:hover{border-color:var(--line-strong)}
-.holdpad:active{transform:scale(.985)}
-.hold-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
-/* Sin vector-effect: con non-scaling-stroke Chrome mide el dasharray en pixeles
-   de pantalla y el pathLength en unidades del viewBox, y el borde se rompia en
-   segmentos sueltos. Asi el trazo recorre el marco entero y lo cierra. */
-.hold-ring rect{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--hp,0))}
-.hold-art{position:relative;z-index:1;width:64%;height:auto;overflow:visible}
-.slots use{fill:none;stroke:var(--line-strong);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:3 5;opacity:calc(.6 - .6*var(--hp,0))}
-.layer use{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.layer{transition:none;transform:scaleX(calc(.88 + .12*var(--hp,0)));transform-origin:center;opacity:calc(.42 + .58*var(--hp,0))}
-/* La 01 y la 03 son un unico movimiento: comparten regla y comparten curva
-   (--cierre, un smoothstep sobre el progreso), asi que salen a la vez, cierran
-   a la vez y tocan la 02 en el mismo instante, como una pinza. */
-.holdpad,.layer{--cierre:calc(var(--hp,0)*var(--hp,0)*(3 - 2*var(--hp,0)))}
-.l1,.l3{transform:translateY(calc((1 - var(--cierre,0))*var(--dy,0px))) scaleX(calc(.88 + .12*var(--hp,0)))}
-.l1{--dy:-28px;color:var(--accent-hover)}
-.l2{color:var(--accent)}
-.l3{--dy:28px;color:var(--stone)}
-/* Al terminar el ensamblado las tres piezas se funden: las costuras se apagan y
-   queda un unico recuadro cerrado, con el degradado que conserva los tres tonos. */
-.soldadura{fill:none;stroke:url(#cap-soldadura);stroke-width:2.6;stroke-linejoin:round;opacity:0;transition:opacity .22s var(--ease)}
-.s1{stop-color:var(--accent-hover)}
-.s2{stop-color:var(--accent)}
-.s3{stop-color:var(--stone)}
-.holdpad.done .soldadura{opacity:1;filter:drop-shadow(0 0 9px var(--accent))}
-.holdpad.done .layer{opacity:0;transition:opacity .3s var(--ease) .1s}
-.holdpad.done .hold-art{animation:holdsnap .46s var(--ease) 1}
-@keyframes holdsnap{0%{transform:scale(1,1)}28%{transform:scale(1.025,.938)}62%{transform:scale(.996,1.012)}100%{transform:scale(1,1)}}
-.holdpad.done{animation:holdflash .85s var(--ease) 1}
-@keyframes holdflash{0%{box-shadow:0 0 0 0 rgba(143,216,218,.3)}100%{box-shadow:0 0 0 26px rgba(143,216,218,0)}}
-.hold-label{position:relative;z-index:1;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);transition:color .4s var(--ease)}
-.holdpad.done .hold-label{color:var(--accent-hover)}
-.holdpad:not(.done):not(.holding) .hold-label{animation:holdhint 3.4s ease-in-out infinite}
-@keyframes holdhint{0%,100%{opacity:.6}50%{opacity:1}}
-.hold-again{position:absolute;left:0;right:0;bottom:18px;z-index:1;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);opacity:0;transition:opacity .5s var(--ease)}
-.holdpad.done .hold-again{opacity:.55;transition-delay:1.1s}
-@media (max-width:860px){.hold-wrap{grid-template-columns:1fr}}
-/* steps */
-.steps{margin-top:44px;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
-.step{position:relative;padding:26px 22px;border:1px solid var(--line);border-radius:16px;background:var(--panel-2)}
-.step .n{color:var(--accent);font-size:13px}
-.step h3{font-size:18px;margin:12px 0 8px}
-.step p{color:var(--text-secondary);font-size:15px}
-@media (max-width:860px){.steps{grid-template-columns:1fr}}
 /* proyectos: tarjetas generadas por `npm run build:proyectos` a partir de
    `contenido/proyectos/` (T4 de la spec 001) */
 .proj-grid{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -800,21 +453,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .proj-card--destacado .proj-card-link{flex-direction:column}
   .proj-card--destacado .proj-card-media{aspect-ratio:16/9}
 }
-/* faq */
-.faqs{margin-top:36px;display:grid;gap:10px}
-.faq{border:1px solid var(--line);border-radius:14px;background:var(--panel-2);overflow:hidden}
-.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:var(--fd);font-weight:600;font-size:16.5px;position:relative;transition:color .3s var(--ease)}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-52%);font-family:var(--fm);color:var(--accent);transition:transform .35s var(--ease)}
-.faq[open] summary::after{transform:translateY(-52%) rotate(45deg)}
-.faq[open] summary{color:var(--accent)}
-.faq p{padding:0 22px 20px;color:var(--text-secondary);font-size:15.5px;max-width:70ch}
-/* las preguntas son el bloque mas corto de la pagina, y con el hueco estandar
-   debajo el salto al formulario se leia como un vacio. Se recorta solo por
-   abajo: el de arriba de la seccion de contacto hace falta para que entre la
-   imagen de fondo, que empieza justo ahi y arranca desvanecida. */
-#faq{padding-bottom:clamp(40px,5vh,64px)}
-/* quien soy */
+/* cómo trabajo: retrato, presentación y tres pasos */
 .about-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,5vw,60px);align-items:center}
 .about-photo-box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1;max-width:380px;box-shadow:0 26px 74px rgba(0,0,0,.45)}
 .about-photo-box::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:20px;box-shadow:inset 0 0 0 1px var(--line)}
@@ -823,6 +462,10 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .about-ph svg{width:52px;height:52px;color:var(--accent)}
 .about p+p{margin-top:14px}
 .about .rev + .rev h2{margin-top:14px}
+.about h2+p{margin-top:18px}
+.steps{list-style:none;margin-top:26px;border-top:1px solid var(--line)}
+.steps li{display:flex;gap:18px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+.steps .mono{font-size:13px;color:var(--accent)}
 @media (max-width:860px){.about-wrap{grid-template-columns:1fr}.about-photo-box{max-width:min(320px,72vw);margin-inline:auto}}
 /* contacto */
 .contact{padding-bottom:120px;position:relative;isolation:isolate;overflow:hidden}
@@ -899,26 +542,14 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .rev.in .part:nth-child(4){transition-delay:.24s}
 .rev.in .part:nth-child(5){transition-delay:.32s}
 .rev.done .part:nth-child(n){transition-delay:0s}
-.cards.rev.in .part:nth-child(1){transition-delay:.05s}
-.cards.rev.in .part:nth-child(2){transition-delay:.17s}
-.cards.rev.in .part:nth-child(3){transition-delay:.29s}
-.cards.rev.done .part:nth-child(n){transition-delay:0s}
-/* living whisper per section */
-/* glowp anima filter, que no es componible: cada paso obliga a recalcular estilo
-   y repintar. Y era infinita y la encendia la clase anim del body, o sea que
-   corria tambien mientras mirabas el hero, cuatro pantallas mas arriba.
-   Ahora solo late mientras su seccion esta a la vista. */
-.anim .a-la-vista .glyph{animation:glowp 5.4s var(--ease-io) infinite}
-.anim .card:nth-child(2) .glyph{animation-delay:-1.8s}
-.anim .card:nth-child(3) .glyph{animation-delay:-3.6s}
-@keyframes glowp{0%,100%{filter:drop-shadow(0 0 0 rgba(143,216,218,0))}50%{filter:drop-shadow(0 0 7px rgba(143,216,218,.45))}}
 /* El subtitulo y el boton ya no esperan al final del scrub: son lo que
      convierte, y hasta ahora vivian en la banda p5, a 6,4 pantallas del
      visitante. Se quedan en p1, debajo del h1, y se van con la banda.
      La banda entera es pointer-events:none --el scrub no debe tragarse los
      clics--, asi que el boton se rehabilita a si mismo. Cuando la banda se
      apaga, el JS le pone visibility:hidden y deja de recibir clics solo. */
-.static-sub,.static-cta{display:block}
+.static-sub{display:block}
+.static-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .static-cta{pointer-events:auto}
 /* entra detras de la ultima palabra del h1: el reparto cascada termina sobre
    los 1.000 ms (--th llega a ~0,55 y el retardo es --th*760ms + 580ms) */
@@ -940,19 +571,11 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
    un drawImage y no un rasterizado de pantalla entera. El compositor se queda
    con lo que si­ se le da bien y no cuesta memoria: el texto. */
 @property --k{syntax:'<number>';initial-value:0;inherits:true}
-@property --ks{syntax:'<number>';initial-value:0;inherits:true}
-@property --kb{syntax:'<number>';initial-value:0;inherits:true}
 @keyframes rampaK{from{--k:0}to{--k:1}}
-@keyframes rampaKs{from{--ks:0}to{--ks:1}}
-@keyframes rampaKb{from{--kb:0}to{--kb:1}}
 @keyframes apareceFrag{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes apareceSimple{from{opacity:0}to{opacity:1}}
 @keyframes desapareceSimple{from{opacity:1}to{opacity:0}}
 @keyframes banda1{0%,9.4266%{opacity:1}11.4266%,100%{opacity:0}}
-@keyframes banda2{0%,15.4289%{opacity:0}17.4289%,33.0072%{opacity:1}35.0072%,100%{opacity:0}}
-@keyframes banda3{0%,39.0095%{opacity:0}41.0095%,54.1241%{opacity:1}56.1241%,100%{opacity:0}}
-@keyframes banda4{0%,60.1264%{opacity:0}62.1264%,77.1692%{opacity:1}79.1692%,100%{opacity:0}}
-@keyframes banda5{0%,83.1714%{opacity:0}85.1714%,100%{opacity:1}}
 
 @supports (animation-timeline: view()){
  @media (pointer:coarse) and (prefers-reduced-motion: no-preference){
@@ -970,10 +593,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
      scroll unicamente dispara al entrar en el tramo de la banda. Asi la frase se
      compone entera aunque pares de deslizar. */
   .p1{animation-name:banda1}
-  .p2{animation-name:banda2}
-  .p3{animation-name:banda3}
-  .p4{animation-name:banda4}
-  .p5{animation-name:banda5}
  }
 }
 /* ============ hero en pantallas táctiles / estrechas ============ */
@@ -984,20 +603,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .p1 .inner{margin-top:15svh;max-width:none}
   .p1 h1{font-size:clamp(28px,7.4vw,42px)}
   .p1::before{background:radial-gradient(ellipse 130% 44% at 50% 22%,rgba(4,6,9,.76) 0%,rgba(4,6,9,.5) 50%,rgba(4,6,9,0) 80%)}
-  .p2,.p3,.p4{justify-content:flex-start}
-  .p2 .inner,.p3 .inner,.p4 .inner{margin:0;max-width:none;text-align:left}
-  .p2{align-items:flex-start}
-  .p2 .inner{margin-top:17svh}
-  .p3,.p4{align-items:flex-end}
-  .p3 .inner,.p4 .inner{margin-bottom:15svh}
-  .p2 h2,.p3 h2,.p4 h2{font-size:clamp(25px,6.6vw,36px)}
-  .p5 h2{font-size:clamp(28px,7.4vw,42px)}
-  .p5 .inner{margin-bottom:13svh}
   .band .sub{font-size:clamp(15px,4.2vw,18px);max-width:32ch}
-  .p2::before{background:radial-gradient(ellipse 130% 46% at 34% 24%,rgba(4,6,9,.76) 0%,rgba(4,6,9,.5) 50%,rgba(4,6,9,0) 80%)}
-  .p3::before{background:radial-gradient(ellipse 130% 50% at 34% 78%,rgba(4,6,9,.76) 0%,rgba(4,6,9,.5) 50%,rgba(4,6,9,0) 80%)}
-  .p4::before{background:radial-gradient(ellipse 130% 50% at 66% 78%,rgba(4,6,9,.76) 0%,rgba(4,6,9,.5) 50%,rgba(4,6,9,0) 80%)}
-  .p5::before{background:radial-gradient(ellipse 120% 54% at 50% 78%,rgba(4,6,9,.74) 0%,rgba(4,6,9,.48) 50%,rgba(4,6,9,0) 80%)}
   .ringbox{bottom:26px}
 }
 /* El motor del metraje entra con cualquier puntero grueso o pantalla estrecha
@@ -1010,8 +616,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @media (orientation:landscape) and (max-height:560px){
   .hero{height:380vh}
   .p1 .inner{margin-top:8svh}
-  .p2 .inner{margin-top:9svh}
-  .p3 .inner,.p4 .inner,.p5 .inner{margin-bottom:8svh}
 }
 /* ============ hero estático solo si el sistema pide menos movimiento ============ */
 @media (prefers-reduced-motion: reduce){
@@ -1031,8 +635,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   *,*::before,*::after{animation:none !important;transition:none !important;transition-delay:0s !important}
   .rev .part{opacity:1;transform:none}
   .dl{stroke-dashoffset:0}
-  .hold-list li{opacity:1;color:var(--text-primary);transform:none}
-  .holdpad,.layer{--hp:1}
   body{opacity:1}
 }
 </style>
@@ -1622,75 +1224,15 @@ var io=new IntersectionObserver(function(entries){
   });
 },{threshold:0,rootMargin:'0px 0px -12% 0px'});
 document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)});
-/* El adorno infinito (glowp) se enciende y se apaga con su seccion.
-   A diferencia del observador de arriba, este no deja de mirar: la clase entra y
-   sale, porque el objetivo es que no corran cuando no se ven. */
-var ambiente=new IntersectionObserver(function(en){
-  en.forEach(function(e){e.target.classList.toggle('a-la-vista',e.isIntersecting)});
-},{rootMargin:'150px 0px'});
-document.querySelectorAll('#servicios').forEach(function(el){ambiente.observe(el)});
-
-/* ---------- hold moment ---------- */
-var pad=document.getElementById('holdpad');
-var label=document.getElementById('hold-label');
-var lis=[].slice.call(document.querySelectorAll('.hold-list li'));
-var hp=0,holding=false,holdRaf=null,holdDone=false,lastHp=-1,armReset=false;
-var LBL_IDLE='Mantén pulsado',LBL_RUN='Ensamblando',LBL_DONE='Ensamblado';
-function setLabel(t){if(label.textContent!==t)label.textContent=t}
-function setHp(v){
-  hp=clamp(v,0,1);
-  if(Math.abs(hp-lastHp)>0.006){lastHp=hp;pad.style.setProperty('--hp',hp.toFixed(3))}
-  if(!holdDone)setLabel(hp>0.05?LBL_RUN:LBL_IDLE);
-}
-function holdTick(){
-  setHp(hp+(holding?0.021:-0.035));
-  if(hp>=1&&!holdDone){completeHold(false);return}
-  if((holding&&hp<1)||(!holding&&hp>0)){holdRaf=requestAnimationFrame(holdTick)}else{holdRaf=null;if(!holding)pad.classList.remove('holding')}
-}
-function startHold(ev){if(holdDone)return;ev.preventDefault();holding=true;pad.classList.add('holding');if(!holdRaf)holdRaf=requestAnimationFrame(holdTick)}
-function endHold(){holding=false;if(!holdDone&&!holdRaf&&hp>0)holdRaf=requestAnimationFrame(holdTick)}
-function completeHold(instant){
-  holdDone=true;holding=false;setHp(1);
-  pad.classList.remove('holding');pad.classList.add('done');setLabel(LBL_DONE);
-  pad.setAttribute('aria-label','Las tres capas están ensambladas. Pulsa para repetir.');
-  lis.forEach(function(li,i){setTimeout(function(){li.classList.add('on')},instant?0:220*i)});
-  if(holdRaf){cancelAnimationFrame(holdRaf);holdRaf=null}
-}
-function resetHold(){
-  holdDone=false;holding=false;armReset=false;setHp(0);
-  pad.classList.remove('done','holding');setLabel(LBL_IDLE);
-  pad.setAttribute('aria-label','Mantén pulsado para ensamblar las tres capas');
-  lis.forEach(function(li){li.classList.remove('on')});
-}
-pad.addEventListener('pointerdown',function(ev){armReset=holdDone;startHold(ev)});
-addEventListener('pointerup',endHold);
-pad.addEventListener('pointercancel',endHold);
-pad.addEventListener('click',function(){if(armReset&&holdDone){armReset=false;resetHold()}});
-pad.addEventListener('keydown',function(e){
-  if(e.key!==' '&&e.key!=='Enter')return;
-  if(e.key===' ')e.preventDefault();
-  if(e.repeat)return;
-  armReset=holdDone;if(!holdDone)startHold(e);
-});
-pad.addEventListener('keyup',function(e){
-  if(e.key!==' '&&e.key!=='Enter')return;
-  if(armReset&&holdDone){armReset=false;resetHold();return}
-  endHold();
-});
-
 /* ---------- reduced motion, live and both directions ---------- */
-var userCompletedHold=false;
-pad.addEventListener('pointerdown',function(){userCompletedHold=holdDone||userCompletedHold});
 function pinToFinalStates(){
   document.querySelectorAll('.rev').forEach(function(el){el.classList.add('in','done')});
   document.querySelectorAll('.divider').forEach(function(el){el.classList.add('in')});
-  if(!holdDone)completeHold(true);
   document.body.classList.remove('anim');
 }
 function unpinFinalStates(){
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
     document.body.classList.add('anim');
-    if(holdDone&&!userCompletedHold)resetHold();
   }
 }
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',function(e){

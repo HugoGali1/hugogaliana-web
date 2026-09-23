@@ -50,7 +50,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       entera vive en `index.html`: ninguna otra tarea debe editarlo a la vez.
 
 ## T5 · Portada: podar lo comercial y rehacer «Cómo trabajo»
-- [ ] Quitar servicios, proceso, preguntas frecuentes y «Mantén pulsado», y
+- [x] Quitar servicios, proceso, preguntas frecuentes y «Mantén pulsado», y
       dejar la presentación nueva.
 - **Criterios**: RF-1, RF-9, RF-10, RF-44, RF-46.
 - **Notas**: al quitar «Mantén pulsado» se va también su CSS y su JavaScript.
