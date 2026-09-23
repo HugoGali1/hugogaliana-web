@@ -1,186 +1,136 @@
 # Contexto de trabajo — hugogaliana.com
 
-Ultima sesion: **15 de septiembre de 2026**.
-Estado: **9 commits en la rama `preparar-despliegue`. Preview verificado y
-Web Analytics activo. Listo para fusionar a `main`.**
-Base: `main` en `ae7be8a`.
+Ultima sesion: **23 de septiembre de 2026**.
+Estado: **`main` en produccion y al dia con la rama `nueva-base`.** Spec 001
+cerrada (T1 y T2). Sin trabajo a medias.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
-> Esta excluido en `.vercelignore`. Borralo cuando el proyecto este al dia.
+> Esta excluido en `.vercelignore`. Es el punto de retomada para cualquier
+> agente (Claude o Codex): mantenlo al dia al cerrar cada sesion.
 
 ---
 
 ## 1. Lo primero al volver
 
 ```bash
-git log --oneline main..preparar-despliegue   # los 9 commits
-npm run build:topnote                          # solo si tocas topnote/src/app.jsx
+git fetch origin && git status          # nueva-base y main deben coincidir
+npm test                                 # debe estar en verde
 ```
 
-Solo queda el repaso visual y fusionar. Seccion 2.
+- Flujo de trabajo: `AGENTS.md`, `docs/constitution.md` y
+  `docs/flujo-agentes.md`. Cambio nuevo = spec con entrevista y aprobacion,
+  una tarea cada vez, implementador y validador distintos.
+- Produccion es `main`: se publica con avance rapido desde `nueva-base`
+  (`git push origin nueva-base:main`) despues de ver el preview de la rama.
 
 ---
 
-## 2. Estado del preview
+## 2. Que hay publicado
 
-Desplegado y **verificado** el 15 de septiembre. URL estable de la rama:
-
-```
-https://hugogaliana-web-git-preparar-despliegue-hugo-gali1-s-projects.vercel.app
-```
-
-Lleva la proteccion de despliegue de Vercel: en el navegador, con la sesion de
-Vercel iniciada, entra sola. Desde la terminal hace falta `vercel curl`, porque
-`curl` a secas devuelve un 302 al SSO. Ojo: `vercel curl` ignora `-o`, `-D` y
-`-w`; usa `-I` para ver cabeceras.
-
-### Comprobado
-
-| Que | Resultado |
+| Pieza | Estado |
 |---|---|
-| `/api/recommendations/rank` | **Vive.** Un GET devuelve `405 Solo se admite POST` |
-| `GEMINI_API_KEY` | **Configurada** en Production y Preview, tipo Sensitive |
-| `/` , `/topnote` , `/privacidad` | 200 |
-| `/topnote/app.js` | 200, 141 KB |
-| `/topnote/data/catalog.json` | 200, 3,39 MB |
-| `/_vercel/speed-insights/script.js` | 200, ya activo |
-| `/_vercel/insights/script.js` | 200, activo desde el 15/09 |
+| Portada `/` | Proyectos justo tras el hero, Brasa y Ascuas destacado como «Mi TFG · Proyecto principal» (panel + movil), ensamblado en 3D, «Quien soy» antes de las FAQ |
+| Hero | Escritorio: scrub del video. Tactil o < 900 px: clase `lite` en `<html>` e imagen fija `assets/hero-movil.jpg` (100 KB), sin animacion |
+| `/proyectos/brasa-y-ascuas`, `/aperture`, `/top-note` | Pagina propia por proyecto; estilos compartidos en `assets/caso.css` |
+| `/proyectos` | Redirige a `/#proyectos` (`vercel.json`) |
+| Demo de Brasa y Ascuas | `buffet.hugogaliana.com`, repo aparte `HugoGali1/TFG`, en Render. **Stripe activo en modo de prueba** (ver seccion 4) |
 
-**Resuelta la duda de `package.json`.** `vercel inspect` lista
-`lambda api/recommendations/rank (6.21KB)` entre los builds: la funcion se detecta
-y se construye pese a tener `package.json` excluido en `.vercelignore`, porque
-`rank.js` no tiene ni un `import` ni un `require`. **No hay que tocar nada.**
-
-### Lo unico que queda
-
-- [ ] **Repaso visual del preview**: que el menu de movil abra y cierre, que la
-      demo monte y pinte los 5.000 perfumes, y que los apartados 02, 04 y 06 de
-      `/privacidad` digan lo que quieres que digan.
-- [ ] **Fusionar `preparar-despliegue` a `main`**. Eso despliega a produccion.
-
-### Cuidado con la cache al tocar `/_vercel/`
-
-Activar Web Analytics en el panel **no basto**: `/_vercel/insights/script.js`
-seguia devolviendo 404 con `X-Vercel-Cache: HIT`. La causa estaba en
-`vercel.json`: la regla de cabeceras cazaba **cualquier** ruta acabada en `.js`,
-incluidas las de plataforma, y habia cacheado el 404 anterior con `max-age` de
-una hora y `stale-while-revalidate` de una semana.
-
-Arreglado en `3f17647` excluyendo el prefijo `_vercel/` del patron. Ahora esas
-rutas las cachea Vercel (31 dias) y el resto del sitio conserva su regla: se
-comprobo que `/topnote/app.js` y el logo siguen con 3600 y el catalogo con
-86400.
+Borrado en esta etapa: `assets/seq/` (48 fotogramas, 804 KB) y el motor de
+lienzo que los pintaba en movil.
 
 ---
 
-## 3. Los 9 commits de la rama
+## 3. Historia reciente (23/09/2026)
 
 ```
-cb93167 perf(topnote)  compilar el JSX en local y quitar Babel del navegador
-2e89585 fix(api)       dejar de recortar los ids largos y acotar el prompt
-b992178 feat(portada)  menu de movil, ficha de servicio en JSON-LD, CTA antes
-91012c8 chore          quitar 3,1 MB de assets muertos y no publicar copias
-b13a1ea feat(analitica) Vercel Analytics + Speed Insights, y privacidad al dia
-07bf9a7 chore(seo)     sitemap con las fechas de esta revision
-72838f6 docs           actualizar la nota de trabajo al estado de la rama
-828b972 docs           resultado de verificar el preview
-3f17647 fix(cache)     no aplicar la cache del sitio a las rutas /_vercel/
+3344312 copy(proyectos): Brasa y Ascuas como «Mi TFG · Proyecto principal»
+0a34ea3 feat(ensamblar): tres placas en 3D que se apilan de la base arriba
+27f0313 docs(agentes): Opus 5.5 con esfuerzo medio para orquestar y redactar specs
+a248f63 fix(proyectos): tarjetas al ancho de la columna de texto
+24d69a3 docs(specs): 001 ensamblado en 3D y tarjetas al ancho del texto
+7b112b6 feat(portfolio): pagina propia por proyecto y hero ligero en movil
+361edba docs(agentes): flujo de trabajo con agentes y specs
 ```
 
-Los cuatro primeros son el trabajo que ya estaba en el indice; los tres ultimos
-salieron de esta sesion.
-
-### Lo que hay detras, en corto
-
-- **Top Note** ya no carga Babel standalone (2,87 MB que se descargaban y
-  ejecutaban en cada visita). El JSX vive en `topnote/src/app.jsx` y se compila a
-  `topnote/app.js` (136 KB) con `scripts/build-topnote.mjs`. `topnote/index.html`
-  baja de 5.134 a ~150 lineas. Logo de 794 KB a 38 KB.
-- **`rank.js`**: `compactCandidate` cortaba el id a 40 caracteres, pero 543 de los
-  5.000 perfumes tienen ids de hasta 86, asi que `parseRanked` los descartaba
-  contra `validIds`. Medido: antes **0 de 8** recomendaciones sobrevivian, ahora
-  **8 de 8**. Nueva constante `MAX_ID_CHARS = 120`.
-- **Portada**: menu de movil (hamburguesa, `inert` sobre el fondo, Escape),
-  `ProfessionalService` en el JSON-LD, subtitulo y CTA del hero de la banda p5 a
-  la p1 para que se vean en escritorio.
-- **Analitica**: la politica de privacidad decia literalmente “no hay analitica”,
-  asi que se actualizo a la vez (apartados 02, 04 y 06, y la fecha). Sigue sin
-  haber cookies ni banner: la herramienta de Vercel no guarda nada en el
-  dispositivo.
-- **Borrado**: `assets/hero-scrub-mobile.mp4` (2,1 MB), `assets/hg-favicon.png`
-  (1 MB), y las copias de trabajo `index-original.html` e `index-movil.html`,
-  que se habrian publicado tal cual.
+- **La historia de GitHub se reescribio** el 23/09 (mismos arboles, otros
+  hashes). Si un clon antiguo no casa con `origin`, no se fuerza nada: se
+  recoloca con `git rebase --onto origin/<rama> <commit-viejo-equivalente>`.
+- **PR #2 cerrada** (`escaparate-proyectos`): otra version de la portada y de
+  las paginas de proyecto, generadas desde Markdown (`contenido/proyectos/`,
+  `scripts/build-proyectos.mjs`) y con tests propios. Se descarto en favor de
+  `nueva-base`. **La rama sigue en GitHub** por si se quiere recuperar algo.
+- Rama local `respaldo-nueva-base-claude`: copia de seguridad del trabajo antes
+  de recolocarlo; su arbol es identico al de `main`. Se puede borrar.
+- Pagina de prueba de las tres propuestas del ensamblado (se eligio la A):
+  https://claude.ai/artifact/G62HMkyZr9o4Tz2zEo2mmA
 
 ---
 
-## 4. La bandera CUENTAS — leer antes de tocar Top Note
+## 4. Stripe en la demo de Brasa y Ascuas
+
+- Modo de **prueba**: nunca se cobra dinero. Tarjeta `4242 4242 4242 4242`
+  (3D Secure: `4000 0025 0000 3155`). La pagina del proyecto lo indica.
+- Clave publicable en `brasa-ascuas-app/src/environments/environment.prod.ts`
+  (repo `TFG`, commit `8f97aad`). La secreta, `STRIPE_SECRET_KEY`, solo en las
+  variables de entorno de Render (servicio `buffet-staff`).
+- **Sin webhook**: la app confirma cada pago con `POST /api/payments/:id/sync`,
+  que consulta el estado a Stripe. Solo se pierde el caso de cerrar el
+  navegador a mitad de un Bizum.
+- Comprobacion rapida: `curl https://buffet.hugogaliana.com/api/payments/config`
+  debe devolver `{"stripeEnabled":true}`.
+- Orden importante si se cambia de claves: la app usa Stripe con solo tener la
+  publicable, asi que **primero la secreta en Render, despues la publicable**.
+
+---
+
+## 5. La bandera CUENTAS — leer antes de tocar Top Note
 
 `topnote/src/app.jsx` habla con **14 rutas** de API. El despliegue publico solo
 tiene **una** funcion serverless: `api/recommendations/rank.js`. Las otras trece
-(`/auth/signup`, `/auth/login`, `/auth/me`, `/auth/account`, `/favorites`,
-`/favorites/bulk`, `/history`, `/history/bulk`...) viven en el backend NestJS de
-Top Note, **que no esta desplegado**.
+(`/auth/*`, `/favorites*`, `/history*`...) viven en el backend NestJS de Top
+Note, **que no esta desplegado**. Por eso `const CUENTAS = false`: esconde la UI
+de cuenta; favoritos e historial van contra `localStorage`.
 
-Con la UI de cuenta visible, un visitante pulsaba “Crear cuenta” y se llevaba un
-Error 404. Por eso `const CUENTAS = false`: esconde el avatar del header y bloquea
-el modal de auth. Favoritos e historial siguen funcionando contra `localStorage`,
-que es lo unico que la demo necesita.
+**Cuando levantes el NestJS, `CUENTAS = true` y la UI vuelve entera.**
 
-**Cuando levantes el NestJS, `CUENTAS = true` y la UI vuelve entera.** No hay que
-deshacer nada mas.
-
-Ojo al editar: `topnote/app.js` es **producto**, no fuente. Se edita
-`topnote/src/app.jsx` y se reconstruye con `npm run build:topnote`. El despliegue
-es estatico y no ejecuta ese script, por eso `app.js` se commitea.
+`topnote/app.js` es **producto**: se edita `topnote/src/app.jsx` y se
+reconstruye con `npm run build:topnote`.
 
 ---
 
-## 5. Mejoras analizadas y no aplicadas
+## 6. Pendiente y mejoras no aplicadas
 
 Ordenadas por impacto. Ninguna esta empezada.
 
-### Peso
-
-- **`assets/hero-scrub.mp4`: 6,2 MB.** El fichero mas pesado del proyecto.
-  `preload="none"` esta bien puesto, pero cuando entra, entra. Recomprimir a AV1 o
-  H.265, o bajar bitrate. Es el mayor ahorro que queda en la portada.
-- **`topnote/data/catalog.json`: 3,4 MB** que el visitante descarga antes de poder
-  buscar nada. Brotli lo deja sobre 600 KB, pero sigue siendo mucho para un primer
-  contacto. Partirlo en un indice ligero (id, nombre, casa, familia) + detalle bajo
-  demanda quitaria la mayor parte.
-- **CDNs de terceros** (unpkg, jsdelivr) para React, ReactDOM, three y
-  framer-motion: punto unico de fallo para la demo. Autohospedarlos en
-  `/topnote/vendor/` los mete ademas bajo las cabeceras de cache del sitio.
-
-> Descartado: *“framer-motion sin minificar”* figuraba aqui y **era un falso
-> positivo**. `dist/framer-motion.js` (142 KB) ya es el build de produccion; el de
-> desarrollo es `dist/framer-motion.dev.js` (525 KB), que el proyecto no usa.
-
-### Producto
-
-- **Limite por IP en `rank.js`**: `underLimit(ip)` se consume *antes* de validar el
-  cuerpo, asi que una peticion malformada gasta una de las 5. Moverlo detras de
-  las validaciones.
-- **Allowlist de origen**: acepta cualquier `*.vercel.app` y la cabecera `Origin`
-  se falsifica con un curl. El dia que la demo tenga trafico real, BotID o Redis
-  del marketplace de Vercel. El techo de verdad ahora es el limite de gasto de la
-  cuenta de Google.
+- **`assets/hero-scrub.mp4`: 6,2 MB**, ahora solo lo descarga el escritorio.
+  Recomprimir (AV1/H.265 o menos bitrate) es el mayor ahorro que queda.
+- **`topnote/data/catalog.json`: 3,4 MB** antes de poder buscar. Partirlo en
+  indice ligero + detalle bajo demanda.
+- **CDNs de terceros** en Top Note (React, three, framer-motion): autohospedar
+  en `/topnote/vendor/`.
+- **`rank.js`**: el limite por IP se gasta antes de validar el cuerpo; moverlo
+  detras. La allowlist de origen acepta cualquier `*.vercel.app`.
+- **Aperture**: la pagina dice React + Vite + EmailJS, deducido del codigo
+  publicado de su web; confirmarlo.
+- CSS muerto menor: `.cols.dos` en `assets/caso.css`.
+- Ideas de contenido: cita de Aperture, capturas de detalle por proyecto, CV en
+  PDF, precios orientativos en la FAQ.
 
 ---
 
-## 6. Mapa rapido del proyecto
+## 7. Mapa rapido del proyecto
 
 ```
-index.html              portada, todo en un fichero (CSS y JS en linea, ~103 KB)
+index.html              portada, todo en un fichero (CSS y JS en linea, ~97 KB)
+proyectos/*.html        una pagina por proyecto
+assets/caso.css         estilos de las paginas de proyecto
 404.html  privacidad.html  robots.txt  sitemap.xml
-vercel.json             cleanUrls, redirects de /buffet, cabeceras de cache y seguridad
+vercel.json             cleanUrls, redirects (/buffet, /proyectos), cache y seguridad
 api/recommendations/rank.js   unica funcion serverless: re-rankeo con Gemini
-topnote/index.html      cascaron de la demo (~150 lineas)
-topnote/src/app.jsx     FUENTE de la demo (5.121 lineas) <- se edita aqui
-topnote/app.js          PRODUCTO, generado, commiteado (136 KB)
-topnote/data/catalog.json     5.000 perfumes, 3,4 MB
-scripts/build-topnote.mjs     jsx -> js (Babel + terser)
-assets/                 hero-scrub.mp4 (6,2 MB), seq/ (48 webp, 804 KB), capturas
+topnote/src/app.jsx     FUENTE de la demo <- se edita aqui
+topnote/app.js          PRODUCTO, generado, commiteado
+specs/001-*/            spec 001 (cerrada) y sus tareas
+assets/                 hero-scrub.mp4 (6,2 MB, solo escritorio), hero-movil.jpg, capturas
 ```
 
 Formulario de contacto: Web3Forms, la access key del `<input id="w3f-key">` es
