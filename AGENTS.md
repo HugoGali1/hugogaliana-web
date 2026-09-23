@@ -11,9 +11,13 @@ estático que se sirve tal cual: la portada (`index.html`, CSS y JS en línea),
 función serverless, `api/recommendations/rank.js`, que re-rankea con Gemini;
 la clave vive en la variable de entorno `GEMINI_API_KEY` de Vercel.
 
-El único paso de construcción es compilar el JSX de la demo:
-`topnote/src/app.jsx` es la fuente y `topnote/app.js` es producto, generado y
-commiteado porque el despliegue no ejecuta ningún build.
+Hay dos pasos de construcción, los dos en local y con el resultado
+commiteado, porque el despliegue no ejecuta ningún build:
+- La demo: `topnote/src/app.jsx` es la fuente y `topnote/app.js` es producto.
+- Los proyectos: cada uno es un archivo en `contenido/proyectos/`, y de ellos
+  salen las tarjetas de la portada (entre las marcas `proyectos:inicio` y
+  `proyectos:fin` de `index.html`), las páginas de `proyectos/` y sus entradas
+  del sitemap (spec 001).
 
 ## Comandos
 Desde la raíz.
@@ -22,6 +26,9 @@ Desde la raíz.
 - Compilar la demo: `npm run build:topnote`. Solo si cambió
   `topnote/src/app.jsx`. No se llama `build` a propósito: Vercel ejecutaría
   un script con ese nombre (ver `.vercelignore`).
+- Generar los proyectos: `npm run build:proyectos`. Tras añadir o cambiar un
+  archivo de `contenido/proyectos/` o sus imágenes; falla nombrando el archivo
+  y el dato si algo no cuadra.
 - Preview: cada rama subida a GitHub genera un despliegue de preview en
   Vercel. Tiene protección de despliegue: desde la terminal, `vercel curl`
   (no `curl`, que devuelve un 302 al SSO).
@@ -37,8 +44,10 @@ por partes:
 |---|---:|---|
 | `docs/constitution.md` | — | Leer siempre antes de tocar código. |
 | `specs/NNN-*/spec.md` y `tasks.md` | — | Leer la spec activa (la de número más alto con tareas abiertas). |
-| `CONTEXTO.md` | 8 KB | Punto de retomada: estado, pendientes y decisiones abiertas. |
-| `index.html` | 106 KB | **Nunca entero.** Buscar la sección con `grep -n` y leer ese tramo. |
+| `CONTEXTO.md` | 7 KB | Punto de retomada: estado, pendientes y decisiones abiertas. |
+| `index.html` | 53 KB | **Nunca entero.** Buscar la sección con `grep -n` y leer ese tramo. El bloque entre `proyectos:inicio` y `proyectos:fin` es generado: no se edita a mano. |
+| `contenido/proyectos/*.md` | — | Uno por proyecto; el formato está en `contenido/proyectos/README.md`. |
+| `proyectos/` | — | Páginas generadas por `npm run build:proyectos`: no se editan a mano. |
 | `topnote/src/app.jsx` | 5.100 líneas | **Nunca entero.** Por partes, localizando con `grep -n`. Leer antes la bandera `CUENTAS` en `CONTEXTO.md`. |
 | `topnote/app.js` | 136 KB | Producto generado: no se lee ni se edita. |
 | `topnote/data/catalog.json` | 3,4 MB | **Nunca entero.** Consultar con `node -e` o `grep`. |

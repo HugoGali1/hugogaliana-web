@@ -84,7 +84,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       `/buffet` y `/buffet/*` comprobadas una a una.
 
 ## T9 · Cierre de la spec
-- [ ] Dejar la documentación al día y fusionar.
+- [x] Dejar la documentación al día y fusionar.
 - **Incluye**: `CONTEXTO.md` con el estado nuevo, la tabla de `AGENTS.md` si
       cambian los archivos de referencia, y el sitemap con las fechas de la
       revisión.
