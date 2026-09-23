@@ -1,5 +1,5 @@
 /* Pruebas de las secciones de la portada (spec 001, T5: RF-1, RF-9, RF-10,
- * RF-44, RF-46).
+ * RF-44, RF-46; T6: RF-32 a RF-37).
  *
  * A diferencia de `tests/portada.test.mjs`, que prueba el generador de la
  * lista de proyectos con datos de prueba, aqui se lee el `index.html` de
@@ -10,7 +10,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const raiz = join(import.meta.dirname, '..');
@@ -28,7 +28,7 @@ function tramo(apertura, etiqueta) {
 }
 
 test('RF-1: la primera pantalla presenta a Hugo y ofrece «Ver proyectos» y «Escríbeme»', () => {
-  const hero = tramo(/<div class="band p1\b/, 'header');
+  const hero = tramo(/<div class="hero-text">/, 'header');
   assert.match(hero, /<h1[^>]*>Hugo Galiana\.<\/h1>/);
   assert.match(hero, /Desarrollador full-stack · Valencia/);
   assert.match(hero, /class="static-sub">[^<]+<\/p>/);
@@ -79,6 +79,41 @@ test('RF-46: título, descripción e imagen para redes sin venta a comercios', (
   const datos = JSON.parse(cabecera.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
   const tipos = datos['@graph'].map((nodo) => nodo['@type']);
   assert.deepEqual(tipos, ['Person', 'WebSite']);
+});
+
+/* Hero (T6: RF-32 a RF-37 y el peso del bucle). Lo que depende del
+   dispositivo --que no haya tirones, que el movil no descargue nada de mas--
+   se comprueba en el preview; aqui, lo que se puede leer en los archivos. */
+const MOBILE = '(pointer:coarse),(max-width:900px)';
+
+test('RF-32: el bucle del móvil existe y pesa 1 MB o menos', () => {
+  const bucle = join(raiz, 'assets', 'hero-loop.mp4');
+  assert.ok(existsSync(bucle), 'falta assets/hero-loop.mp4');
+  assert.ok(statSync(bucle).size <= 1024 * 1024, `pesa ${statSync(bucle).size} bytes`);
+  assert.ok(html.includes(`matchMedia('${MOBILE}')`), 'el script no usa la condición de móvil de la spec');
+  assert.match(html, /video\.loop=true/);
+});
+
+test('RF-33: la secuencia de fotogramas ya no existe y el móvil tiene su propia imagen de fondo', () => {
+  assert.ok(!existsSync(join(raiz, 'assets', 'seq')), 'sigue la carpeta assets/seq');
+  assert.doesNotMatch(html, /assets\/seq\//);
+  const movil = tramo(new RegExp(`@media ${MOBILE.replace(/[()]/g, '\\$&')}\\{`), 'style');
+  assert.match(movil, /background-image:url\('assets\/hero-loop\.webp'\)/);
+});
+
+test('RF-34: el hero de escritorio ocupa como mucho 2 pantallas', () => {
+  const alturas = [...html.matchAll(/\.hero\{height:(\d+)(?:vh|svh|lvh)\}/g)].map((m) => Number(m[1]));
+  assert.ok(alturas.length > 0, 'no se encuentra la altura del hero');
+  for (const altura of alturas) assert.ok(altura <= 200, `el hero mide ${altura}vh`);
+});
+
+test('RF-35 a RF-37: con movimiento reducido o ahorro de datos, imagen fija; sin vídeo, también', () => {
+  assert.match(html, /@media \(prefers-reduced-motion: reduce\)\{[^}]*\{[^}]*\}\s*\.stage\{[^}]*\}\s*\.stage video\{display:none\}/);
+  assert.match(html, /navigator\.connection;if\(\(c&&c\.saveData\)/);
+  assert.match(html, /\.hero-still \.stage video\{display:none\}/);
+  /* la imagen fija es el fondo del escenario: esta ahi antes de que el video llegue */
+  assert.match(html, /\.stage\{[^}]*url\('assets\/hero-poster\.jpg'\)/);
+  assert.match(html, /\.stage video\{[^}]*opacity:0/);
 });
 
 test('la página 404 no enlaza a secciones que ya no existen', () => {

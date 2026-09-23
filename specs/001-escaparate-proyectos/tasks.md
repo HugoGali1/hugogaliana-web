@@ -57,7 +57,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       El JSON-LD deja de declarar un servicio profesional.
 
 ## T6 · Hero: bucle en móvil, dos pantallas en escritorio
-- [ ] Rehacer el fondo de la primera pantalla.
+- [x] Rehacer el fondo de la primera pantalla.
 - **Criterios**: RF-32 a RF-37, y el peso de 1 MB o menos del bucle.
 - **Comprobar en el preview, en un móvil real**: al deslizar no hay tirones, no
       se descargan ni el vídeo de escritorio ni los 48 fotogramas, y con

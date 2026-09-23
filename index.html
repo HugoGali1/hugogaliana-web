@@ -24,9 +24,14 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- el primer fotograma hace de fondo del hero en tactil: 14 KB que conviene
-     pedir en cuanto se lee la cabecera, no cuando arranca el script -->
-<link rel="preload" as="image" href="assets/seq/f001.webp" media="(pointer:coarse)" fetchpriority="high">
+<!-- el primer fotograma del bucle es el fondo del hero en movil: 19 KB que
+     conviene pedir en cuanto se lee la cabecera, no cuando arranca el script -->
+<link rel="preload" as="image" href="assets/hero-loop.webp" media="(pointer:coarse),(max-width:900px)" fetchpriority="high">
+<!-- Antes del primer pintado, para que el hero no cambie de altura despues:
+     js activa el recorrido de dos pantallas del escritorio (sin JavaScript no
+     hay metraje que recorrer) y hero-still lo apaga si se ha pedido ahorrar
+     datos (RF-36). -->
+<script>(function(r){r.classList.add('js');var c=navigator.connection;if((c&&c.saveData)||matchMedia('(prefers-reduced-data: reduce)').matches)r.classList.add('hero-still')})(document.documentElement)</script>
 <!-- la hoja de un tercero bloqueaba el pintado y, con el, el DOMContentLoaded
      del que cuelga el arranque del hero: entra como preload y asciende a hoja
      de estilos en cuanto ha llegado -->
@@ -140,43 +145,28 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   /* con el panel abierto, el fondo no se mueve */
   html[data-menu="abierto"]{overflow:hidden}
 }
-/* ============ hero scrub ============ */
-.hero{position:relative;height:640vh}
-.stage{position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden}
-.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);will-change:transform;transform:translateZ(0)}
+/* ============ hero ============
+   Escritorio: el metraje avanza con el scroll a lo largo de dos pantallas como
+   maximo (RF-34). Movil y tactil: un bucle corto que reproduce el navegador,
+   sin ningun calculo ligado al scroll (RF-32). Con movimiento reducido o ahorro
+   de datos no hay video: se queda la imagen fija del fondo (RF-35, RF-36), que
+   es tambien lo que se ve si el video no llega (RF-37). */
+.hero{position:relative}
+.js:not(.hero-still) .hero{height:200vh}
+.stage{position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden;display:flex;flex-direction:column;
+  background:var(--canvas) url('assets/hero-poster.jpg') center/cover no-repeat}
+.stage video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s var(--ease)}
 .stage.video-ready video{opacity:1}
-.stage.video-failed video{display:none}
-/* lienzo del hero en móvil: fotogramas ya decodificados, sin pedirle
-   nada al decodificador de vídeo mientras se hace scroll */
-.stage canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);display:none}
-.stage.seq video{display:none}
-.stage.seq canvas{display:block}
-.stage.seq-ready canvas{opacity:1}
-.poster{position:absolute;inset:0;background-size:cover;background-position:center}
-.scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 35%,rgba(10,10,18,.62) 100%)}
-.ringbox{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);color:var(--accent);z-index:5}
-.ring{width:34px;height:34px;transform:rotate(-90deg)}
-.ring circle{transition:stroke-dashoffset .2s linear}
-.chev{width:26px;height:26px;color:var(--text-secondary)}
-.anim .chev{animation:chev 2.4s var(--ease-io) infinite}
-@keyframes chev{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(7px);opacity:1}}
-/* bands */
-.band{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;text-shadow:var(--tshadow)}
-/* la primera es la unica que se ve al cargar: su estado natural es visible, y
-   el motor de scrubbing la tapa en cuanto empiezas a desplazarte */
-.band[data-first]{opacity:1}
-.band .btn{text-shadow:none}
-.band::before{content:"";position:absolute;inset:-4%;pointer-events:none;opacity:calc(.25 + .75*var(--k,1));background:radial-gradient(ellipse 74% 62% at 50% 50%,rgba(5,5,10,.66) 0%,rgba(5,5,10,.44) 46%,rgba(5,5,10,0) 76%)}
-.band .inner{position:relative;max-width:900px;padding:0 24px;text-align:center;z-index:2}
-/* colocación por banda, obedeciendo los capítulos de luz del metraje */
-.p1{align-items:flex-start}
-.p1 .inner{margin-top:10vh;max-width:1140px}
-.p1 h1{font-size:clamp(30px,3.4vw,46px)}
-.p1::before{background:radial-gradient(ellipse 92% 46% at 50% 16%,rgba(4,6,9,.70) 0%,rgba(4,6,9,.46) 46%,rgba(4,6,9,0) 76%)}
-.band h1{font-size:clamp(34px,5.4vw,64px);color:var(--text-primary)}
-.band h2{font-size:clamp(30px,4.6vw,54px)}
-.band .sub{margin-top:18px;font-size:clamp(16px,1.6vw,20px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
-.band .kicker{display:inline-block;margin-bottom:16px}
+/* Dos velos acotados y quietos donde antes habia tres a pantalla completa, uno
+   de ellos animado: arriba, bajo el texto, y abajo, el fundido con la pagina. */
+.stage::before,.stage::after{content:"";position:absolute;left:0;right:0;z-index:1;pointer-events:none}
+.stage::before{top:0;height:64%;background:linear-gradient(180deg,rgba(4,6,9,.74) 0%,rgba(4,6,9,.46) 55%,rgba(4,6,9,0) 100%)}
+.stage::after{bottom:0;height:18%;background:linear-gradient(180deg,rgba(11,20,26,0) 0%,var(--canvas) 100%)}
+.hero-text{position:relative;z-index:2;flex:1;display:flex;justify-content:center;padding:max(104px,14vh) 24px 72px;text-align:center;text-shadow:var(--tshadow)}
+.hero-text .inner{max-width:1140px}
+.hero-text .kicker{display:inline-block;margin-bottom:16px}
+.hero-text h1{font-size:clamp(36px,5.2vw,68px);color:var(--text-primary)}
+.hero-text .btn{text-shadow:none}
 .btn{background:transparent;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--fd);font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;text-decoration:none;transition:transform .35s var(--ease),background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
 .btn-solid{background:var(--accent);color:#07131A}
 .btn-ghost{border:1px solid var(--line-strong);color:var(--text-primary)}
@@ -185,18 +175,13 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   .btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
 }
 .btn:active{transform:scale(.98)}
-/* character entrances: transform+opacity only, driven by --k */
+/* Entrada del titular palabra a palabra, solo con opacity y transform. El
+   estado natural de la palabra es visible: si la animacion no llega a
+   ejecutarse, se ve el texto. */
 .w{display:inline-block;white-space:pre}
-.c{display:inline-block;white-space:pre}
-/* La entrada del titular ya no cuelga de --k, que JavaScript no escribe hasta
-   que el bucle lleva un rato corriendo: la lleva el compositor, empieza en el
-   primer fotograma y el escalonado sale del mismo --th de siempre. El estado
-   natural de la palabra es visible; de esconderla mientras entra se encarga la
-   animacion, asi que si no llega a ejecutarse se ve el texto. */
 @keyframes wApproach{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
-.e-approach .w{opacity:1;animation:wApproach .58s var(--ease) both;animation-delay:calc(var(--th,0)*760ms)}
+.hero-text .w{animation:wApproach .58s var(--ease) both;animation-delay:calc(var(--th,0)*760ms)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-height:560px){.ringbox{display:none}}
 </style>
 <!-- Datos estructurados: le dicen a Google que aqui hay una persona concreta,
      no una cadena de texto. El correo se deja fuera a proposito: ya es alcanzable
@@ -266,22 +251,14 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <header class="hero" id="top" aria-label="Presentación">
   <div class="stage" id="stage">
-    <div class="poster" id="poster" aria-hidden="true"></div>
-    <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
-    <canvas id="hero-seq" width="450" height="800" aria-hidden="true"></canvas>
-    <div class="scrim" aria-hidden="true"></div>
-
-    <div class="band p1 e-approach" data-a="0.0000" data-b="0.1143" data-first="1">
+    <video id="hero-video" muted playsinline preload="none" disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+    <div class="hero-text">
       <div class="inner">
         <span class="kicker">Desarrollador full-stack · Valencia</span>
         <h1 data-split="w">Hugo Galiana.</h1>
         <p class="static-sub">Construyo software de principio a fin. Aquí enseño lo que he hecho, cómo lo hice y por qué.</p>
         <div class="static-cta"><a class="btn btn-solid" href="#proyectos">Ver proyectos</a><a class="btn btn-ghost" href="#contacto">Escríbeme</a></div>
       </div>
-    </div>
-
-    <div class="ringbox" id="ringbox" aria-hidden="true">
-      <svg class="ring" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/></svg>
     </div>
   </div>
 </header>
@@ -542,93 +519,34 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .rev.in .part:nth-child(4){transition-delay:.24s}
 .rev.in .part:nth-child(5){transition-delay:.32s}
 .rev.done .part:nth-child(n){transition-delay:0s}
-/* El subtitulo y el boton ya no esperan al final del scrub: son lo que
-     convierte, y hasta ahora vivian en la banda p5, a 6,4 pantallas del
-     visitante. Se quedan en p1, debajo del h1, y se van con la banda.
-     La banda entera es pointer-events:none --el scrub no debe tragarse los
-     clics--, asi que el boton se rehabilita a si mismo. Cuando la banda se
-     apaga, el JS le pone visibility:hidden y deja de recibir clics solo. */
-.static-sub{display:block}
-.static-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.static-cta{pointer-events:auto}
-/* entra detras de la ultima palabra del h1: el reparto cascada termina sobre
-   los 1.000 ms (--th llega a ~0,55 y el retardo es --th*760ms + 580ms) */
-.static-sub{animation:apareceFrag .5s var(--ease) both .88s}
-.static-cta{animation:apareceFrag .5s var(--ease) both 1.04s}
-/* ============ metraje del hero en tactil ============
-   Aqui vivian tres hojas de sprites de 2160x2560 movidas por el compositor.
-   La idea era buena y la geometria no: cada fotograma es de 360x640 y en un
-   movil se pinta a 1424x2532 px de dispositivo, un reescalado de x3,96. Con la
-   hoja entera pintada a 2849x3376 px CSS son 86,5 Mpx --346 MB de superficie--
-   por hoja, y las tres estaban vivas a la vez, porque visibility:hidden no
-   libera el rasterizado. De ahi el parpadeo: el navegador tiraba texturas y las
-   volvia a subir a mitad del recorrido.
-   No tiene arreglo por esa via. Para no reescalar harian falta 1424x2532 px por
-   fotograma, o sea un atlas de 8544x30384 para 72 fotogramas, y MAX_TEXTURE_SIZE
-   son 16384. El atlas no cabe con ningun reparto.
-   Lo mueve el canvas, que ya estaba escrito: su backing store son 450x800 y el
-   escalado a pantalla completa lo hace la GPU, asi que el coste por fotograma es
-   un drawImage y no un rasterizado de pantalla entera. El compositor se queda
-   con lo que si­ se le da bien y no cuesta memoria: el texto. */
-@property --k{syntax:'<number>';initial-value:0;inherits:true}
-@keyframes rampaK{from{--k:0}to{--k:1}}
+/* el subtitulo y los botones entran detras de la ultima palabra del h1 */
+.static-sub{display:block;margin-top:18px;font-size:clamp(16px,1.6vw,20px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto;animation:apareceFrag .5s var(--ease) both .88s}
+.static-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px;animation:apareceFrag .5s var(--ease) both 1.04s}
 @keyframes apareceFrag{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes apareceSimple{from{opacity:0}to{opacity:1}}
-@keyframes desapareceSimple{from{opacity:1}to{opacity:0}}
-@keyframes banda1{0%,9.4266%{opacity:1}11.4266%,100%{opacity:0}}
-
-@supports (animation-timeline: view()){
- @media (pointer:coarse) and (prefers-reduced-motion: no-preference){
-  .hero{view-timeline:--hero block}
-  .stage video,.ringbox{display:none}
-  /* El poster (el fotograma 1, 14 KB) se queda debajo del canvas: cubre la
-     primera pantalla mientras la secuencia no ha llegado. Va en CSS y no en
-     JavaScript para que lo encuentre el analizador de precarga. */
-  .poster{z-index:0;background-image:url('assets/seq/f001.webp')}
-  .band{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;
-    animation-timeline:--hero;animation-range:contain 0% contain 100%}
-  /* Lo que se ve aqui es solo el aparecer y desaparecer de cada banda, que si
-     depende de donde este el dedo. La entrada palabra a palabra ya no: la monta
-     textoAlCompositor con animaciones normales, medidas en milisegundos, que el
-     scroll unicamente dispara al entrar en el tramo de la banda. Asi la frase se
-     compone entera aunque pares de deslizar. */
-  .p1{animation-name:banda1}
- }
+/* ============ hero en movil y tactil ============
+   Una pantalla y nada pegado: el bucle corre de fondo mientras se desliza. La
+   tablet tactil ancha entra aqui tambien, por el puntero grueso. */
+@media (pointer:coarse),(max-width:900px){
+  .js:not(.hero-still) .hero{height:auto}
+  .stage{position:relative;height:auto;min-height:100svh;background-image:url('assets/hero-loop.webp')}
+  .hero-text{padding:15svh 20px 64px}
+  .hero-text h1{font-size:clamp(36px,11vw,56px)}
+  .static-sub{font-size:clamp(15px,4.2vw,18px);max-width:32ch}
 }
-/* ============ hero en pantallas táctiles / estrechas ============ */
-/* El scrub sigue activo: solo cambia la composición para que quepa y se lea. */
-@media (max-width:820px){
-  .hero{height:288svh}
-  .band .inner{max-width:none;padding:0 26px}
-  .p1 .inner{margin-top:15svh;max-width:none}
-  .p1 h1{font-size:clamp(28px,7.4vw,42px)}
-  .p1::before{background:radial-gradient(ellipse 130% 44% at 50% 22%,rgba(4,6,9,.76) 0%,rgba(4,6,9,.5) 50%,rgba(4,6,9,0) 80%)}
-  .band .sub{font-size:clamp(15px,4.2vw,18px);max-width:32ch}
-  .ringbox{bottom:26px}
-}
-/* El motor del metraje entra con cualquier puntero grueso o pantalla estrecha
-   --la misma condicion que LIGHT en el script--, asi que la altura del hero
-   tiene que seguir el mismo criterio y no solo el ancho. Si no, una tablet
-   tactil ancha se quedaba con los 640vh de escritorio: 5.530 px de recorrido
-   para 48 fotogramas, o sea 115 px por fotograma, a saltos. */
-@media (pointer:coarse),(max-width:900px){.hero{height:288svh}}
-/* apaisado bajo: menos recorrido para que el hero no se eternice */
+/* movil en apaisado: el texto sube para caber en la pantalla y ocupa casi
+   toda la altura, asi que el velo tambien, o la frase quedaria sobre la roca */
 @media (orientation:landscape) and (max-height:560px){
-  .hero{height:380vh}
-  .p1 .inner{margin-top:8svh}
+  .hero-text{padding-top:84px;padding-bottom:40px}
+  .stage::before{height:100%;background:linear-gradient(180deg,rgba(4,6,9,.8) 0%,rgba(4,6,9,.62) 60%,rgba(4,6,9,.4) 100%)}
 }
-/* ============ hero estático solo si el sistema pide menos movimiento ============ */
+/* ============ hero con la imagen fija ============ */
 @media (prefers-reduced-motion: reduce){
-  .hero{height:auto;min-height:100svh}
-  .stage{position:relative;height:100svh;background:url('assets/hero-static.jpg') center/cover no-repeat var(--canvas)}
-  .stage video,.ringbox{display:none}
-  .band{display:none}
-  .band[data-first]{display:flex;opacity:1;--k:1;pointer-events:auto;align-items:flex-start}
-  .band[data-first] .inner{transform:none;margin:20svh auto 0;text-align:center;max-width:900px;padding:0 26px}
-  .band[data-first] h1{font-size:clamp(32px,7vw,54px)}
+  .js:not(.hero-still) .hero{height:auto}
+  .stage{position:relative;height:auto;min-height:100svh}
+  .stage video{display:none}
 }
-.static-sub{margin-top:18px;font-size:clamp(16px,4vw,19px);color:var(--text-secondary);max-width:46ch;margin-left:auto;margin-right:auto}
-.static-cta{margin-top:28px}
+.hero-still .stage{position:relative;height:auto;min-height:100svh}
+.hero-still .stage video{display:none}
 /* reduced motion: full stop */
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
@@ -639,7 +557,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 }
 </style>
 <style>
-.band.live{pointer-events:auto}
 .sec{scroll-margin-top:70px}
 body.paused *,body.paused *::before,body.paused *::after{animation-play-state:paused !important}
 </style>
@@ -714,162 +631,51 @@ document.querySelectorAll('[data-split]').forEach(function(el,ei){
   el.innerHTML=sr+'</span>';
 });
 
-/* ---------- hero scrub core ---------- */
+/* ---------- hero ----------
+   Dos modos, decididos al cargar con la misma condicion que el CSS:
+   - movil y tactil: el bucle corto lo reproduce el navegador. El scroll no
+     toca nada del hero, asi que el hilo principal queda libre al deslizar.
+   - escritorio: el metraje completo avanza con el scroll, cuantizado a
+     fotograma, a lo largo de las dos pantallas del hero.
+   Con movimiento reducido o ahorro de datos no se pide ningun video. */
 var hero=document.querySelector('.hero');
 var stage=document.getElementById('stage');
 var video=document.getElementById('hero-video');
-var poster=document.getElementById('poster');
-var ringbox=document.getElementById('ringbox');
-var ring=ringbox.querySelector('circle');
-var bandsEls=[].slice.call(document.querySelectorAll('.band'));
-var bands=bandsEls.map(function(el){
-  return {el:el,a:parseFloat(el.dataset.a),b:parseFloat(el.dataset.b),
-    first:el.hasAttribute('data-first'),last:el.hasAttribute('data-last'),
-    t0:-1,op:-1,k:-1,ks:-1,kb:-1,live:false};
-});
-/* Dos motores para el mismo hero:
-   - escritorio: scrub sobre el vídeo (el decodificador de sobremesa aguanta).
-   - táctil/estrecho: secuencia de fotogramas ya decodificados pintados en un
-     lienzo. Pedirle un seek al decodificador en cada frame de scroll es lo que
-     hacía que el móvil fuese a tirones; así el scroll solo cuesta un drawImage. */
-/* Dos preguntas distintas que hasta ahora se respondian con la misma variable:
-   TACTIL es que el dedo mueve el scroll --entrada continua, sin suavizado y con
-   el texto en el compositor--; LIGHT es que el metraje lo pinta el lienzo en vez
-   del decodificador. Una ventana de escritorio estrecha es LIGHT pero no TACTIL:
-   la mueve una rueda, que da saltos, y sin suavizado se veia a tirones. */
-var TACTIL=matchMedia('(pointer:coarse)').matches;
-var LIGHT=TACTIL||innerWidth<=900;
+var MOBILE=matchMedia('(pointer:coarse),(max-width:900px)').matches;
+var reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+function isStill(){return reduceMotion.matches||raiz.classList.contains('hero-still')}
+var LOOP_URL='assets/hero-loop.mp4';
 var VIDEO_URL='assets/hero-scrub.mp4';
-var VIDEO_BYTES=6233767;
 var FPS=24;
-/* la secuencia va recortada a 9:16, que es justo lo que el móvil ve con cover */
-var SEQ_DIR='assets/seq/';
-var SEQ_TOTAL=48;
-/* En moviles con poca memoria se pintaban la mitad de los fotogramas. Ahorraba
-   RAM, pero al acortar el hero a 288svh esa mitad son 66 px de scroll por
-   fotograma y se ve a saltos: justo el defecto que veniamos a arreglar. Se
-   quedan los 48 y lo que baja es la resolucion de cada uno. A 225x400 son
-   17 MB en vez de 69, y como el lienzo ya se amplia a pantalla completa, medio
-   fotograma menos de nitidez no se nota; medio fotograma menos de cadencia si. */
-var LOWMEM=(navigator.deviceMemory||4)<=3;
-var SEQ_STEP=1;
-var SEQ_ESCALA=LOWMEM?0.5:1;
-/* En tactil el recalculo de estilo de las letras partidas es lo que mas cuesta
-   del frame (medido: x3 en los picos al actualizar varias bandas a la vez).
-   Subir el escalon reduce esos recalculos sin que el ojo note la diferencia:
-   --k recorre 0..1, y un paso de 0.025 son 40 actualizaciones por banda. */
-var STEP_K=TACTIL?0.025:0.008;
-var VIS_MIN=TACTIL?0.02:0.004;
-var heroOnScreen=true,loadK=0,loadT0=0;
+var heroOnScreen=true,videoRequested=false;
+function markVideoReady(){stage.classList.add('video-ready')}
+/* si el video falla, la imagen fija sigue debajo y el texto no depende de el */
+video.addEventListener('error',function(){stage.classList.remove('video-ready')});
 
-/* El recorrido del hero se mide una vez, no en cada scroll: getBoundingClientRect
-   obliga al navegador a recalcular posiciones, y en iOS eso se paga justo durante
-   el desplazamiento por inercia. Con scrollY basta y no cuesta nada. */
+/* ---- movil: el bucle ---- */
+function syncLoop(){
+  if(!videoRequested||!MOBILE)return;
+  /* fuera de pantalla o con la pestana oculta no hay nada que ver: se para */
+  if(isStill()||!heroOnScreen||document.hidden){video.pause();return}
+  var pr=video.play();
+  if(pr&&pr.catch)pr.catch(function(){});
+}
+function startLoop(){
+  video.loop=true;
+  video.muted=true;
+  video.addEventListener('playing',markVideoReady,{once:true});
+  video.src=LOOP_URL;
+  syncLoop();
+}
+
+/* ---- escritorio: el metraje sigue al scroll ---- */
+/* el recorrido se mide al cargar y al cambiar de tamano, no en cada scroll */
 var heroTop=0,heroTotal=1;
 function measureHero(){
   heroTop=hero.offsetTop;
   heroTotal=Math.max(1,hero.offsetHeight-innerHeight);
 }
-measureHero();
-addEventListener('resize',measureHero,{passive:true});
-addEventListener('orientationchange',measureHero,{passive:true});
-function heroProgress(){
-  return clamp((scrollY-heroTop)/heroTotal,0,1);
-}
-function updateCaptions(p,now){
-  /* Cuando el texto lo mueve el compositor, escribir aqui opacity y --k pisaria
-     sus animaciones y volveria a meter en cada fotograma el recalculo de estilo
-     de los 68 fragmentos que costaba 0,84 ms. El bucle sigue vivo para el
-     metraje; el texto no pasa por aqui. */
-  entradaViva=false;
-  if(TEXTO_CSS){disparaEntradas(p);return}
-  for(var i=0;i<bands.length;i++){
-    var b=bands[i];
-    var f=Math.min(0.02,(b.b-b.a)/3);
-    var op=(b.first?1:smoothstep(p,b.a,b.a+f))*(b.last?1:(1-smoothstep(p,b.b-f,b.b)));
-    if(!b.first&&!b.last){op=smoothstep(p,b.a,b.a+f)*(1-smoothstep(p,b.b-f,b.b))}
-    if(b.first){op=1-smoothstep(p,b.b-f,b.b)}
-    if(b.last){op=smoothstep(p,b.a,b.a+f)}
-    /* El scroll dispara la entrada; medirla es cosa del reloj. Antes k era la
-       distancia recorrida desde el principio de la banda, asi que la frase no
-       acababa de montarse hasta haber deslizado la rampa entera --2,5% del hero,
-       unos 137 px-- y, si parabas antes, se quedaba a medias. */
-    if(p>=b.a){if(b.t0<0)b.t0=now}else{b.t0=-1}
-    var k=b.t0<0?0:clamp((now-b.t0)/T_ENTRADA,0,1);
-    if(b.first){k=Math.max(k,loadK)}
-    /* solo cuenta la banda que ya ha arrancado: las que aun no han llegado
-       tienen k=0 y dejarian el bucle despierto para siempre */
-    if(b.t0>=0&&k<1)entradaViva=true;
-    if(Math.abs(op-b.op)>STEP_K){
-      b.op=op;b.el.style.opacity=op.toFixed(3);
-      /* una banda invisible no se pinta ni se mide: se saca del trabajo del frame */
-      b.el.style.visibility=op<VIS_MIN?'hidden':'';
-    }
-    /* cada cambio de --k obliga a recalcular estilo en las ~40 letras de la banda.
-       Si la banda no se ve, ese trabajo se tira: solo actualizamos las visibles. */
-    if((op>VIS_MIN||b.k<0)&&Math.abs(k-b.k)>STEP_K){b.k=k;b.el.style.setProperty('--k',k.toFixed(3))}
-    if(b.last){
-      var ks=clamp((k-0.5)*3,0,1),kb=clamp((k-0.72)*4,0,1);
-      if(Math.abs(ks-b.ks)>STEP_K){b.ks=ks;b.el.style.setProperty('--ks',ks.toFixed(3))}
-      if(Math.abs(kb-b.kb)>STEP_K){b.kb=kb;b.el.style.setProperty('--kb',kb.toFixed(3))}
-      var live=op>0.55;
-      if(live!==b.live){b.live=live;b.el.classList.toggle('live',live)}
-    }
-  }
-}
-/* ---- motor A: lienzo con la secuencia (móvil) ---- */
-var seq=document.getElementById('hero-seq');
-var sctx=null,seqFrames=[],seqReady=false,lastI=-1,lastG=-1;
-/* Los 48 fotogramas se reparten unos 1.300 px de recorrido: 27 px de dedo por
-   fotograma. Saltar de uno al siguiente hacía que el metraje avanzase a tirones
-   --los pasos--, aunque el scroll fuese perfectamente fluido. Cada fotograma se
-   cruza con el siguiente, y el cruce ocupa el intervalo entero: mientras el dedo
-   se mueve, la imagen se mueve con el, sin un solo tramo congelado. Comprimirlo
-   al centro dejaba nitidos los extremos, pero a cambio la mitad del recorrido no
-   respondia al dedo, que es peor: se deslizaba y la imagen llegaba despues.
-   La nitidez no se compra ahi sino al parar: 140 ms despues del ultimo
-   movimiento el cruce se retira sobre el fotograma mas cercano, asi que lo que
-   se queda en pantalla mientras se lee el texto es siempre una imagen limpia. */
-var MEZCLA=1;                      /* fraccion del intervalo que dura el cruce */
-var NITIDO_ESPERA=140;             /* quietud que hace falta para empezar a enfocar */
-var NITIDO_MS=220;                 /* lo que tarda en enfocar */
-var nitidez=0;
-function frameCercano(i){
-  for(var d=1;d<seqFrames.length;d++){
-    if(seqFrames[i-d])return seqFrames[i-d];
-    if(seqFrames[i+d])return seqFrames[i+d];
-  }
-  return null;
-}
-function drawSeq(p){
-  if(!seqReady)return;
-  var x=p*(seqFrames.length-1);
-  var i=Math.floor(x),f=x-i;
-  var g=clamp((f-(1-MEZCLA)/2)/MEZCLA,0,1);
-  if(nitidez>0)g+=((f<0.5?0:1)-g)*nitidez;
-  /* con el dedo quieto el bucle sigue vivo medio segundo: sin esta puerta
-     repintaria el mismo par de fotogramas treinta veces */
-  if(i===lastI&&Math.abs(g-lastG)<0.002)return;
-  var a=seqFrames[i],b=seqFrames[i+1];
-  var uno=g<0.004?a:(g>0.996?b:null);
-  if(!uno&&a&&b){
-    lastI=i;lastG=g;
-    sctx.globalAlpha=1;sctx.drawImage(a,0,0,seq.width,seq.height);
-    sctx.globalAlpha=g;sctx.drawImage(b,0,0,seq.width,seq.height);
-    sctx.globalAlpha=1;
-    return;
-  }
-  /* Solo se cruzan vecinos de verdad. Durante la carga faltan fotogramas, y
-     cruzar dos que estan a seis de distancia se ve como una doble exposicion:
-     ahi vale mas el de siempre, el mas cercano que ya haya llegado. */
-  var u=uno||a||b||frameCercano(i);
-  if(!u)return;
-  lastI=i;lastG=g;
-  sctx.globalAlpha=1;
-  sctx.drawImage(u,0,0,seq.width,seq.height);
-}
-
-/* ---- motor B: seek del vídeo (escritorio), cuantizado a fotograma ---- */
+function heroProgress(){return clamp((scrollY-heroTop)/heroTotal,0,1)}
 var seekBusy=false,pendingTime=null,lastSeek=-1;
 var canFastSeek=typeof video.fastSeek==='function';
 function requestSeek(t){
@@ -881,337 +687,65 @@ function requestSeek(t){
   lastSeek=t;seekBusy=true;
   if(canFastSeek){video.fastSeek(t)}else{video.currentTime=t}
 }
-
-/* punto único por el que pasa el render, sea cual sea el motor */
-function renderMedia(p){
-  if(LIGHT)drawSeq(p);
-  else requestSeek(p*video.duration);
+function flushSeek(){
+  seekBusy=false;
+  if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}
 }
-video.addEventListener('seeked',function(){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}});
-video.addEventListener('error',function(){seekBusy=false;pendingTime=null});
-/* red de seguridad: si un 'seeked' se pierde (pasa en Safari) no dejamos el scrub
-   colgado. Solo hace falta en el motor de vídeo. */
-if(!LIGHT)setInterval(function(){
-  if(seekBusy&&!video.seeking){seekBusy=false;if(pendingTime!==null){var t=pendingTime;pendingTime=null;requestSeek(t)}}
-},350);
-/* lerp loop that rests */
-var target=0,shown=0,rafId=null,lastTick=0,lastScroll=0,entradaViva=false;
+video.addEventListener('seeked',flushSeek);
+/* un suavizado que se duerme en cuanto alcanza el scroll */
+var target=0,shown=0,rafId=null,lastTick=0;
 function tick(now){
-  if(!loadT0)loadT0=now;
-  var lk=clamp((now-loadT0)/1600,0,1);loadK=lk*lk*(3-2*lk);
   var dt=Math.min(100,now-(lastTick||now));lastTick=now;
-  /* En tactil no se suaviza: el dedo ya da una posicion continua, y perseguirla
-     con un factor de 0.26 costaba ~10 fotogramas (unos 165 ms) en alcanzarla, que
-     es el retraso que se nota al deslizar. Se lee el scroll en el propio frame
-     para no depender de cuando dispare el evento. */
-  if(TACTIL){
-    target=heroProgress();
-    shown=target;
-  }else{
-    var k=0.16;
-    shown+=(target-shown)*(1-Math.pow(1-k,dt/16.667));
-  }
-  /* En tactil el bucle no puede pararse en cuanto alcanza el objetivo (siempre lo
-     alcanza), o volveriamos a depender del evento de scroll. Sigue vivo mientras
-     haya deslizamiento reciente y se duerme medio segundo despues del ultimo. */
-  /* entradaViva: con el texto movido por JavaScript el bucle no puede dormirse
-     con una banda a medio montar, o la frase se congelaria hasta el proximo
-     gesto. En tactil el texto lo mueve el compositor y esto nunca se activa. */
-  var enReposo=(TACTIL?(now-lastScroll>500):(Math.abs(target-shown)<0.0005))&&!entradaViva;
-  /* Enfocar no espera al medio segundo que tarda el bucle en dormirse: con 140 ms
-     sin movimiento ya se retira el cruce. Asi, en cuanto paras, la imagen se
-     asienta; y mientras deslizas --aunque sea despacio-- los eventos de scroll no
-     paran de llegar y el cruce sigue puesto, que es lo que la mantiene pegada al
-     dedo. El bucle, ademas, no se duerme con el enfoque a medias. */
-  var quieto=TACTIL?(now-lastScroll>NITIDO_ESPERA):(Math.abs(target-shown)<0.0005);
-  nitidez=(quieto&&!entradaViva)?Math.min(1,nitidez+dt/NITIDO_MS):0;
-  if(enReposo&&loadK>=1&&nitidez>=1){shown=target;rafId=null;lastTick=0}
-  else{rafId=requestAnimationFrame(tick)}
-  renderMedia(shown);
-  updateCaptions(shown,now);
+  shown+=(target-shown)*(1-Math.pow(1-0.16,dt/16.667));
+  if(Math.abs(target-shown)<0.0005){shown=target;rafId=null;lastTick=0}
+  else rafId=requestAnimationFrame(tick);
+  requestSeek(shown*video.duration);
 }
 function onScroll(){
-  /* El observador del hero llama aqui al cargar, sin pasar por la puerta: con
-     movimiento reducido el motor daba una pasada y dejaba opacity/visibility
-     en linea sobre las bandas, pisando al CSS del hero estatico. */
-  if(!scrubOn)return;
-  lastScroll=performance.now();
-  /* Al despertar el bucle refrescamos las medidas: en iOS la barra de direcciones
-     se pliega al deslizar y cambia innerHeight, asi que el recorrido del hero no
-     es el mismo entre un gesto y el siguiente. Una lectura por gesto, no por frame. */
-  if(rafId===null)measureHero();
   target=heroProgress();
-  if(rafId===null&&heroOnScreen)rafId=requestAnimationFrame(tick);
+  if(rafId===null&&heroOnScreen&&stage.classList.contains('video-ready'))rafId=requestAnimationFrame(tick);
+}
+/* entero en memoria: buscar fotogramas sobre la red va a saltos */
+async function loadScrub(){
+  var res=await fetch(VIDEO_URL,{priority:'low'});
+  if(!res.ok)throw new Error(res.status);
+  var blob=await res.blob();
+  video.addEventListener('canplay',function(){
+    measureHero();
+    target=shown=heroProgress();
+    requestSeek(shown*video.duration);
+    markVideoReady();
+  },{once:true});
+  video.src=URL.createObjectURL(blob);
+  /* red de seguridad: Safari pierde a veces un 'seeked' y el metraje se colgaria */
+  setInterval(function(){if(seekBusy&&!video.seeking)flushSeek()},350);
+}
+
+function startHero(){
+  if(videoRequested||isStill())return;
+  videoRequested=true;
+  if(MOBILE){startLoop();return}
+  measureHero();
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',measureHero,{passive:true});
+  loadScrub().catch(function(){});
+}
+function applyHeroMode(){
+  unpinFinalStates();
+  if(isStill()){video.pause();return}
+  startHero();
+  syncLoop();
 }
 new IntersectionObserver(function(en){
   heroOnScreen=en[0].isIntersecting;
   document.body.classList.toggle('hero-a-la-vista',heroOnScreen);
-  if(heroOnScreen)onScroll();
+  syncLoop();
 }).observe(hero);
-
-/* carga con anillo de progreso honesto */
-var heroInit=false;
-var POSTER=LIGHT?SEQ_DIR+'f001.webp':'assets/hero-poster.jpg';
-function initHeroOnce(){
-  if(heroInit)return;heroInit=true;
-  /* en movil el primer fotograma ya hace de poster y pesa 14 KB en vez de 173:
-     ademas es la misma imagen que el motor necesita de todas formas */
-  poster.style.backgroundImage="url('"+POSTER+"')";
-  var started=false;
-  function start(){
-    if(started)return;started=true;
-    (LIGHT?loadSequence():loadHeroBlob()).catch(failVideo);
-  }
-  var pi=new Image();pi.onload=start;pi.onerror=start;pi.src=POSTER;
-  setTimeout(start,4000);
-}
-
-/* ---- carga de la secuencia de fotogramas ----
-   Descarga las 48 imágenes, las decodifica una sola vez a ImageBitmap y las
-   deja listas en memoria. A partir de ahí, mover el scroll es un drawImage. */
-async function loadSequence(){
-  stage.classList.add('seq');
-  sctx=seq.getContext('2d',{alpha:false});
-  var slots=[];
-  for(var i=1;i<=SEQ_TOTAL;i+=SEQ_STEP)slots.push(i);
-  var bitmaps=new Array(slots.length);
-  seqFrames=bitmaps;                 /* referencia viva: se va rellenando sola */
-  var done=0,failed=0;
-
-  /* Orden de descarga en "barrido binario": primero el 0, luego la mitad,
-     luego los cuartos... Así, en cualquier instante de la carga los fotogramas
-     que ya están cubren todo el recorrido en vez de solo el principio, y quien
-     hace scroll antes de tiempo ve la animación entera aunque tosca. */
-  var order=[],step=slots.length;
-  while(step>1){
-    step=Math.ceil(step/2);
-    for(var s=0;s<slots.length;s+=step)if(order.indexOf(s)<0)order.push(s);
-  }
-  for(var s2=0;s2<slots.length;s2++)if(order.indexOf(s2)<0)order.push(s2);
-
-  function revealOnce(){
-    if(seqReady||!bitmaps[0])return;
-    seqReady=true;lastI=-1;lastG=-1;
-    drawSeq(heroProgress());
-    stage.classList.add('seq-ready');
-  }
-
-  async function grab(slot){
-    var url=SEQ_DIR+'f'+('00'+slots[slot]).slice(-3)+'.webp';
-    try{
-      var r=await fetch(url);
-      if(!r.ok)throw new Error(r.status);
-      var blob=await r.blob();
-      var opciones=SEQ_ESCALA<1
-        ? {resizeWidth:Math.round(seq.width*SEQ_ESCALA),resizeHeight:Math.round(seq.height*SEQ_ESCALA),resizeQuality:'medium'}
-        : undefined;
-      bitmaps[slot]=self.createImageBitmap
-        ? await createImageBitmap(blob,opciones)
-        : await new Promise(function(ok,no){
-            var im=new Image();im.onload=function(){ok(im)};im.onerror=no;im.src=URL.createObjectURL(blob);
-          });
-    }catch(e){failed++}
-    done++;
-    if(ringbox&&ringbox.parentNode)ringbox.style.setProperty('--ld',Math.round(126*(1-done/slots.length)));
-    revealOnce();
-  }
-
-  /* El fotograma de portada va solo y primero: si sale en la misma tanda que los
-     otros 47 no gana la carrera y la pantalla se queda en negro de más. */
-  await grab(order.shift());
-  /* El resto, todos a la vez: el navegador limita la concurrencia mejor que
-     nosotros, y así no pagamos una ida y vuelta por cada lote. */
-  await Promise.all(order.map(grab));
-
-  if(failed>slots.length/2)throw new Error('secuencia no disponible');
-  if(!bitmaps[0])throw new Error('secuencia vacía');
-  seqReady=true;lastI=-1;lastG=-1;
-  drawSeq(heroProgress());
-  stage.classList.add('seq-ready');
-  if(ringbox&&ringbox.parentNode){
-    ringbox.style.setProperty('--ld',0);
-    ringbox.style.opacity=0;
-    setTimeout(function(){if(ringbox.parentNode)ringbox.remove()},900);
-  }
-}
-async function loadHeroBlob(){
-  var ctrl=new AbortController();
-  var watchdog=setTimeout(function(){ctrl.abort()},20000);
-  var res=await fetch(VIDEO_URL,{priority:'low',signal:ctrl.signal});
-  var total=Number(res.headers.get('Content-Length'))||VIDEO_BYTES;
-  var reader=res.body.getReader();
-  var chunks=[],got=0,lastRing=0;
-  for(;;){
-    var st=await reader.read();
-    if(st.done)break;
-    clearTimeout(watchdog);
-    watchdog=setTimeout(function(){ctrl.abort()},20000);
-    chunks.push(st.value);got+=st.value.length;
-    var frac=Math.min(1,got/total);
-    var now=performance.now();
-    if(now-lastRing>100||frac===1){lastRing=now;ringbox.style.setProperty('--ld',Math.round(126*(1-frac)))}
-  }
-  clearTimeout(watchdog);
-  ringbox.style.setProperty('--ld',0);
-  video.src=URL.createObjectURL(new Blob(chunks,{type:'video/mp4'}));
-  video.load();
-  video.addEventListener('canplay',function(){
-    unlockMedia();
-    requestSeek(heroProgress()*video.duration);
-    stage.classList.add('video-ready');
-    ringbox.style.opacity=0;
-    setTimeout(function(){if(ringbox.parentNode)ringbox.remove()},900);
-  },{once:true});
-}
-/* iOS no deja mover currentTime de un vídeo que nunca ha arrancado:
-   lo lanzamos y lo paramos al instante para desbloquear el elemento. */
-var mediaUnlocked=false;
-function unlockMedia(){
-  if(mediaUnlocked)return;
-  var pr=video.play();
-  if(pr&&pr.then){pr.then(function(){mediaUnlocked=true;video.pause()},function(){});}
-  else{mediaUnlocked=true;try{video.pause()}catch(e){}}
-}
-if(!LIGHT)['touchstart','pointerdown'].forEach(function(ev){
-  addEventListener(ev,function once(){removeEventListener(ev,once);if(video.readyState>0)unlockMedia()},{passive:true});
-});
-function makeChevron(){var s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('class','chev');s.innerHTML='<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';return s}
-/* si el medio no carga, el póster se queda de fondo y las bandas de texto
-   siguen animándose con el scroll: se pierde el metraje, no la narración */
-function failVideo(){
-  if(ringbox&&ringbox.parentNode){var c=makeChevron();ringbox.innerHTML='';ringbox.appendChild(c)}
-  stage.classList.remove('seq','seq-ready');
-  stage.classList.add('video-failed');
-  seqReady=false;
-}
-video.addEventListener('error',failVideo);
-
-/* ---------- gates del hero estático (mismas cadenas que en el CSS) ----------
-   El scrub va también en móvil: lo único que lo apaga es que el sistema
-   pida menos movimiento. */
-/* El reparto en tactil: el metraje lo pinta el canvas y el texto lo mueve el
-   compositor. Antes el compositor llevaba las dos cosas y el metraje iba en
-   hojas de sprites, que es lo que reventaba la memoria; el texto, en cambio, no
-   cuesta nada ahi y no puede ir con retraso, asi que se queda donde estaba. */
-var TEXTO_CSS=TACTIL &&
-  !matchMedia('(prefers-reduced-motion: reduce)').matches &&
-  !!(window.CSS&&CSS.supports&&CSS.supports('animation-timeline','view()'));
-/* --- la entrada del texto, al compositor ---------------------------------
-   Antes la movia --k, una propiedad personalizada registrada con @property. Eso
-   no se puede componer: cada paso invalidaba el estilo de los 68 fragmentos que
-   heredan la variable, 0,84 ms de cada fotograma. Aqui cada fragmento lleva su
-   propia animacion de opacity y transform, que si van por el compositor.
-   El escalonado vive en --th, y CSS no sabe multiplicar un retardo por una
-   variable: los numeros se calculan aqui y se escriben ya resueltos. JavaScript
-   corre una vez al cargar, no una vez por fotograma. */
-var EASE='cubic-bezier(.22,.75,.25,1)';   /* el mismo --ease de la hoja */
-/* El scroll disparaba la entrada y ademas la medía: la posicion del dedo era la
-   linea de tiempo de la animacion, asi que la frase no acababa de montarse hasta
-   haber recorrido el 9,7% del hero --unos 125 px-- y, si parabas antes, se
-   quedaba a medias. Ahora el scroll solo dispara: en cuanto la banda entra en su
-   tramo, el texto se monta entero por su cuenta con el reloj del compositor,
-   aunque el dedo se haya parado. Sigue siendo reversible: al volver por encima
-   del disparador la banda se desarma y se monta otra vez al cruzarlo. */
-var T_FRAG=300;                    /* lo que tarda cada letra o palabra */
-var T_ESCALON=260;                 /* del primer fragmento al ultimo */
-var T_CRUCE=380;                   /* el cruce borroso/nitido de la banda 2 */
-var T_ENTRADA=T_ESCALON+T_FRAG;    /* la banda entera, de la primera letra a la ultima */
-var INICIO={p2:15.43,p3:39.01,p4:60.13,p5:83.17};
-var entradas={},armadas={};
-function textoAlCompositor(){
-  var css=[],n=0;
-  /* aqui no se aplica nada: cada animacion se guarda y la enciende armaBanda */
-  function pon(p,el,nombre,retraso,dur){
-    (entradas[p]||(entradas[p]=[])).push(
-      [el,'__'+nombre+' '+Math.round(dur)+'ms '+EASE+' '+Math.round(retraso)+'ms both']);
-  }
-  function num(el,v){return parseFloat(el.style.getPropertyValue(v))||0}
-  Object.keys(INICIO).forEach(function(p){
-    var b=document.querySelector('.'+p); if(!b)return;
-    /* p2 cruza una copia borrosa por una nitida; no lleva letras partidas */
-    var soft=b.querySelector('.e-blur .soft'), sharp=b.querySelector('.e-blur .sharp');
-    if(soft&&sharp){ pon(p,soft,'sale',0,T_CRUCE); pon(p,sharp,'entra',0,T_CRUCE); }
-    /* las letras y palabras, con su desorden propio congelado en el fotograma clave */
-    [].forEach.call(b.querySelectorAll('.c,.w'),function(f){
-      var th=num(f,'--th'), jx=num(f,'--jx'), jy=num(f,'--jy'), jr=num(f,'--jr');
-      var esPalabra=f.classList.contains('w');
-      var dur=esPalabra&&p==='p5'?T_FRAG*0.85:T_FRAG;
-      if(!jx&&!jy&&!jr){ pon(p,f,esPalabra?'sube':'entra',th*T_ESCALON,dur); return }
-      var nom='j'+(n++);
-      css.push('@keyframes __'+nom+'{from{opacity:0;transform:translate('+jx+'px,'+jy+'px) rotate('+jr+'deg)}'
-               +'to{opacity:1;transform:none}}');
-      pon(p,f,nom,th*T_ESCALON,dur);
-    });
-  });
-  /* el subtitulo y el boton de la ultima banda, donde estaban --ks y --kb */
-  var sub=document.querySelector('.p5 .sub'), cta=document.querySelector('.p5 .cta-row');
-  if(sub) pon('p5',sub,'sube14',0.5*T_ESCALON,T_FRAG*0.8);
-  if(cta) pon('p5',cta,'sube14',0.72*T_ESCALON,T_FRAG*0.7);
-  css.push('@keyframes __entra{from{opacity:0}to{opacity:1}}');
-  css.push('@keyframes __sale{from{opacity:1}to{opacity:0}}');
-  css.push('@keyframes __sube{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}');
-  css.push('@keyframes __sube14{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}');
-  var e=document.createElement('style'); e.textContent=css.join(String.fromCharCode(10));
-  document.head.appendChild(e);
-  /* la hoja se inyecta tarde a proposito (ver prepararTextoCSS): si para entonces
-     ya estamos dentro de alguna banda, hay que armarla ahora mismo */
-  armadas={};
-  disparaEntradas(heroProgress());
-}
-function armaBanda(p,on){
-  var lista=entradas[p]; if(!lista)return;
-  for(var i=0;i<lista.length;i++)lista[i][0].style.animation=on?lista[i][1]:'';
-}
-/* cuatro comparaciones por fotograma; el trabajo de verdad solo pasa al cruzar */
-function disparaEntradas(p){
-  for(var nom in INICIO){
-    var on=p>=INICIO[nom]/100;
-    if(on!==!!armadas[nom]){armadas[nom]=on;armaBanda(nom,on)}
-  }
-}
-var textoPreparado=false;
-function prepararTextoCSS(){
-  if(textoPreparado)return;textoPreparado=true;
-  /* Aqui vivia tambien la carga de las tres hojas de sprites, 1,06 MB que ya no
-     se piden. Queda solo el texto, y con el su motivo original para no correr en
-     DOMContentLoaded: inyectar la hoja de estilos generada justo antes del primer
-     pintado costaba 0,7 s de FCP y de LCP, y nada de esto hace falta hasta la
-     banda 2, que esta a 286 px de haber empezado a deslizar. */
-  var listo=false;
-  function abrir(){if(listo)return;listo=true;textoAlCompositor()}
-  addEventListener('scroll',abrir,{passive:true,once:true});
-  addEventListener('touchstart',abrir,{passive:true,once:true});
-  var enReposo=window.requestIdleCallback||function(f){return setTimeout(f,1200)};
-  if(document.readyState==='complete')enReposo(abrir,{timeout:1500});
-  else addEventListener('load',function(){enReposo(abrir,{timeout:1500})},{once:true});
-}
-var GATES=['(prefers-reduced-motion: reduce)'];
-var scrubOn=false;
-function enableScrub(){
-  if(scrubOn)return;scrubOn=true;
-  initHeroOnce();
-  addEventListener('scroll',onScroll,{passive:true});
-  bands.forEach(function(b){b.op=-1;b.k=-1;b.ks=-1;b.kb=-1});
-  unpinFinalStates();
-  updateCaptions(heroProgress(),performance.now());
-  onScroll();
-}
-function disableScrub(){
-  if(!scrubOn)return;scrubOn=false;
-  removeEventListener('scroll',onScroll);
-  if(rafId!==null){cancelAnimationFrame(rafId);rafId=null}
-}
-function applyHeroMode(){
-  if(GATES.some(function(q){return matchMedia(q).matches})){disableScrub();return}
-  /* El motor del metraje corre siempre: antes en tactil se apagaba entero y el
-     hero lo movia el compositor con hojas de sprites, que es lo que no cabia en
-     memoria. Ahora el canvas pinta los fotogramas y, si el navegador sabe de
-     lineas de tiempo, el texto lo sigue moviendo el compositor. */
-  if(TEXTO_CSS)prepararTextoCSS();
-  enableScrub();
-}
-var MQLS=GATES.map(function(q){return matchMedia(q)});
-MQLS.forEach(function(m){m.addEventListener('change',applyHeroMode)});
+document.addEventListener('visibilitychange',syncLoop);
+/* el video no compite con lo que se pinta primero: se pide al acabar la carga */
+unpinFinalStates();
+if(document.readyState==='complete')applyHeroMode();
+else addEventListener('load',applyHeroMode,{once:true});
 
 /* ---------- entrances with delay retirement ---------- */
 var io=new IntersectionObserver(function(entries){
@@ -1236,7 +770,7 @@ function unpinFinalStates(){
   }
 }
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',function(e){
-  if(e.matches)pinToFinalStates();else applyHeroMode();
+  if(e.matches){pinToFinalStates();video.pause()}else applyHeroMode();
 });
 
 /* ---------- tab visibility ---------- */
@@ -1375,7 +909,6 @@ cform.addEventListener('submit',function(ev){
 function boot(){
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.body.classList.add('anim');
   else pinToFinalStates();
-  applyHeroMode();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
