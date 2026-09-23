@@ -39,10 +39,10 @@ validación evita que una hipótesis llegue a producción sin comprobar.
 
 | Rol | Principal | Reserva | Entrega |
 |---|---|---|---|
-| Orquestador | Claude Opus, alto; conversación principal | Codex `gpt-6-astra`, alto; si no está, `gpt-5.6-sol`, alto | Tarea acotada y verificable |
-| Redactor de spec | Claude Opus, alto; entrevista con `spec-generator` | Codex `gpt-6-astra`, alto; misma skill en `.agents/skills/spec-generator` | Spec con EARS pendiente de aprobación |
+| Orquestador | Claude Opus 5.5, medio; conversación principal | Codex `gpt-6-astra`, alto; si no está, `gpt-5.6-sol`, alto | Tarea acotada y verificable |
+| Redactor de spec | Claude Opus 5.5, medio; entrevista con `spec-generator` | Codex `gpt-6-astra`, alto; misma skill en `.agents/skills/spec-generator` | Spec con EARS pendiente de aprobación |
 | Investigador | Codex `gpt-5.6-terra`, medio, solo lectura | Subagente `investigador` de Claude: Haiku; Sonnet si cruza muchas fuentes | Hechos con rutas, impacto y dudas abiertas |
-| Implementador | Codex `gpt-5.6-sol`, medio; alto si toca la API o la demo | Subagente `implementador` de Claude: Sonnet; Opus si toca la API o la demo | Cambio mínimo, pruebas y diff revisado |
+| Implementador | Codex `gpt-5.6-sol`, medio; alto si toca la API o la demo | Subagente `implementador` de Claude: Sonnet; Opus 5.5, medio, si toca la API o la demo | Cambio mínimo, pruebas y diff revisado |
 | Validador | Subagente `validador` de Claude, Sonnet | Codex `gpt-5.6-luna`, solo lectura; el orquestador pasa las pruebas | Pruebas y revisión contra la spec |
 
 El orquestador y el redactor de spec son la conversación principal de Claude.
