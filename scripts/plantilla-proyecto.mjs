@@ -12,8 +12,10 @@
  */
 
 /* Escapa los caracteres que cambiarian el HTML. Vale tanto para texto como
-   para el interior de un atributo entre comillas dobles. */
-function escaparHtml(valor) {
+   para el interior de un atributo entre comillas dobles. Se exporta porque el
+   bloque de tarjetas de la portada (T4 de la spec 001) tambien lo necesita y
+   no debe duplicar esta logica. */
+export function escaparHtml(valor) {
   return String(valor)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

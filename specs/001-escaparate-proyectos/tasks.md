@@ -43,7 +43,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       los tres en círculo y cada página tiene su propio título y descripción.
 
 ## T4 · Portada: la lista de proyectos
-- [ ] Sustituir las secciones «Mi mejor proyecto» y «Proyectos» por la lista
+- [x] Sustituir las secciones «Mi mejor proyecto» y «Proyectos» por la lista
       generada.
 - **Criterios**: RF-2 a RF-8, RF-12 a RF-15.
 - **Notas**: desaparece la duplicidad actual de Brasa y Ascuas. La portada
