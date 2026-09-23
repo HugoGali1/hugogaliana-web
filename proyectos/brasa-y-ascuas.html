@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brasa y Ascuas · Pedidos por QR para restaurantes · Hugo Galiana</title>
+<meta name="description" content="Sistema de pedidos en mesa para un restaurante de buffet: QR por mesa, cocina en tiempo real, pagos con Stripe y panel de administración. Ionic, Angular, NestJS y MongoDB.">
+<meta name="theme-color" content="#0B141A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Brasa y Ascuas · Pedidos por QR para restaurantes">
+<meta property="og:description" content="QR por mesa, cocina en tiempo real, pagos con Stripe y panel de administración. Construido de cero por Hugo Galiana.">
+<meta property="og:url" content="https://hugogaliana.com/proyectos/brasa-y-ascuas">
+<meta property="og:site_name" content="Hugo Galiana">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://hugogaliana.com/assets/shot-buffet-panel.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://hugogaliana.com/proyectos/brasa-y-ascuas">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/caso.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Brasa y Ascuas",
+  "url": "https://buffet.hugogaliana.com",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "description": "Sistema de pedidos en mesa para restaurante de buffet con check-in por QR, cocina en tiempo real, pagos con Stripe y panel de administración.",
+  "image": "https://hugogaliana.com/assets/shot-buffet-panel.jpg",
+  "inLanguage": ["es-ES", "en"],
+  "author": { "@type": "Person", "@id": "https://hugogaliana.com/#hugo", "name": "Hugo Galiana Real" },
+  "codeRepository": "https://github.com/HugoGali1/TFG"
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Hugo Galiana, inicio">
+      <img src="/assets/logo-hg.png" alt="" aria-hidden="true" width="22" height="22" decoding="async">
+      Hugo Galiana
+    </a>
+    <ul class="nav-links">
+      <li class="hide-s"><a href="/#proyectos">Proyectos</a></li>
+      <li><a class="cta" href="/#contacto">Cuéntame tu proyecto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+  <header class="case-head">
+    <div class="wrap">
+      <ol class="crumbs" aria-label="Estás en"><li><a href="/">Inicio</a></li><li><a href="/#proyectos">Proyectos</a></li><li aria-current="page">Brasa y Ascuas</li></ol>
+      <span class="tag">Proyecto de fin de grado · Destacado</span>
+      <h1>Brasa y Ascuas</h1>
+      <p class="lede">Un sistema de pedidos completo para un restaurante de buffet libre. El cliente escanea el QR de su mesa, pide y paga desde el móvil, y la comanda entra al instante en la pantalla de cocina. Lo construí de cero, de la base de datos a la última pantalla.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Probar la demo ↗</a>
+        <a class="btn btn-ghost" href="https://github.com/HugoGali1/TFG" target="_blank" rel="noopener">Ver el código ↗</a>
+      </div>
+      <dl class="facts">
+        <div><dt>Qué es</dt><dd>Pedidos, cocina y cobro para restaurante</dd></div>
+        <div><dt>Mi papel</dt><dd>Todo: diseño, frontend, backend y despliegue</dd></div>
+        <div><dt>Tecnología</dt><dd>Ionic · Angular · NestJS · MongoDB</dd></div>
+        <div><dt>Estado</dt><dd>Publicado, con demo guiada</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-shot con-movil">
+      <div class="shot">
+        <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">buffet.hugogaliana.com</span></div>
+        <img src="/assets/shot-buffet-panel.jpg" width="1400" height="689" alt="Panel de cocina de Brasa y Ascuas con los pedidos de cada mesa en tiempo real" fetchpriority="high" decoding="async">
+        <div class="shot-phone"><img src="/assets/shot-buffet-movil.jpg" width="393" height="859" alt="La carta de Brasa y Ascuas vista desde el móvil del cliente" loading="lazy" decoding="async"></div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="case-body">
+    <div class="narrow">
+
+      <section class="block" aria-labelledby="b1">
+        <h2 id="b1"><span class="n">01</span> El problema</h2>
+        <p>En un buffet libre con carta, el camarero pasa la noche yendo y viniendo: toma nota, la lleva a cocina, vuelve para preguntar el punto de la carne y, al final, calcula a mano qué entra en el precio del buffet y qué se cobra aparte. Cada paso es una oportunidad para un error y un rato que no se dedica a atender.</p>
+        <p>La idea era quitar ese recorrido de en medio: que el pedido viaje solo de la mesa a la cocina, que la cuenta se calcule sola y que el dueño vea cómo va la noche sin preguntar a nadie.</p>
+      </section>
+
+      <section class="block" aria-labelledby="b2">
+        <h2 id="b2"><span class="n">02</span> Lo que construí</h2>
+        <p>Una sola aplicación con tres caras, una para cada persona que la usa. Cada una ve solo lo que necesita.</p>
+      </section>
+    </div>
+    <div class="wrap">
+      <div class="cols">
+        <div class="cell">
+          <span class="n">Cliente</span>
+          <h3>Pide y paga desde la mesa</h3>
+          <ul>
+            <li>Un QR fijo por mesa: al escanearlo se abre la sesión, o te unes a la de tus acompañantes</li>
+            <li>Eliges tarifa de buffet y la carta te marca qué entra y qué es extra</li>
+            <li>Punto de cocción solo en los platos a la brasa</li>
+            <li>Aviso en el móvil cuando tu plato está listo</li>
+            <li>Pago con tarjeta, Apple Pay, Google Pay o Bizum, con propina y valoración</li>
+            <li>En español y en inglés</li>
+          </ul>
+        </div>
+        <div class="cell">
+          <span class="n">Cocina</span>
+          <h3>Las comandas entran solas</h3>
+          <ul>
+            <li>Cada pedido nuevo suena, parpadea y cambia el título de la pestaña, aunque esté en segundo plano</li>
+            <li>Estados por plato con el lenguaje de cocina: «Poner en brasa», «Servir»</li>
+            <li>Las bebidas se saltan los pasos intermedios</li>
+            <li>Si se cae la red, se reconecta sola sin recargar</li>
+            <li>Avisos de mesa: llamar al camarero, pedir la cuenta, para llevar</li>
+          </ul>
+        </div>
+        <div class="cell">
+          <span class="n">Administración</span>
+          <h3>El negocio, en directo</h3>
+          <ul>
+            <li>Mesas, platos y tarifas, con precios editables en la propia tabla</li>
+            <li>Apagar un plato agotado y que cocina y carta lo sepan al momento</li>
+            <li>Pedidos e ingresos del día, mesas activas y valoración media</li>
+            <li>Platos y buffets más vendidos, y las últimas opiniones</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="narrow">
+
+      <section class="block" aria-labelledby="b3">
+        <h2 id="b3"><span class="n">03</span> Por dentro</h2>
+        <p>La aplicación del cliente y la del personal comparten código: una sola base en Ionic y Angular que funciona en el navegador y puede empaquetarse para iOS y Android. Detrás hay una API en NestJS sobre MongoDB, y el tiempo real va por Socket.io, con una sala por mesa para que cada aviso llegue solo a quien le toca.</p>
+        <dl class="stack">
+          <div><dt>Interfaz</dt><dd>Ionic 8 + Angular 20 <span>· rutas con carga diferida, guards por rol</span></dd></div>
+          <div><dt>API</dt><dd>NestJS 11 <span>· DTOs validados en cada endpoint, documentación Swagger</span></dd></div>
+          <div><dt>Datos</dt><dd>MongoDB con Mongoose <span>· agregaciones para las métricas del panel</span></dd></div>
+          <div><dt>Tiempo real</dt><dd>Socket.io <span>· salas por sesión, reingreso automático al reconectar</span></dd></div>
+          <div><dt>Acceso</dt><dd>JWT + Passport <span>· cliente, cocina, camarero y administrador</span></dd></div>
+          <div><dt>Pagos</dt><dd>Stripe Payment Element + webhook</dd></div>
+          <div><dt>Pruebas</dt><dd>Jest <span>· las reglas de cobro del buffet, cubiertas</span></dd></div>
+        </dl>
+      </section>
+
+      <section class="block" aria-labelledby="b4">
+        <h2 id="b4"><span class="n">04</span> Decisiones que tomé</h2>
+        <p>Lo interesante de un proyecto así no es la lista de tecnologías, sino lo que eliges cuando dos cosas razonables chocan.</p>
+        <div class="decisions">
+          <div class="decision">
+            <h3>Un QR fijo por mesa, no uno por comida</h3>
+            <div>
+              <p>El restaurante imprime los códigos una vez y se olvida. Si la mesa ya está abierta, quien escanea se une a ella, así que los que llegan tarde piden en la misma cuenta.</p>
+              <p class="trade">A cambio: cualquiera con la foto del QR podría abrir sesión. Lo frena que hay que estar sentado en la mesa; los QR por sesión quedan como mejora.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>La cuenta la calcula el servidor</h3>
+            <div>
+              <p>Para cada plato, el servidor decide si lo cubre el buffet o se cobra aparte. El móvil solo enseña el resultado, así que nadie puede cambiar un precio desde su teléfono.</p>
+              <p class="trade">A cambio: más lógica en la API. Por eso es justo la parte que tiene pruebas automáticas.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>Cobro real, con un simulador de respaldo</h3>
+            <div>
+              <p>Los pagos van por Stripe de verdad, confirmados por webhook. Si el entorno no tiene claves, entra un modo simulado, para que la demo nunca se quede atascada en el paso de pagar.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>Una cocina que aguanta cortes de red</h3>
+            <div>
+              <p>Una tablet en una cocina pierde la wifi. Al volver, se reincorpora sola a su sala y sigue recibiendo pedidos, sin que nadie tenga que recargar la página a mitad del servicio.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="b5">
+        <h2 id="b5"><span class="n">05</span> Pruébalo tú</h2>
+        <p>La demo es una visita guiada en tres pasos. Cada uno se abre en una pestaña, así que puedes ver los tres papeles a la vez y mirar cómo tu pedido llega a cocina mientras lo haces.</p>
+      </section>
+    </div>
+    <div class="wrap">
+      <div class="cols">
+        <div class="cell"><span class="n">Paso 1</span><h3>Siéntate en una mesa</h3><p>Abre la vista del cliente como si hubieras escaneado el QR.</p></div>
+        <div class="cell"><span class="n">Paso 2</span><h3>Abre la cocina</h3><p>Pide desde la otra pestaña y mira cómo entra la comanda.</p></div>
+        <div class="cell"><span class="n">Paso 3</span><h3>Abre la administración</h3><p>Las métricas del día se mueven con lo que acabas de pedir.</p></div>
+      </div>
+    </div>
+    <div class="narrow">
+      <p class="note">Los pagos de la demo van en modo de prueba: no se cobra nada.</p>
+      <div class="actions"><a class="btn btn-solid" href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Abrir la demo ↗</a></div>
+    </div>
+
+    <div class="wrap">
+      <section class="next" aria-labelledby="next-h">
+        <span class="kicker">Siguiente proyecto</span>
+        <article class="next-card">
+          <div>
+            <span class="tag">En producción · Cliente real</span>
+            <h2 id="next-h"><a href="/proyectos/aperture">Aperture Technologies</a></h2>
+            <p>La web corporativa de una empresa de software para la gestión de residuos.</p>
+            <p class="more" aria-hidden="true">Ver el proyecto →</p>
+          </div>
+          <div class="shot">
+            <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">aperturetechnologies.es</span></div>
+            <img src="/assets/shot-aperture.jpg?v=2" width="1400" height="700" alt="" loading="lazy" decoding="async">
+          </div>
+        </article>
+      </section>
+
+      <aside class="cta-band" aria-labelledby="cta-h">
+        <div>
+          <h2 id="cta-h">¿Tu negocio necesita algo así?</h2>
+          <p>Pedidos, reservas o cobros sin comisiones de terceros. Cuéntame qué te falta y te digo cómo lo construiría.</p>
+        </div>
+        <a class="btn btn-solid" href="/#contacto">Cuéntame tu proyecto</a>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <p>© 2026 Hugo Galiana Real · Valencia</p>
+    <p class="mono"><a href="https://github.com/HugoGali1" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/hugo-galiana-real-8a1831329/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="mono"><a href="/proyectos/brasa-y-ascuas" aria-current="page">Brasa y Ascuas</a> · <a href="/proyectos/aperture">Aperture</a> · <a href="/proyectos/top-note">Top Note</a> · <a href="/privacidad">Privacidad</a></p>
+  </div>
+</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>

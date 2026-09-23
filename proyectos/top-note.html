@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top Note · Buscador de perfumes con IA · Hugo Galiana</title>
+<meta name="description" content="Top Note: describes el perfume que buscas con tus palabras y una IA te recomienda con razones. Catálogo de más de 30.000 fragancias, React y Google Gemini.">
+<meta name="theme-color" content="#0B141A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Top Note · Buscador de perfumes con IA">
+<meta property="og:description" content="Describes lo que buscas con tus palabras y la IA te recomienda con razones. Más de 30.000 fragancias.">
+<meta property="og:url" content="https://hugogaliana.com/proyectos/top-note">
+<meta property="og:site_name" content="Hugo Galiana">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="https://hugogaliana.com/assets/shot-topnote.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://hugogaliana.com/proyectos/top-note">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/caso.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Top Note",
+  "url": "https://hugogaliana.com/topnote",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web",
+  "description": "Buscador de fragancias en lenguaje natural: prefiltra un catálogo de más de 30.000 perfumes y una IA recomienda con razones.",
+  "image": "https://hugogaliana.com/assets/shot-topnote.jpg",
+  "inLanguage": "es-ES",
+  "author": { "@type": "Person", "@id": "https://hugogaliana.com/#hugo", "name": "Hugo Galiana Real" },
+  "codeRepository": "https://github.com/HugoGali1/topnote"
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Hugo Galiana, inicio">
+      <img src="/assets/logo-hg.png" alt="" aria-hidden="true" width="22" height="22" decoding="async">
+      Hugo Galiana
+    </a>
+    <ul class="nav-links">
+      <li class="hide-s"><a href="/#proyectos">Proyectos</a></li>
+      <li><a class="cta" href="/#contacto">Cuéntame tu proyecto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+  <header class="case-head">
+    <div class="wrap">
+      <ol class="crumbs" aria-label="Estás en"><li><a href="/">Inicio</a></li><li><a href="/#proyectos">Proyectos</a></li><li aria-current="page">Top Note</li></ol>
+      <span class="tag">Con IA</span>
+      <h1>Top Note</h1>
+      <p class="lede">Un buscador de perfumes que entiende lo que le pides con tus palabras. Escribes «algo amaderado y cálido para el invierno, parecido a Baccarat Rouge» y te devuelve una selección razonada: qué notas tiene cada uno y por qué encaja contigo.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="/topnote" target="_blank" rel="noopener">Probar la demo ↗</a>
+        <a class="btn btn-ghost" href="https://github.com/HugoGali1/topnote" target="_blank" rel="noopener">Ver el código ↗</a>
+      </div>
+      <dl class="facts">
+        <div><dt>Qué es</dt><dd>Recomendador en lenguaje natural</dd></div>
+        <div><dt>Mi papel</dt><dd>Datos, búsqueda, IA, interfaz y despliegue</dd></div>
+        <div><dt>Tecnología</dt><dd>React · Gemini · Python · Vercel</dd></div>
+        <div><dt>Estado</dt><dd>Demo pública con 5.000 perfumes</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-shot">
+      <div class="shot">
+        <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">hugogaliana.com/topnote</span></div>
+        <img src="/assets/shot-topnote.jpg" width="1600" height="800" alt="Top Note: búsqueda en lenguaje natural y resultados con las notas de cada perfume" fetchpriority="high" decoding="async">
+      </div>
+    </figure>
+  </div>
+
+  <div class="case-body">
+    <div class="narrow">
+
+      <section class="block" aria-labelledby="b1">
+        <h2 id="b1"><span class="n">01</span> El problema</h2>
+        <p>Los buscadores de tienda funcionan con filtros: marca, precio, familia olfativa. Pero nadie piensa así en un perfume. Piensas en «algo fresco para la oficina que no sea el típico», o en «uno como el que llevaba mi padre, pero más dulce».</p>
+        <p>Top Note traduce esa frase a una búsqueda de verdad. Y la idea sirve para cualquier catálogo difícil de filtrar: vinos, muebles, libros o repuestos.</p>
+      </section>
+
+      <section class="block" aria-labelledby="b2">
+        <h2 id="b2"><span class="n">02</span> En números</h2>
+        <div class="stats">
+          <div class="stat"><b>+30.000</b><span>fragancias en el catálogo completo, unidas desde dos fuentes</span></div>
+          <div class="stat"><b>80</b><span>candidatos que el buscador elige antes de preguntar a la IA</span></div>
+          <div class="stat"><b>−2,8 MB</b><span>que dejó de descargar cada visitante al compilar la interfaz</span></div>
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="b3">
+        <h2 id="b3"><span class="n">03</span> Cómo funciona</h2>
+        <p>Mandar treinta mil perfumes a una IA en cada búsqueda sería lento y caro. Así que la búsqueda va en dos tiempos: primero el propio navegador reduce el catálogo a unos pocos candidatos buenos, y solo esos viajan al modelo, que elige y explica.</p>
+      </section>
+    </div>
+    <div class="wrap">
+      <div class="cols">
+        <div class="cell">
+          <span class="n">1 · Entender</span>
+          <h3>Lee tu frase</h3>
+          <ul>
+            <li>Aplica los filtros que marques: familia, género, temporada</li>
+            <li>Detecta perfumes que nombras («como Sauvage») y usa sus notas como referencia</li>
+            <li>Traduce palabras cotidianas a acordes: «oficina» es fresco y limpio; «dulce», vainilla y gourmand</li>
+          </ul>
+        </div>
+        <div class="cell">
+          <span class="n">2 · Preseleccionar</span>
+          <h3>Se queda con los mejores</h3>
+          <ul>
+            <li>Puntúa cada perfume por coincidencias y por calidad (valoración y número de votos)</li>
+            <li>Máximo tres por marca, para que no te devuelva ocho de la misma casa</li>
+            <li>Los 80 mejores pasan a la siguiente fase</li>
+          </ul>
+        </div>
+        <div class="cell">
+          <span class="n">3 · Recomendar</span>
+          <h3>La IA elige y explica</h3>
+          <ul>
+            <li>Google Gemini actúa como perfumista y reordena los candidatos</li>
+            <li>Responde con un formato fijo, así que la interfaz nunca recibe texto roto</li>
+            <li>Cada recomendación llega con sus notas y el porqué</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="narrow">
+
+      <section class="block" aria-labelledby="b4">
+        <h2 id="b4"><span class="n">04</span> Por dentro</h2>
+        <dl class="stack">
+          <div><dt>Datos</dt><dd>Python <span>· funde los catálogos de Parfumo y Fragrantica, traduce las notas y calcula perfumes parecidos</span></dd></div>
+          <div><dt>Interfaz</dt><dd>React + Framer Motion <span>· scroll infinito, favoritos e historial</span></dd></div>
+          <div><dt>3D</dt><dd>Three.js <span>· un frasco estilizado cuando no hay foto oficial</span></dd></div>
+          <div><dt>IA</dt><dd>Google Gemini <span>· salida con esquema fijo</span></dd></div>
+          <div><dt>Servidor</dt><dd>Función serverless en Vercel <span>· guarda la clave y limita el uso</span></dd></div>
+          <div><dt>Cuentas</dt><dd>NestJS + JWT <span>· preparado, apagado en la demo pública</span></dd></div>
+        </dl>
+      </section>
+
+      <section class="block" aria-labelledby="b5">
+        <h2 id="b5"><span class="n">05</span> Decisiones que tomé</h2>
+        <div class="decisions">
+          <div class="decision">
+            <h3>La clave de la IA nunca toca el navegador</h3>
+            <div>
+              <p>Las búsquedas pasan por una función en el servidor que guarda la clave de Gemini. Además limita cada visitante a cinco búsquedas cada diez minutos y solo acepta peticiones de la propia web.</p>
+              <p class="trade">A cambio: un salto más en cada búsqueda. Merece la pena: una clave expuesta es una factura sin techo.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>Filtrar antes de preguntar</h3>
+            <div>
+              <p>El modelo solo ve 80 candidatos, no el catálogo entero. Así responde antes, cuesta menos por búsqueda y no puede recomendar un perfume que no existe.</p>
+              <p class="trade">A cambio: si el filtro previo descarta algo bueno, la IA no llega a verlo. Por eso el prefiltro está afinado con sinónimos y perfumes de referencia.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>Compilar la interfaz en vez de hacerlo en cada visita</h3>
+            <div>
+              <p>La primera versión traducía el código de la interfaz en el propio navegador de cada visitante: 2,8 MB de herramienta que se descargaban y ejecutaban en cada visita. Ahora se compila una vez, antes de publicar, y lo que se sirve son 136 KB.</p>
+            </div>
+          </div>
+          <div class="decision">
+            <h3>Medir antes de dar algo por arreglado</h3>
+            <div>
+              <p>Algunas recomendaciones desaparecían sin error. La causa: los identificadores largos se recortaban al enviarlos al modelo y luego no casaban con el catálogo. Antes del arreglo sobrevivían 0 de 8; después, 8 de 8.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="note">La demo pública corre sobre 5.000 de los perfumes y sin cuentas de usuario: tus favoritos e historial se guardan solo en tu navegador. No escribas datos personales en la búsqueda, que se envía a Google Gemini.</p>
+      <div class="actions"><a class="btn btn-solid" href="/topnote" target="_blank" rel="noopener">Abrir la demo ↗</a></div>
+    </div>
+
+    <div class="wrap">
+      <section class="next" aria-labelledby="next-h">
+        <span class="kicker">Siguiente proyecto</span>
+        <article class="next-card">
+          <div>
+            <span class="tag">Proyecto de fin de grado</span>
+            <h2 id="next-h"><a href="/proyectos/brasa-y-ascuas">Brasa y Ascuas</a></h2>
+            <p>Pedidos por QR, cocina en tiempo real y pagos, para un restaurante de buffet.</p>
+            <p class="more" aria-hidden="true">Ver el proyecto →</p>
+          </div>
+          <div class="shot">
+            <div class="browser-bar" aria-hidden="true"><i></i><i></i><i></i><span class="mono">buffet.hugogaliana.com</span></div>
+            <img src="/assets/shot-buffet-panel.jpg" width="1400" height="689" alt="" loading="lazy" decoding="async">
+          </div>
+        </article>
+      </section>
+
+      <aside class="cta-band" aria-labelledby="cta-h">
+        <div>
+          <h2 id="cta-h">¿Tienes un catálogo difícil de buscar?</h2>
+          <p>Productos, fichas o documentos: la misma técnica sirve para que tus clientes encuentren lo que buscan con sus palabras.</p>
+        </div>
+        <a class="btn btn-solid" href="/#contacto">Cuéntame tu proyecto</a>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <p>© 2026 Hugo Galiana Real · Valencia</p>
+    <p class="mono"><a href="https://github.com/HugoGali1" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/hugo-galiana-real-8a1831329/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="mono"><a href="/proyectos/brasa-y-ascuas">Brasa y Ascuas</a> · <a href="/proyectos/aperture">Aperture</a> · <a href="/proyectos/top-note" aria-current="page">Top Note</a> · <a href="/privacidad">Privacidad</a></p>
+  </div>
+</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
