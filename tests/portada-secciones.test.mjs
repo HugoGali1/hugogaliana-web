@@ -1,5 +1,5 @@
 /* Pruebas de las secciones de la portada (spec 001, T5: RF-1, RF-9, RF-10,
- * RF-44, RF-46; T6: RF-32 a RF-37).
+ * RF-44, RF-46; T6: RF-32 a RF-37; T7: RF-38 a RF-43, RF-45).
  *
  * A diferencia de `tests/portada.test.mjs`, que prueba el generador de la
  * lista de proyectos con datos de prueba, aqui se lee el `index.html` de
@@ -114,6 +114,45 @@ test('RF-35 a RF-37: con movimiento reducido o ahorro de datos, imagen fija; sin
   /* la imagen fija es el fondo del escenario: esta ahi antes de que el video llegue */
   assert.match(html, /\.stage\{[^}]*url\('assets\/hero-poster\.jpg'\)/);
   assert.match(html, /\.stage video\{[^}]*opacity:0/);
+});
+
+/* Contacto y navegacion de movil (T7: RF-38 a RF-43, RF-45). El envio real se
+   prueba en el preview; aqui, la estructura y las reglas del script. */
+test('RF-38: el formulario tiene tres campos obligatorios, nombre, correo y mensaje', () => {
+  const form = tramo(/<form class="cform/, 'form');
+  const campos = [...form.matchAll(/<(input|textarea)\b[^>]*\bid="(f-[a-z]+)"[^>]*>/g)].map((m) => [m[2], /\brequired\b/.test(m[0])]);
+  assert.deepEqual(campos, [['f-name', true], ['f-mail', true], ['f-msg', true], ['f-legal', true]]);
+  assert.doesNotMatch(html, /f-tel|name="phone"|phone:/, 'queda el teléfono');
+});
+
+test('RF-39: junto al formulario, el correo, GitHub y LinkedIn', () => {
+  const contacto = tramo(/<section [^>]*id="contacto"/, 'section');
+  assert.match(contacto, /<a href="mailto:hgalianareal@gmail\.com">hgalianareal@gmail\.com<\/a>/);
+  assert.match(contacto, /<a href="https:\/\/github\.com\/HugoGali1"/);
+  assert.match(contacto, /<a href="https:\/\/www\.linkedin\.com\/in\/hugo-galiana-real-8a1831329\/"/);
+});
+
+test('RF-40 a RF-43: casilla de privacidad, éxito solo confirmado, error sin borrar y campo señalado', () => {
+  assert.match(html, /if\(fLegal&&!fLegal\.checked\)return fieldError\(fLegal,/);
+  /* el unico camino a la confirmacion es la respuesta success:true de la API */
+  assert.equal((html.match(/markDelivered\(\)/g) || []).length, 2, 'markDelivered se define y se llama una sola vez');
+  assert.match(html, /if\(res\.status===200&&d\.success===true\)return markDelivered\(\);/);
+  /* nada vacia los campos */
+  assert.doesNotMatch(html, /cform\.reset\(\)|\.value=''/);
+  assert.match(html, /function fieldError\(el,t\)\{[^}]*setAttribute\('aria-invalid','true'\)/);
+  assert.match(html, /if\(!isMail\(m\)\)return fieldError\(fMail,/);
+});
+
+test('RF-45: hasta 900 px el menú va en un panel que abre un botón y cierra Escape', () => {
+  assert.match(html, /<button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu"/);
+  assert.match(html, /@media \(max-width:900px\)\{\s*\.nav\{align-items:center\}\s*\.nav-toggle\{display:inline-flex\}/);
+  assert.match(html, /matchMedia\('\(min-width:901px\)'\)/);
+  assert.match(html, /e\.key==='Escape'&&menuVisible\(\)\)\{menu\(false\);navToggle\.focus\(\)\}/);
+});
+
+test('principio 5: la política de privacidad ya no habla del teléfono', () => {
+  const privacidad = readFileSync(join(raiz, 'privacidad.html'), 'utf8');
+  assert.doesNotMatch(privacidad, /tel[eé]fono/i);
 });
 
 test('la página 404 no enlaza a secciones que ya no existen', () => {

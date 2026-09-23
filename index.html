@@ -109,11 +109,12 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 }
 @media (max-width:1180px){.nav ul{gap:20px}}
 /* ---- menu de movil ----
-   Por debajo de 780px se caia el ultimo enlace y la barra se quedaba en marca y
-   CTA: el visitante de movil --que es la mayoria-- no tenia como saltar a
-   Proyectos ni a Preguntas frecuentes. El mismo <ul> se convierte en panel, asi
-   que no hay una segunda lista de enlaces que mantener en paralelo. */
-.nav-toggle{display:none;background:none;border:0;cursor:pointer;color:var(--text-primary);padding:11px;margin:-11px;border-radius:10px;line-height:0}
+   Hasta 900px, el mismo ancho en el que el hero pasa a movil (RF-45), los
+   enlaces van en un panel que abre el boton de menu y cierra Escape. El mismo
+   <ul> se convierte en panel, asi que no hay una segunda lista de enlaces que
+   mantener en paralelo. */
+/* 44x44: las rayas miden 22x16 y el relleno pone el resto del area tactil */
+.nav-toggle{display:none;background:none;border:0;cursor:pointer;color:var(--text-primary);padding:14px 11px;margin:-14px -11px;border-radius:10px;line-height:0}
 .nav-burger{display:block;position:relative;width:22px;height:16px}
 .nav-burger i{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:currentColor;transition:transform .32s var(--ease),opacity .18s var(--ease)}
 .nav-burger i:nth-child(1){top:0}
@@ -122,7 +123,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 [data-menu="abierto"] .nav-burger i:nth-child(1){transform:translateY(7px) rotate(45deg)}
 [data-menu="abierto"] .nav-burger i:nth-child(2){opacity:0}
 [data-menu="abierto"] .nav-burger i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-@media (max-width:780px){
+@media (max-width:900px){
   .nav{align-items:center}
   .nav-toggle{display:inline-flex}
   /* la marca y el boton se quedan por encima del panel que baja */
@@ -137,7 +138,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     transform:translateY(-102%);visibility:hidden;
     transition:transform .42s var(--ease),visibility .42s var(--ease);
   }
-  /* dentro del panel sobra sitio: vuelven los seis que la barra habia soltado */
   #nav-menu li{display:block}
   .nav ul a{display:block;padding:15px 2px;font-size:14px;border-bottom:1px solid var(--line)}
   .nav ul li:last-child a{border-bottom:0;margin-top:6px;font-size:15px}
@@ -184,8 +184,8 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 <!-- Datos estructurados: le dicen a Google que aqui hay una persona concreta,
-     no una cadena de texto. El correo se deja fuera a proposito: ya es alcanzable
-     por el formulario y ponerlo aqui es servirselo a los rastreadores de spam. -->
+     no una cadena de texto. El correo esta a la vista junto al formulario
+     (RF-39); aqui no hace falta repetirlo. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -339,33 +339,34 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <!-- ============ 3 · Contacto ============ -->
 <section class="sec contact" id="contacto" aria-labelledby="h-cont">
-  <div class="wrap narrow">
+  <div class="wrap contact-wrap">
     <div class="rev">
-      <span class="kicker part">El siguiente paso</span>
-      <h2 id="h-cont" class="part">Cuéntame tu proyecto.</h2>
-      <p class="lede part">Explícame qué necesitas y qué te falta. Te contesto yo, sin compromiso y sin tecnicismos.</p>
+      <span class="kicker part">Contacto</span>
+      <h2 id="h-cont" class="part">¿Tienes algo en mente?</h2>
+      <p class="lede part">Si te gusta lo que ves y quieres que trabajemos juntos, escríbeme. Te contesto yo.</p>
+      <ul class="contact-links mono part" aria-label="Otras formas de contacto">
+        <li><a href="mailto:hgalianareal@gmail.com">hgalianareal@gmail.com</a></li>
+        <li><a href="https://github.com/HugoGali1" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/hugo-galiana-real-8a1831329/" target="_blank" rel="noopener">LinkedIn</a></li>
+      </ul>
     </div>
     <form class="cform rev" id="cform" method="POST" action="https://api.web3forms.com/submit" novalidate>
       <input type="hidden" name="access_key" id="w3f-key" value="19029ac9-2e87-4a0d-82e3-4cb66b1ac2ea">
       <div class="cform-grid part">
         <div class="fld">
           <label class="mono" for="f-name">Tu nombre</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120" placeholder="María López">
+          <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120">
         </div>
         <div class="fld">
           <label class="mono" for="f-mail">Tu correo</label>
-          <input id="f-mail" name="email" type="email" autocomplete="email" required maxlength="160" inputmode="email" placeholder="maria@ejemplo.com">
-        </div>
-        <div class="fld">
-          <label class="mono" for="f-tel">Tu teléfono <span class="opt">(opcional)</span></label>
-          <input id="f-tel" name="phone" type="tel" autocomplete="tel" maxlength="24" inputmode="tel" placeholder="600 12 34 56">
+          <input id="f-mail" name="email" type="email" autocomplete="email" required maxlength="160" inputmode="email">
         </div>
       </div>
-      <label class="mono part" for="f-msg">Tu proyecto</label>
-      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un restaurante y quiero que mis clientes puedan reservar desde la web..."></textarea>
+      <label class="mono part" for="f-msg">Mensaje</label>
+      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000"></textarea>
       <!-- antispam: invisible para personas, irresistible para bots -->
       <input type="checkbox" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
+      <input type="hidden" name="subject" value="Nuevo mensaje desde hugogaliana.com">
       <input type="hidden" name="from_name" value="Formulario de hugogaliana.com">
       <label class="consent part" for="f-legal">
         <span class="cbox">
@@ -375,7 +376,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. Tus datos se usan solo para responderte a este mensaje.</span>
       </label>
       <div class="cform-row part">
-        <button class="btn btn-solid" id="send-btn" type="submit">Enviar mi proyecto</button>
+        <button class="btn btn-solid" id="send-btn" type="submit">Enviar</button>
       </div>
       <p class="mono cnote part" aria-live="polite" role="status"></p>
       <div class="form-ok" role="status" hidden>
@@ -452,10 +453,16 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
    observador (y que el modo de movimiento reducido tambien deja fijado). */
 .contact::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.15;-webkit-mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent);mask-image:linear-gradient(to bottom,transparent,black 24%,black 76%,transparent)}
 .contact:has(.rev.in)::before{background:url('assets/hero-ending.jpg') center/cover no-repeat}
-.cform{margin-top:36px;display:grid;gap:12px}
+/* dos columnas como en la maqueta: la presentacion y los enlaces a un lado,
+   el formulario al otro; en movil, una debajo de otra */
+.contact-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,72px);align-items:start}
+.contact-links{list-style:none;margin-top:26px;display:grid;gap:4px;font-size:15px}
+.contact-links a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-bottom:1px solid var(--accent-muted);overflow-wrap:anywhere}
+.contact-links a:hover{border-color:var(--accent)}
+@media (max-width:860px){.contact-wrap{grid-template-columns:1fr}}
+.cform{display:grid;gap:12px}
 .cform label{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary)}
 .cform-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fld .opt{opacity:.55;letter-spacing:0}
 .fld{display:grid;gap:8px}
 @media (max-width:640px){.cform-grid{grid-template-columns:1fr}}
 .cform input,.cform textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;color:var(--text-primary);font-family:var(--fb);font-size:16px;padding:14px 18px;transition:border-color .3s var(--ease)}
@@ -601,7 +608,7 @@ addEventListener('keydown',function(e){
 });
 /* al girar el movil o ensanchar la ventana el panel deja de existir como tal:
    si se queda marcado como abierto, el scroll del fondo sigue bloqueado */
-matchMedia('(min-width:781px)').addEventListener('change',function(e){if(e.matches)menu(false)});
+matchMedia('(min-width:901px)').addEventListener('change',function(e){if(e.matches)menu(false)});
 
 /* ---------- text splitting (seeded) ---------- */
 document.querySelectorAll('[data-split]').forEach(function(el,ei){
@@ -797,7 +804,6 @@ var cnote=cform.querySelector('.cnote');
 var fName=document.getElementById('f-name');
 var fMail=document.getElementById('f-mail');
 var fMsg=document.getElementById('f-msg');
-var fTel=document.getElementById('f-tel');
 var fLegal=document.getElementById('f-legal');
 var botcheck=cform.querySelector('[name="botcheck"]');
 var NOTE_DEFAULT='Llega directo a mi correo. Te respondo en menos de 24 h.';
@@ -823,9 +829,9 @@ if(fLegal)fLegal.addEventListener('change',function(){
 });
 function mailtoFallback(n,m,t){
   var body=encodeURIComponent('Hola Hugo, soy '+n+' ('+m+').\n\n'+t);
-  location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Nuevo proyecto desde tu web')+'&body='+body;
+  location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Nuevo mensaje desde tu web')+'&body='+body;
 }
-function resetBtn(){sendBtn.disabled=false;sendBtn.textContent='Enviar mi proyecto'}
+function resetBtn(){sendBtn.disabled=false;sendBtn.textContent='Enviar'}
 /* única puerta al estado de éxito: nadie más toca .sent ni .form-ok */
 function markDelivered(){
   cform.classList.add('sent');
@@ -842,11 +848,10 @@ cform.addEventListener('submit',function(ev){
   ev.preventDefault();
   if(sendBtn.disabled)return;
   var n=fName.value.trim(),m=fMail.value.trim(),t=fMsg.value.trim();
-  var tel=fTel?fTel.value.trim():'';
   if(botcheck&&botcheck.checked)return;              /* bot: se traga el envío en silencio */
   if(!n)return fieldError(fName,'Dime tu nombre y le doy salida.');
   if(!isMail(m))return fieldError(fMail,'Revisa el correo: sin él no puedo responderte.');
-  if(t.length<10)return fieldError(fMsg,'Cuéntame un poco más de tu proyecto, aunque sea en dos líneas.');
+  if(t.length<10)return fieldError(fMsg,'Escribe un poco más, aunque sean dos líneas.');
   /* el consentimiento es la base legal del envio: sin casilla, no sale nada */
   if(fLegal&&!fLegal.checked)return fieldError(fLegal,'Marca la casilla de la política de privacidad para poder enviarlo.');
 
@@ -876,13 +881,12 @@ cform.addEventListener('submit',function(ev){
       name:n,
       email:m,
       message:t,
-      phone:tel||'No indicado',
       replyto:m,
       /* prueba del consentimiento: llega en el propio correo, que es donde
          vive el registro. Sin base de datos que mantener. */
       privacidad:'Política de privacidad aceptada el '+new Date().toISOString(),
       from_name:'Formulario de hugogaliana.com',
-      subject:'Nuevo proyecto desde hugogaliana.com — '+n
+      subject:'Nuevo mensaje desde hugogaliana.com — '+n
     })
   })
   .then(function(r){

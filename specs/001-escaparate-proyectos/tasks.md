@@ -69,7 +69,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       288svh.
 
 ## T7 · Contacto y navegación de móvil
-- [ ] Dejar el formulario en tres campos, añadir el correo visible y revisar el
+- [x] Dejar el formulario en tres campos, añadir el correo visible y revisar el
       menú de móvil.
 - **Criterios**: RF-38 a RF-43, RF-45.
 - **Notas**: el formulario sigue siendo Web3Forms y su clave es pública por
