@@ -6,8 +6,9 @@
  * `proyectos/<identificador>.html` (T3 de la spec 001: RF-11, RF-16 a RF-23,
  * RF-47, RF-48). Esas paginas se sirven en `/proyectos/<identificador>`
  * gracias a `cleanUrls` en `vercel.json`, y se commitean como el resto de lo
- * generado (constitucion, principio 1). Las tarjetas de la portada se generan
- * en T4 y entran aqui.
+ * generado (constitucion, principio 1). Ademas sustituye, en `index.html`,
+ * el bloque de tarjetas de la portada con todos los proyectos publicados
+ * (T4 de la spec 001: RF-2 a RF-8, RF-12 a RF-15).
  *
  * El comando no se llama `build` a proposito: Vercel ejecutaria un script con
  * ese nombre y el sitio se sirve estatico (ver `.vercelignore`).
@@ -19,9 +20,13 @@ import { fileURLToPath } from 'node:url';
 
 import { leerProyectos, ErrorDeProyecto } from './proyectos.mjs';
 import { generarPaginaProyecto } from './plantilla-proyecto.mjs';
+import { generarBloqueProyectos } from './plantilla-portada.mjs';
 
 const DIR_PROYECTOS = 'proyectos';
 const SITEMAP = 'sitemap.xml';
+const INDEX_HTML = 'index.html';
+const MARCA_INICIO = '<!-- proyectos:inicio -->';
+const MARCA_FIN = '<!-- proyectos:fin -->';
 
 /* Borra las paginas de una tanda anterior que ya no corresponden a ningun
    proyecto con caso de estudio de hoy (un identificador que cambio de nombre
@@ -66,6 +71,29 @@ export function actualizarSitemap(conCaso, { rutaSitemap = SITEMAP } = {}) {
   writeFileSync(rutaSitemap, xml);
 }
 
+/* Sustituye, dentro de `rutaIndex`, lo que haya entre las marcas
+   `proyectos:inicio` y `proyectos:fin` por el bloque de tarjetas generado a
+   partir de `proyectos` (todos los publicados, no solo los que tienen caso
+   de estudio: RF-2). Si a `index.html` le faltan las marcas, falla nombrando
+   cual, igual que un proyecto mal escrito (`ErrorDeProyecto`), y no toca el
+   archivo. Ejecutarlo dos veces deja el mismo HTML: se busca la posicion de
+   las marcas en cada llamada, nunca se duplican. */
+export function actualizarIndex(proyectos, { rutaIndex = INDEX_HTML, raizAssets = 'assets' } = {}) {
+  const original = readFileSync(rutaIndex, 'utf8');
+  const inicio = original.indexOf(MARCA_INICIO);
+  const fin = original.indexOf(MARCA_FIN);
+  const faltan = [inicio === -1 ? MARCA_INICIO : null, fin === -1 ? MARCA_FIN : null].filter(Boolean);
+  if (faltan.length > 0) {
+    throw new ErrorDeProyecto(rutaIndex, `faltan las marcas ${faltan.join(' y ')}`);
+  }
+  if (fin < inicio) {
+    throw new ErrorDeProyecto(rutaIndex, `la marca ${MARCA_FIN} aparece antes que ${MARCA_INICIO}`);
+  }
+  const bloque = generarBloqueProyectos(proyectos, { raizAssets });
+  const nuevo = `${original.slice(0, inicio + MARCA_INICIO.length)}${bloque}\n    ${original.slice(fin)}`;
+  writeFileSync(rutaIndex, nuevo);
+}
+
 function main() {
   const proyectos = leerProyectos();
   if (proyectos.length === 0) {
@@ -84,7 +112,8 @@ function main() {
   const conCaso = proyectos.filter((p) => p.caso);
   generarPaginas(conCaso);
   actualizarSitemap(conCaso);
-  console.log(`\n${conCaso.length} pagina(s) de proyecto generadas en ${DIR_PROYECTOS}/, y ${SITEMAP} actualizado.`);
+  actualizarIndex(proyectos);
+  console.log(`\n${conCaso.length} pagina(s) de proyecto generadas en ${DIR_PROYECTOS}/, ${SITEMAP} actualizado y ${INDEX_HTML} con sus tarjetas.`);
 }
 
 /* `generarPaginas` y `actualizarSitemap` se exportan para las pruebas, que las
