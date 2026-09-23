@@ -66,6 +66,52 @@ test('la negrita **asi** se reconoce y nada mas', (t) => {
   assert.ok(html.includes('Un <strong>dato importante</strong> y ni _cursiva_ ni `código`.'));
 });
 
+test('RF-18: un parrafo que empieza en negrita sale como punto con titular, escapado', (t) => {
+  const p = proyecto({
+    apartados: [{ titulo: 'Problemas', parrafos: [
+      'Intro normal.',
+      '**Uno <b>.</b>** Explicación del uno.',
+      '**Dos.** Con **otra** negrita dentro.',
+      'Cierre normal.',
+    ] }],
+  });
+  const html = generarPaginaProyecto(p, { siguiente: null });
+  const puntos = html.match(/<div class="puntos">[\s\S]*?\n      <\/div>/g) || [];
+  assert.equal(puntos.length, 1, 'los dos puntos seguidos van en una sola lista');
+  assert.match(puntos[0], /<h3>Uno &lt;b&gt;\.&lt;\/b&gt;<\/h3>\s*<p>Explicación del uno\.<\/p>/);
+  assert.match(puntos[0], /<h3>Dos\.<\/h3>\s*<p>Con <strong>otra<\/strong> negrita dentro\.<\/p>/);
+  assert.ok(html.indexOf('<p>Intro normal.</p>') < html.indexOf('class="puntos"'));
+  assert.ok(html.indexOf('<p>Cierre normal.</p>') > html.indexOf('class="puntos"'));
+});
+
+test('RF-18: los apartados salen numerados, en orden y con un indice que enlaza a cada uno', (t) => {
+  const p = proyecto({
+    apartados: [
+      { titulo: 'Qué es', parrafos: ['A.'] },
+      { titulo: 'Cómo funciona', parrafos: ['B.'] },
+      { titulo: 'Qué es', parrafos: ['C.'] },
+    ],
+  });
+  const html = generarPaginaProyecto(p, { siguiente: null });
+  const ids = [...html.matchAll(/<section class="apartado" id="([^"]+)">\s*<span class="apartado-n">(\d\d)<\/span>/g)].map((m) => [m[1], m[2]]);
+  assert.deepEqual(ids, [['que-es', '01'], ['como-funciona', '02'], ['que-es-3', '03']]);
+  const indice = [...html.matchAll(/<li><a href="#([^"]+)">/g)].map((m) => m[1]);
+  assert.deepEqual(indice, ['que-es', 'como-funciona', 'que-es-3']);
+  /* con un solo apartado no hay indice */
+  const uno = generarPaginaProyecto(proyecto(), { siguiente: null });
+  assert.doesNotMatch(uno, /class="indice"/);
+});
+
+test('el relleno lateral de .wrap no lo pisa ningun padding abreviado', (t) => {
+  const html = generarPaginaProyecto(proyecto(), { siguiente: null });
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+  for (const clase of ['proyecto-hero', 'caso', 'proyecto-nav']) {
+    const regla = css.match(new RegExp(`\\.${clase}\\{([^}]*)\\}`));
+    assert.ok(regla, `falta la regla de .${clase}`);
+    assert.doesNotMatch(regla[1], /(^|;)padding:/, `.${clase} usa padding abreviado`);
+  }
+});
+
 test('RF-17: los botones de demo y codigo salen solo si el proyecto los tiene', (t) => {
   const conAmbos = generarPaginaProyecto(proyecto({ demo: 'https://demo.test', codigo: 'https://codigo.test' }), { siguiente: null });
   assert.match(conAmbos, /Ver demo/);

@@ -53,12 +53,76 @@ function botones(proyecto) {
   return `<div class="botones">${enlaces.join('')}</div>`;
 }
 
-function apartados(proyecto) {
-  return proyecto.apartados.map((apartado) => `
-    <section class="apartado">
+/* Un parrafo que empieza en negrita es un punto con titular propio: la
+   negrita sale como encabezado y el resto como su explicacion, en filas como
+   en la maqueta aprobada. Los puntos seguidos se agrupan en una lista. */
+const PUNTO = /^\*\*(.+?)\*\*\s+([\s\S]+)$/;
+
+function cuerpo(parrafos) {
+  const trozos = [];
+  let puntos = [];
+  const cierraPuntos = () => {
+    if (puntos.length === 0) return;
+    trozos.push(`<div class="puntos">${puntos.join('')}
+      </div>`);
+    puntos = [];
+  };
+  for (const parrafo of parrafos) {
+    const punto = parrafo.match(PUNTO);
+    if (punto) {
+      puntos.push(`
+        <div class="punto">
+          <h3>${escaparHtml(punto[1])}</h3>
+          <p>${formatearParrafo(punto[2])}</p>
+        </div>`);
+    } else {
+      cierraPuntos();
+      trozos.push(`<p>${formatearParrafo(parrafo)}</p>`);
+    }
+  }
+  cierraPuntos();
+  return trozos.join('\n      ');
+}
+
+/* El ancla de cada apartado sale de su titulo, sin tildes ni signos; si dos
+   coinciden, la segunda lleva el numero del apartado detras. */
+function anclas(titulos) {
+  const usadas = new Set();
+  return titulos.map((titulo, i) => {
+    let ancla = titulo.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || `apartado-${i + 1}`;
+    if (usadas.has(ancla)) ancla = `${ancla}-${i + 1}`;
+    usadas.add(ancla);
+    return ancla;
+  });
+}
+
+const numero = (i) => String(i + 1).padStart(2, '0');
+
+function caso(proyecto) {
+  const ids = anclas(proyecto.apartados.map((a) => a.titulo));
+  const secciones = proyecto.apartados.map((apartado, i) => `
+    <section class="apartado" id="${ids[i]}">
+      <span class="apartado-n">${numero(i)}</span>
       <h2>${escaparHtml(apartado.titulo)}</h2>
-      ${apartado.parrafos.map((p) => `<p>${formatearParrafo(p)}</p>`).join('\n      ')}
+      ${cuerpo(apartado.parrafos)}
     </section>`).join('\n');
+  /* con un solo apartado, el indice no ayuda a nada */
+  if (proyecto.apartados.length < 2) {
+    return `<div class="caso wrap"><div class="caso-texto">${secciones}
+  </div></div>`;
+  }
+  const indice = proyecto.apartados.map((apartado, i) => `
+      <li><a href="#${ids[i]}"><span>${numero(i)}</span>${escaparHtml(apartado.titulo)}</a></li>`).join('');
+  return `<div class="caso caso--indice wrap">
+  <nav class="indice" aria-label="En esta página">
+    <span class="indice-titulo">En esta página</span>
+    <ol>${indice}
+    </ol>
+  </nav>
+  <div class="caso-texto">${secciones}
+  </div>
+  </div>`;
 }
 
 /* `siguiente` es el proximo proyecto con caso de estudio, en el orden de la
@@ -109,6 +173,8 @@ export function generarPaginaProyecto(proyecto, { siguiente }) {
   --line-strong:rgba(150,168,180,.44);
   --text-secondary:#96A8B3;
   --text-primary:#EEF3F4;
+  /* el texto de lectura larga, un punto mas claro que el secundario */
+  --text-body:#C9D5DA;
   --ease:cubic-bezier(.22,.75,.25,1);
   --fd:'Sora',sans-serif;
   --fb:'Instrument Sans',sans-serif;
@@ -116,6 +182,7 @@ export function generarPaginaProyecto(proyecto, { siguiente }) {
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{overflow-x:hidden;background:var(--canvas)}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
 body{font-family:var(--fb);font-weight:400;color:var(--text-primary);line-height:1.6;font-size:17px}
 h1,h2{font-family:var(--fd);font-weight:700;line-height:1.15;letter-spacing:-.015em}
 img{max-width:100%;display:block}
@@ -125,14 +192,16 @@ a:hover{color:var(--accent-hover)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 .skip{position:absolute;left:-9999px;top:0;background:var(--panel);color:var(--text-primary);padding:10px 16px;z-index:99;border-radius:0 0 10px 0}
 .skip:focus{left:0}
-.wrap{max-width:820px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
 .kicker{font-family:var(--fm);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
 /* ============ nav minima ============ */
 .nav-min{padding:22px clamp(20px,4vw,48px)}
 .nav-min a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-secondary);font-family:var(--fm);font-size:13px;letter-spacing:.06em;min-height:44px}
 .nav-min a:hover{color:var(--text-primary)}
 /* ============ cabecera del proyecto ============ */
-.proyecto-hero{padding:24px 0 0}
+/* solo relleno vertical: el lateral es el de .wrap, y un padding abreviado
+   aqui lo dejaba a cero y pegaba el texto al borde en movil */
+.proyecto-hero{padding-top:24px}
 .proyecto-hero h1{font-size:clamp(30px,5vw,48px);margin-top:10px}
 .lede{margin-top:16px;color:var(--text-secondary);max-width:60ch;font-size:18px}
 .ficha{display:flex;flex-wrap:wrap;gap:20px 40px;margin-top:32px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -146,16 +215,43 @@ a:hover{color:var(--accent-hover)}
   .btn-solid:hover{background:var(--accent-hover);color:#07131A;transform:translateY(-2px)}
   .btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
 }
-.proyecto-img{width:100%;height:auto;border-radius:16px;margin-top:36px;border:1px solid var(--line)}
-/* ============ caso de estudio ============ */
-.caso{padding:48px 0}
-.apartado{padding-top:36px}
-.apartado:first-child{padding-top:0}
-.apartado h2{font-size:clamp(22px,3vw,28px)}
-.apartado p{margin-top:16px;color:var(--text-secondary);max-width:68ch}
-.apartado strong{color:var(--text-primary);font-weight:600}
+.proyecto-img{width:100%;height:auto;border-radius:16px;margin-top:40px;border:1px solid var(--line)}
+/* ============ caso de estudio ============
+   Como en la maqueta aprobada: un indice numerado a la izquierda que se queda
+   a la vista, el texto a la derecha, y los puntos en filas con su titular. */
+.caso{padding-top:72px;padding-bottom:72px}
+.caso--indice{display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px;align-items:start}
+.indice{position:sticky;top:32px;font-family:var(--fm);font-size:13px}
+.indice-titulo{display:block;margin-bottom:10px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
+.indice ol{list-style:none}
+.indice a{display:flex;align-items:center;gap:10px;min-height:44px;text-decoration:none;color:var(--text-secondary);line-height:1.3}
+.indice a span{color:var(--accent)}
+.indice a:hover{color:var(--text-primary)}
+.caso-texto{max-width:720px}
+.apartado{scroll-margin-top:24px}
+.apartado + .apartado{margin-top:72px}
+.apartado-n{display:block;font-family:var(--fm);font-size:12px;letter-spacing:.16em;color:var(--accent)}
+.apartado h2{font-size:clamp(26px,3.4vw,34px);margin-top:10px}
+.apartado > p{margin-top:18px;color:var(--text-body);font-size:18px;line-height:1.7}
+/* Instrument Sans solo esta cargada a 400 y 500: un 600 lo inventaba el
+   navegador y la negrita salia apelotonada */
+.apartado strong{color:var(--text-primary);font-weight:500}
+.puntos{margin-top:24px;border-top:1px solid var(--line)}
+.punto{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:28px;padding:24px 0;border-bottom:1px solid var(--line)}
+.punto h3{font-family:var(--fd);font-weight:600;font-size:18px;line-height:1.35;letter-spacing:-.01em;color:var(--text-primary)}
+.punto p{color:var(--text-body);font-size:17px;line-height:1.65}
+@media (max-width:900px){
+  .caso--indice{display:block}
+  .indice{display:none}
+}
+@media (max-width:700px){
+  .caso{padding-top:56px;padding-bottom:56px}
+  .apartado + .apartado{margin-top:56px}
+  .apartado > p{font-size:17px}
+  .punto{grid-template-columns:1fr;gap:8px;padding:20px 0}
+}
 /* ============ navegacion entre proyectos ============ */
-.proyecto-nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding:32px 0 56px;border-top:1px solid var(--line)}
+.proyecto-nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:56px;border-top:1px solid var(--line)}
 .proyecto-nav a{text-decoration:none;font-family:var(--fm);font-size:14px;color:var(--text-secondary);min-height:44px;display:inline-flex;align-items:center}
 .proyecto-nav a:hover{color:var(--accent)}
 /* ============ pie (igual que la portada) ============ */
@@ -181,8 +277,7 @@ a:hover{color:var(--accent-hover)}
     ${botones(proyecto)}
     <img class="proyecto-img" src="/assets/${escaparHtml(proyecto.imagen)}" alt="${alt}" loading="eager">
   </header>
-  <div class="caso wrap">${apartados(proyecto)}
-  </div>
+  ${caso(proyecto)}
   <nav class="proyecto-nav wrap" aria-label="Otros proyectos">
     <a href="/#proyectos">← Todos los proyectos</a>${siguiente ? `
     <a href="/proyectos/${siguiente.identificador}">Siguiente: ${escaparHtml(siguiente.titulo)} →</a>` : ''}
