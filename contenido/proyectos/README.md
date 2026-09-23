@@ -61,7 +61,18 @@ Lo que haga falta contar.
 
 Lo que va debajo del segundo `---`. Cada apartado empieza por `## Título` y
 lleva al menos un párrafo; salen en la página en el mismo orden en que los
-escribes.
+escribes, numerados y con un índice al lado en escritorio.
+
+Un párrafo que **empieza** en negrita sale como un punto destacado: la frase
+en negrita hace de titular y el resto de explicación, en una fila aparte. Va
+bien para «problemas que resolví» o «decisiones que tomé»:
+
+```markdown
+**Las recomendaciones desaparecían.** Al preparar los candidatos, el
+identificador se recortaba a 40 caracteres...
+```
+
+La negrita en mitad de un párrafo se queda como negrita normal.
 
 Es opcional: un archivo sin nada debajo publica solo la tarjeta, que enlazará a
 la demo o, si no hay, al código.
