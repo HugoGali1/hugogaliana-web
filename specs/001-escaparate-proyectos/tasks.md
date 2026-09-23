@@ -77,7 +77,7 @@ después la portada (T4–T7); y al final la medición y el cierre (T8–T9).
       este mismo cambio (constitución, principio 5).
 
 ## T8 · Medición y rutas heredadas
-- [ ] Medir en el preview y comprobar que nada de lo viejo se ha roto.
+- [x] Medir en el preview y comprobar que nada de lo viejo se ha roto.
 - **Criterios**: los requisitos no funcionales (Lighthouse de 90+ en rendimiento
       móvil y 95+ en accesibilidad, CLS de 0,1 o menos) y RF-49.
 - **Entrega**: las cifras anotadas en el PR, y `/topnote`, `/privacidad`,
