@@ -102,15 +102,13 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .nav ul li{flex:none}
 .nav ul a{display:inline-block;white-space:nowrap;font-family:var(--fm);font-size:12.5px;letter-spacing:.08em;text-decoration:none;color:var(--text-secondary);transition:color .3s var(--ease)}
 .nav ul a:hover{color:var(--text-primary)}
-.nav ul a.cta{color:var(--accent)}
 /* el menú se va soltando lastre para no partirse nunca en dos líneas */
 /* desenfocar la barra sobre un hero que cambia en cada frame obliga a la GPU
    del móvil a rehacer el blur constantemente: ahí va opaca */
 @media (pointer:coarse){
   .nav.solid{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(9,14,20,.94)}
 }
-@media (max-width:1320px){.nav li[data-lvl="4"]{display:none}}
-@media (max-width:1180px){.nav ul{gap:20px}.nav li[data-lvl="3"]{display:none}}
+@media (max-width:1180px){.nav ul{gap:20px}}
 @media (max-width:980px){.nav li[data-lvl="2"]{display:none}}
 @media (max-width:780px){.nav li[data-lvl="1"]{display:none}}
 /* ---- menu de movil ----
@@ -382,11 +380,8 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   </button>
   <ul id="nav-menu">
     <li data-lvl="1"><a href="#proyectos">Proyectos</a></li>
-    <li data-lvl="2"><a href="#servicios">Qué construyo</a></li>
-    <li data-lvl="3"><a href="#proceso">Cómo trabajo</a></li>
     <li data-lvl="2"><a href="#sobre-mi">Quién soy</a></li>
-    <li data-lvl="4"><a href="#faq">Preguntas frecuentes</a></li>
-    <li><a class="cta" href="#contacto">Cuéntame tu proyecto</a></li>
+    <li><a href="#contacto">Contacto</a></li>
   </ul>
 </nav>
 
@@ -476,6 +471,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         <p class="feat-links part">
           <a class="btn btn-ghost" href="/proyectos/brasa-y-ascuas">Ver el proyecto <span aria-hidden="true">→</span></a>
           <a class="alink" href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Probar la demo ↗</a>
+          <a class="alink" href="https://github.com/HugoGali1/TFG" target="_blank" rel="noopener">Ver el código ↗</a>
         </p>
       </div>
     </article>
@@ -502,6 +498,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
           <span class="mono tag">Con IA</span>
           <h3><a href="/proyectos/top-note">Top Note</a></h3>
           <p>Un buscador de perfumes que entiende lo que le pides con tus palabras y te recomienda con razones. La misma idea sirve para cualquier catálogo de productos.</p>
+          <p class="pcard-code"><a class="alink" href="https://github.com/HugoGali1/topnote" target="_blank" rel="noopener">Ver el código ↗</a></p>
           <p class="pcard-more mono" aria-hidden="true">Ver el proyecto →</p>
         </div>
       </article>
@@ -511,35 +508,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-
-<!-- ============ 2 · Qué construyo ============ -->
-<section class="sec" id="servicios" aria-labelledby="h-serv">
-  <div class="wrap">
-    <div class="rev">
-      <span class="kicker part">Qué construyo</span>
-      <h2 id="h-serv" class="part">Tres cosas, hechas a medida.</h2>
-    </div>
-    <div class="cards rev">
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="10" width="32" height="24" rx="4"/><path d="M8 18h32M14 26h12"/></svg>
-        <h3>Una web que trae clientes</h3>
-        <p>Rápida, clara y preparada para aparecer en Google, para que quien te busque te encuentre y sepa en diez segundos qué ofreces y cómo contactarte.</p>
-      </article>
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="6" width="20" height="36" rx="5"/><path d="M20 34h8M24 12v10l6 4"/></svg>
-        <h3>Pedidos, reservas y pagos</h3>
-        <p>Cobra desde tu propia web o app, sin depender de plataformas que se llevan comisión de cada venta.</p>
-      </article>
-      <article class="card part">
-        <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 14h28M10 24h28M10 34h28"/><circle cx="34" cy="14" r="3"/><circle cx="18" cy="24" r="3"/><circle cx="28" cy="34" r="3"/></svg>
-        <h3>Herramientas internas</h3>
-        <p>Paneles y aplicaciones para tu día a día: inventario, turnos, comandas, lo que tu negocio necesite controlar.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3 · Ensámblalo ============ -->
+<!-- ============ 2 · Ensámblalo ============ -->
 <section class="sec hold-sec" id="ensamblar" aria-labelledby="h-hold">
   <div class="wrap hold-wrap">
     <div class="hold-left rev">
@@ -583,35 +552,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-<!-- ============ 4 · Cómo trabajo ============ -->
-<section class="sec" id="proceso" aria-labelledby="h-proc">
-  <div class="wrap">
-    <div class="rev">
-      <span class="kicker part">Cómo trabajo</span>
-      <h2 id="h-proc" class="part">Sin sorpresas, de principio a fin.</h2>
-    </div>
-    <ol class="steps rev">
-      <li class="step part">
-        <span class="n mono">01</span>
-        <h3>Hablamos y me cuentas qué necesitas.</h3>
-        <p>Me cuentas tu negocio y lo que te falta. Yo traduzco eso a una solución concreta.</p>
-      </li>
-      <li class="step part">
-        <span class="n mono">02</span>
-        <h3>Te doy precio y fecha por escrito, cerrados.</h3>
-        <p>Sabes lo que cuesta y cuándo lo tienes antes de decidir nada. Sin contadores que corren.</p>
-      </li>
-      <li class="step part">
-        <span class="n mono">03</span>
-        <h3>Te lo entrego y te enseño cómo usarlo.</h3>
-        <p>El código y el dominio son tuyos desde el día uno. Podrás contactarme en cualquier momento si me necesitas.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
-
-<!-- ============ 5 · Quién soy ============ -->
+<!-- ============ 3 · Quién soy ============ -->
 <section class="sec about" id="sobre-mi" aria-labelledby="h-about">
   <div class="wrap about-wrap">
     <div class="rev">
@@ -632,41 +573,27 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-<!-- ============ 6 · FAQ ============ -->
-<section class="sec" id="faq" aria-labelledby="h-faq">
+<!-- ============ 4 · Encargos ============ -->
+<section class="sec" id="encargos" aria-labelledby="h-enc">
   <div class="wrap narrow">
     <div class="rev">
-      <span class="kicker part">Preguntas honestas</span>
-      <h2 id="h-faq" class="part">Lo que todo el mundo pregunta antes de escribir.</h2>
-    </div>
-    <div class="faqs rev">
-      <details class="faq part">
-        <summary>¿Cuánto cuesta?</summary>
-        <p>Depende del tamaño del proyecto, y por eso no te doy una cifra al aire: te doy un presupuesto cerrado por escrito después de escucharte. Una web sencilla y un sistema de pedidos completo no cuestan lo mismo, pero en los dos casos sabrás el número exacto antes de decidir.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Cuánto tarda?</summary>
-        <p>La fecha de entrega va cerrada en la propuesta, junto al precio. Si me comprometo a un día, es ese día.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Podré actualizarla yo?</summary>
-        <p>Sí. Te entrego un panel para cambiar tus textos, precios y fotos sin tocar código, y te enseño a usarlo el día de la entrega.</p>
-      </details>
-      <details class="faq part">
-        <summary>¿Y si ya tengo una web?</summary>
-        <p>La reviso gratis y te digo con claridad si conviene arreglarla o rehacerla. A veces la respuesta es que no hace falta rehacer nada, y también te lo diré.</p>
-      </details>
+      <span class="kicker part">Encargos</span>
+      <h2 id="h-enc" class="part">¿Tienes un proyecto en mente?</h2>
+      <p class="lede part">También desarrollo proyectos por encargo: webs, aplicaciones y herramientas a medida. Cuéntame qué necesitas y lo vemos juntos.</p>
+      <a class="btn btn-ghost part" href="#contacto">Escríbeme</a>
     </div>
   </div>
 </section>
 
-<!-- ============ 7 · Contacto ============ -->
+<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
+
+<!-- ============ 5 · Contacto ============ -->
 <section class="sec contact" id="contacto" aria-labelledby="h-cont">
   <div class="wrap narrow">
     <div class="rev">
-      <span class="kicker part">El siguiente paso</span>
-      <h2 id="h-cont" class="part">Cuéntame tu proyecto.</h2>
-      <p class="lede part">Explícame qué necesitas y qué te falta. Te contesto yo, sin compromiso y sin tecnicismos.</p>
+      <span class="kicker part">Contacto</span>
+      <h2 id="h-cont" class="part">Escríbeme.</h2>
+      <p class="lede part">Para un proyecto, una oferta de trabajo o simplemente para hablar. Te contesto yo.</p>
     </div>
     <form class="cform rev" id="cform" method="POST" action="https://api.web3forms.com/submit" novalidate>
       <input type="hidden" name="access_key" id="w3f-key" value="19029ac9-2e87-4a0d-82e3-4cb66b1ac2ea">
@@ -684,11 +611,11 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
           <input id="f-tel" name="phone" type="tel" autocomplete="tel" maxlength="24" inputmode="tel" placeholder="600 12 34 56">
         </div>
       </div>
-      <label class="mono part" for="f-msg">Tu proyecto</label>
-      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Tengo un restaurante y quiero que mis clientes puedan reservar desde la web..."></textarea>
+      <label class="mono part" for="f-msg">Tu mensaje</label>
+      <textarea class="part" id="f-msg" name="message" rows="5" required maxlength="4000" placeholder="Hola, Hugo. Te escribo porque..."></textarea>
       <!-- antispam: invisible para personas, irresistible para bots -->
       <input type="checkbox" name="botcheck" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <input type="hidden" name="subject" value="Nuevo proyecto desde hugogaliana.com">
+      <input type="hidden" name="subject" value="Nuevo mensaje desde hugogaliana.com">
       <input type="hidden" name="from_name" value="Formulario de hugogaliana.com">
       <label class="consent part" for="f-legal">
         <span class="cbox">
@@ -698,7 +625,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
         <span>He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. Tus datos se usan solo para responderte a este mensaje.</span>
       </label>
       <div class="cform-row part">
-        <button class="btn btn-solid" id="send-btn" type="submit">Enviar mi proyecto</button>
+        <button class="btn btn-solid" id="send-btn" type="submit">Enviar mensaje</button>
       </div>
       <p class="mono cnote part" aria-live="polite" role="status"></p>
       <div class="form-ok" role="status" hidden>
@@ -767,6 +694,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .pcard h3 a:focus-visible{outline:none}
 .pcard:has(h3 a:focus-visible){outline:2px solid var(--accent);outline-offset:3px}
 .pcard p{color:var(--text-secondary);font-size:15.5px}
+.pcard-code a{position:relative;z-index:1}
 .pcard-more{margin-top:auto;padding-top:18px;font-size:13px;color:var(--accent)}
 @media (hover:hover){
   .pcard:hover{border-color:var(--line-strong);transform:translateY(-4px)}
@@ -775,16 +703,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @media (max-width:760px){.pgrid{grid-template-columns:1fr}}
 .chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none}
 .chip{background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:8px 14px;font-family:var(--fm);font-size:12.5px;color:var(--text-secondary)}
-/* cards */
-.cards{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);border:1px solid var(--line);border-radius:16px;padding:28px 24px;transition:transform .45s var(--ease),border-color .45s var(--ease)}
-@media (hover:hover){.card:hover{transform:translateY(-5px);border-color:var(--line-strong)}}
-/* en táctil no hay hover: la tarjeta se marca al entrar en pantalla */
-@media (hover:none){.cards.rev.in .card{border-color:var(--line-strong)}.card:active{transform:scale(.99)}}
-.card h3{font-size:19px;margin:16px 0 10px}
-.card p{color:var(--text-secondary);font-size:15.5px}
-.glyph{width:44px;height:44px;fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-@media (max-width:860px){.cards{grid-template-columns:1fr}}
 /* hold moment */
 .hold-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
 .hold-list{list-style:none;margin-top:26px;display:grid;gap:12px}
@@ -846,13 +764,6 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 .hold-again{position:absolute;left:0;right:0;bottom:18px;z-index:1;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);opacity:0;transition:opacity .5s var(--ease)}
 .holdpad.done .hold-again{opacity:.55;transition-delay:1.1s}
 @media (max-width:860px){.hold-wrap{grid-template-columns:1fr}}
-/* steps */
-.steps{margin-top:44px;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
-.step{position:relative;padding:26px 22px;border:1px solid var(--line);border-radius:16px;background:var(--panel-2)}
-.step .n{color:var(--accent);font-size:13px}
-.step h3{font-size:18px;margin:12px 0 8px}
-.step p{color:var(--text-secondary);font-size:15px}
-@media (max-width:860px){.steps{grid-template-columns:1fr}}
 /* La marca de Aperture no es un fichero: en su web es un cuadrado dibujado con
    CSS. Se reproduce aqui con su misma receta --gradiente, radio y cuadro
    interior-- en lugar de recortar una captura, asi que no hay ningun asset
@@ -863,20 +774,6 @@ h3.con-marca{display:flex;align-items:center;gap:12px}
           box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 4px 14px -4px rgba(37,99,235,.55)}
 .ap-marca::after{content:"";position:absolute;top:6px;left:6px;width:14px;height:14px;
                  border-radius:4px;border:1px solid rgba(255,255,255,.85)}
-/* faq */
-.faqs{margin-top:36px;display:grid;gap:10px}
-.faq{border:1px solid var(--line);border-radius:14px;background:var(--panel-2);overflow:hidden}
-.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:var(--fd);font-weight:600;font-size:16.5px;position:relative;transition:color .3s var(--ease)}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-52%);font-family:var(--fm);color:var(--accent);transition:transform .35s var(--ease)}
-.faq[open] summary::after{transform:translateY(-52%) rotate(45deg)}
-.faq[open] summary{color:var(--accent)}
-.faq p{padding:0 22px 20px;color:var(--text-secondary);font-size:15.5px;max-width:70ch}
-/* las preguntas son el bloque mas corto de la pagina, y con el hueco estandar
-   debajo el salto al formulario se leia como un vacio. Se recorta solo por
-   abajo: el de arriba de la seccion de contacto hace falta para que entre la
-   imagen de fondo, que empieza justo ahi y arranca desvanecida. */
-#faq{padding-bottom:clamp(40px,5vh,64px)}
 /* quien soy */
 .about-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,5vw,60px);align-items:center}
 .about-photo-box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1;max-width:380px;box-shadow:0 26px 74px rgba(0,0,0,.45)}
@@ -962,20 +859,12 @@ h3.con-marca{display:flex;align-items:center;gap:12px}
 .rev.in .part:nth-child(4){transition-delay:.24s}
 .rev.in .part:nth-child(5){transition-delay:.32s}
 .rev.done .part:nth-child(n){transition-delay:0s}
-.cards.rev.in .part:nth-child(1){transition-delay:.05s}
-.cards.rev.in .part:nth-child(2){transition-delay:.17s}
-.cards.rev.in .part:nth-child(3){transition-delay:.29s}
-.cards.rev.done .part:nth-child(n){transition-delay:0s}
 /* living whisper per section */
-/* glowp anima filter y dotp anima background: ninguna de las dos es componible,
-   asi que cada paso obliga a recalcular estilo y repintar. Y eran infinitas y las
-   encendia la clase anim del body, o sea que corrian tambien mientras mirabas el
-   hero, cuatro pantallas mas arriba: 3,59 ms de cada fotograma se iban aqui.
-   Ahora solo laten mientras su seccion esta a la vista. */
-.anim .a-la-vista .glyph{animation:glowp 5.4s var(--ease-io) infinite}
-.anim .card:nth-child(2) .glyph{animation-delay:-1.8s}
-.anim .card:nth-child(3) .glyph{animation-delay:-3.6s}
-@keyframes glowp{0%,100%{filter:drop-shadow(0 0 0 rgba(143,216,218,0))}50%{filter:drop-shadow(0 0 7px rgba(143,216,218,.45))}}
+/* dotp anima background: no es componible, asi que cada paso obliga a
+   recalcular estilo y repintar. Era infinita y la encendia la clase anim del
+   body, o sea que corria tambien mientras mirabas el hero, cuatro pantallas
+   mas arriba: 3,59 ms de cada fotograma se iban aqui.
+   Ahora solo late mientras su seccion esta a la vista. */
 .anim #proyectos.a-la-vista .feat .browser-bar i:first-child{animation:dotp 6s var(--ease-io) infinite}
 @keyframes dotp{0%,100%{background:var(--line-strong)}50%{background:var(--accent)}}
 /* El subtitulo y el boton ya no esperan al final del scrub: son lo que
@@ -1334,13 +1223,13 @@ var io=new IntersectionObserver(function(entries){
   });
 },{threshold:0,rootMargin:'0px 0px -12% 0px'});
 document.querySelectorAll('.rev,.divider').forEach(function(el){io.observe(el)});
-/* Los adornos infinitos (glowp, dotp) se encienden y se apagan con su seccion.
+/* El adorno infinito (dotp) se enciende y se apaga con su seccion.
    A diferencia del observador de arriba, este no deja de mirar: la clase entra y
-   sale, porque el objetivo es que no corran cuando no se ven. */
+   sale, porque el objetivo es que no corra cuando no se ve. */
 var ambiente=new IntersectionObserver(function(en){
   en.forEach(function(e){e.target.classList.toggle('a-la-vista',e.isIntersecting)});
 },{rootMargin:'150px 0px'});
-document.querySelectorAll('#servicios,#proyectos').forEach(function(el){ambiente.observe(el)});
+document.querySelectorAll('#proyectos').forEach(function(el){ambiente.observe(el)});
 
 /* ---------- hold moment: tres placas en perspectiva 3D ---------- */
 var pad=document.getElementById('holdpad');
@@ -1577,7 +1466,7 @@ function mailtoFallback(n,m,t){
   var body=encodeURIComponent('Hola Hugo, soy '+n+' ('+m+').\n\n'+t);
   location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Nuevo proyecto desde tu web')+'&body='+body;
 }
-function resetBtn(){sendBtn.disabled=false;sendBtn.textContent='Enviar mi proyecto'}
+function resetBtn(){sendBtn.disabled=false;sendBtn.textContent='Enviar mensaje'}
 /* única puerta al estado de éxito: nadie más toca .sent ni .form-ok */
 function markDelivered(){
   cform.classList.add('sent');
