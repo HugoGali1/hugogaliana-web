@@ -83,8 +83,8 @@ Valencia») no cambian.
   validación.
 - RF-14: EL SISTEMA explicará en esa sección que la decisión final sobre cada
   cambio es de Hugo.
-- RF-15: EL SISTEMA explicará en esa sección que cada tarea termina con los
-  tests en verde.
+- RF-15: EL SISTEMA explicará en esa sección que cada tarea va en su propio
+  commit, con su casilla marcada en la spec.
 - RF-16: EL SISTEMA explicará en esa sección que los cambios se revisan en un
   despliegue de preview antes de publicarse.
 - RF-17: EL SISTEMA enlazará desde esa sección al repositorio público de esta
@@ -182,3 +182,7 @@ Aprobada por el usuario el 24/09/2026.
 Cambio aprobado el 24/09/2026, tras revisar el preview: fuera el bloque de
 encargos que pedían RF-22 y RF-23. Los encargos quedan solo en la invitación
 del contacto.
+
+Cambio aprobado el 24/09/2026: RF-15 pasa de «tests en verde» a «un commit
+por tarea», porque `tests/` solo cubre la paridad de skills y el paso
+prometía más de lo que el repo enseña.
