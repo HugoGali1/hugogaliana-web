@@ -51,7 +51,6 @@ a:hover{color:var(--accent-hover)}
 .nav-links{display:flex;align-items:center;gap:22px;list-style:none}
 .nav-links a{font-family:var(--fm);font-size:12.5px;letter-spacing:.08em;text-decoration:none;color:var(--text-secondary);white-space:nowrap;transition:color .3s var(--ease)}
 .nav-links a:hover{color:var(--text-primary)}
-.nav-links a.cta{color:var(--accent)}
 @media (max-width:520px){.nav-links .hide-s{display:none}}
 @media (pointer:coarse){.nav-links a{min-height:44px;display:inline-flex;align-items:center}}
 
