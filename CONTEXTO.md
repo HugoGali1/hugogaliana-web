@@ -1,8 +1,8 @@
 # Contexto de trabajo — hugogaliana.com
 
-Ultima sesion: **23 de septiembre de 2026**.
-Estado: **`main` en produccion y al dia con la rama `nueva-base`.** Spec 001
-cerrada (T1 y T2). Sin trabajo a medias.
+Ultima sesion: **24 de septiembre de 2026**.
+Estado: **`main` en produccion y al dia con la rama `nueva-base`.** Spec 002
+cerrada (T1 a T6). Sin trabajo a medias.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
 > Esta excluido en `.vercelignore`. Es el punto de retomada para cualquier
@@ -29,7 +29,7 @@ npm test                                 # debe estar en verde
 
 | Pieza | Estado |
 |---|---|
-| Portada `/` | Proyectos justo tras el hero, Brasa y Ascuas destacado como «Mi TFG · Proyecto principal» (panel + movil), ensamblado en 3D, «Quien soy» antes de las FAQ |
+| Portada `/` | Enfoque de portfolio (spec 002): hero que presenta a Hugo, proyectos con enlace al codigo, ensamblado, «Quien soy», «Como trabajo» (el metodo, con enlaces al repo) y contacto abierto. Sin servicios, proceso, FAQ ni bloque de encargos |
 | Hero | Escritorio: scrub del video. Tactil o < 900 px: clase `lite` en `<html>` e imagen fija `assets/hero-movil.jpg` (100 KB), sin animacion |
 | `/proyectos/brasa-y-ascuas`, `/aperture`, `/top-note` | Pagina propia por proyecto; estilos compartidos en `assets/caso.css` |
 | `/proyectos` | Redirige a `/#proyectos` (`vercel.json`) |
@@ -40,7 +40,30 @@ lienzo que los pintaba en movil.
 
 ---
 
-## 3. Historia reciente (23/09/2026)
+## 3. Historia reciente
+
+### 24/09/2026 · spec 002, enfoque de portfolio
+
+```
+246353d feat(portada): quitar el bloque de encargos; los encargos quedan en el contacto
+5a4e95f chore(seo): titulo, descripcion y JSON-LD de portfolio, sin FAQ ni ficha de servicio
+0e71e50 copy(proyectos): cerrar cada caso con el codigo o la web publicada, no con una venta
+e02c65c feat(portada): seccion «Como trabajo», el metodo que se puede comprobar en el repo
+885a30e feat(portada): portfolio primero, encargos como opcion y contacto abierto
+5f49887 copy(hero): presentar a Hugo en lugar de vender, y el ensamblado con las mismas capas
+2d6b4ff docs(specs): 002 enfoque de portfolio en lugar de pagina de venta
+```
+
+- Publico principal: empresas que contratan. Los encargos solo aparecen como
+  motivo en el contacto.
+- T1 la implemento Codex; se quedo sin cuota a mitad de T2 y el resto lo
+  implemento el subagente `implementador` (Sonnet). Validacion con el
+  `validador` de Claude en todas, por decision del usuario (Codex sin cuota).
+- T6 (quitar encargos) se hizo tras ver el preview, sin implementador aparte.
+- Se quito `Co-Authored-By: Claude` del historial de `main` (este repo),
+  `topnote` y `TFG`; los hashes anteriores al 24/09 cambiaron.
+
+### 23/09/2026
 
 ```
 3344312 copy(proyectos): Brasa y Ascuas como «Mi TFG · Proyecto principal»
@@ -101,6 +124,15 @@ reconstruye con `npm run build:topnote`.
 ## 6. Pendiente y mejoras no aplicadas
 
 Ordenadas por impacto. Ninguna esta empezada.
+
+- **Correo de respaldo** del formulario (`mailtoFallback` en `index.html`):
+  su asunto sigue siendo «Nuevo proyecto desde tu web»; el normal ya es
+  «Nuevo mensaje desde hugogaliana.com». Pendiente de decision del usuario.
+- **«Como trabajo», paso 04 «Tests en verde»**: es cierto, pero `tests/` solo
+  tiene un test (paridad de skills). Alternativa propuesta: «Un commit por
+  tarea». Pendiente de decision.
+- Worktrees de Orca `spec002-t1..t5` y ramas `HugoGali1/spec002-*`: ya
+  fusionadas, se pueden archivar.
 
 - **`assets/hero-scrub.mp4`: 6,2 MB**, ahora solo lo descarga el escritorio.
   Recomprimir (AV1/H.265 o menos bitrate) es el mayor ahorro que queda.
