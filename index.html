@@ -381,6 +381,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
   <ul id="nav-menu">
     <li data-lvl="1"><a href="#proyectos">Proyectos</a></li>
     <li data-lvl="2"><a href="#sobre-mi">Quién soy</a></li>
+    <li data-lvl="2"><a href="#como-trabajo">Cómo trabajo</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
 </nav>
@@ -573,7 +574,31 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-<!-- ============ 4 · Encargos ============ -->
+<!-- ============ 4 · Cómo trabajo ============ -->
+<section class="sec" id="como-trabajo" aria-labelledby="h-metodo">
+  <div class="wrap narrow">
+    <div class="rev">
+      <span class="kicker part">Cómo trabajo</span>
+      <h2 id="h-metodo" class="part">Un método que se puede comprobar.</h2>
+      <p class="lede part">Esta web está hecha así y su repositorio es público: cada paso queda en el historial.</p>
+      <ol class="metodo part">
+        <li><span class="mono">01</span><h3>Primero, la spec.</h3><p>Cada cambio empieza por una especificación con requisitos verificables. No se escribe código hasta que está aprobada.</p></li>
+        <li><span class="mono">02</span><h3>Agentes con papeles separados.</h3><p>Trabajo con agentes de IA, Claude y Codex: uno implementa la tarea y otro distinto valida el resultado contra la spec.</p></li>
+        <li><span class="mono">03</span><h3>La decisión es mía.</h3><p>Los agentes ejecutan tareas acotadas. Qué se construye, cómo se cuenta y cuándo se publica lo decido yo.</p></li>
+        <li><span class="mono">04</span><h3>Tests en verde.</h3><p>Cada tarea termina con las pruebas pasando y va en su propio commit.</p></li>
+        <li><span class="mono">05</span><h3>Preview antes de publicar.</h3><p>Cada rama genera un despliegue de prueba en Vercel. Nada llega a producción sin verse antes ahí.</p></li>
+      </ol>
+      <p class="feat-links part">
+        <a class="btn btn-ghost" href="https://github.com/HugoGali1/hugogaliana-web" target="_blank" rel="noopener">Ver el repositorio ↗</a>
+        <a class="alink" href="https://github.com/HugoGali1/hugogaliana-web/tree/main/specs" target="_blank" rel="noopener">Leer las specs ↗</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
+
+<!-- ============ 5 · Encargos ============ -->
 <section class="sec" id="encargos" aria-labelledby="h-enc">
   <div class="wrap narrow">
     <div class="rev">
@@ -587,7 +612,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 
 <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 34" preserveAspectRatio="none"><path class="dl" d="M0 6 H200" pathLength="1"/><path class="dl" d="M20 17 H180" pathLength="1"/><path class="dl" d="M60 28 H140" pathLength="1"/></svg></div>
 
-<!-- ============ 5 · Contacto ============ -->
+<!-- ============ 6 · Contacto ============ -->
 <section class="sec contact" id="contacto" aria-labelledby="h-cont">
   <div class="wrap narrow">
     <div class="rev">
@@ -784,6 +809,14 @@ h3.con-marca{display:flex;align-items:center;gap:12px}
 .about p+p{margin-top:14px}
 .about .rev + .rev h2{margin-top:14px}
 @media (max-width:860px){.about-wrap{grid-template-columns:1fr}.about-photo-box{max-width:min(320px,72vw);margin-inline:auto}}
+/* cómo trabajo: pasos numerados */
+/* pasos en lista: el contenedor estrecho no admite columnas legibles */
+.metodo{list-style:none;margin-top:32px}
+.metodo li{display:grid;grid-template-columns:56px 1fr;column-gap:16px;padding:20px 0;border-top:1px solid var(--line)}
+.metodo li .mono{grid-row:span 2;color:var(--accent);font-size:13px;padding-top:4px}
+.metodo li h3{font-size:18px;margin:0 0 6px}
+.metodo li p{color:var(--text-secondary);font-size:15px;max-width:60ch}
+@media (max-width:600px){.metodo li{grid-template-columns:36px 1fr;column-gap:12px}}
 /* contacto */
 .contact{padding-bottom:120px;position:relative;isolation:isolate;overflow:hidden}
 /* 185 KB para un velo al 15% que esta cinco pantallas mas abajo, y se pedian
