@@ -125,14 +125,6 @@ reconstruye con `npm run build:topnote`.
 
 Ordenadas por impacto. Ninguna esta empezada.
 
-- **Correo de respaldo** del formulario (`mailtoFallback` en `index.html`):
-  su asunto sigue siendo «Nuevo proyecto desde tu web»; el normal ya es
-  «Nuevo mensaje desde hugogaliana.com». Pendiente de decision del usuario.
-- **«Como trabajo», paso 04 «Tests en verde»**: es cierto, pero `tests/` solo
-  tiene un test (paridad de skills). Alternativa propuesta: «Un commit por
-  tarea». Pendiente de decision.
-- Worktrees de Orca `spec002-t1..t5` y ramas `HugoGali1/spec002-*`: ya
-  fusionadas, se pueden archivar.
 
 - **`assets/hero-scrub.mp4`: 6,2 MB**, ahora solo lo descarga el escritorio.
   Recomprimir (AV1/H.265 o menos bitrate) es el mayor ahorro que queda.
