@@ -1391,7 +1391,7 @@ if(fLegal)fLegal.addEventListener('change',function(){
 });
 function mailtoFallback(n,m,t){
   var body=encodeURIComponent('Hola Hugo, soy '+n+' ('+m+').\n\n'+t);
-  location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Nuevo proyecto desde tu web')+'&body='+body;
+  location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent('Nuevo mensaje desde hugogaliana.com')+'&body='+body;
 }
 function resetBtn(){sendBtn.disabled=false;sendBtn.textContent='Enviar mensaje'}
 /* única puerta al estado de éxito: nadie más toca .sent ni .form-ok */
