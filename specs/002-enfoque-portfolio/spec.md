@@ -100,9 +100,9 @@ Valencia») no cambian.
 - RF-20: EL SISTEMA no mostrará las secciones actuales de servicios ni de
   proceso de encargo.
 - RF-21: EL SISTEMA no mostrará las preguntas frecuentes actuales.
-- RF-22: EL SISTEMA mostrará, antes del contacto, un bloque breve que ofrezca
-  encargos de proyectos, de como máximo tres frases.
-- RF-23: EL SISTEMA enlazará ese bloque con el formulario de contacto.
+- RF-22: EL SISTEMA no mostrará una sección propia que ofrezca encargos.
+- RF-23: EL SISTEMA ofrecerá los encargos de proyectos solo como uno de los
+  motivos para escribir en la sección de contacto (RF-24).
 
 ### Contacto
 - RF-24: EL SISTEMA invitará en la sección de contacto a escribir por un
@@ -178,3 +178,7 @@ Valencia») no cambian.
 
 ## Estado
 Aprobada por el usuario el 24/09/2026.
+
+Cambio aprobado el 24/09/2026, tras revisar el preview: fuera el bloque de
+encargos que pedían RF-22 y RF-23. Los encargos quedan solo en la invitación
+del contacto.

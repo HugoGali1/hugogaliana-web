@@ -10,3 +10,5 @@ commit.
 - [x] T3 · Sección «Cómo trabajo» después de «Quién soy» (RF-11 a RF-19).
 - [x] T4 · Páginas de proyecto: menú y cierre (RF-5, RF-27 a RF-29).
 - [x] T5 · Metadatos y datos estructurados de la portada (RF-30 a RF-34).
+- [x] T6 · Quitar el bloque de encargos, cambio pedido tras ver el preview
+      (RF-22 y RF-23 reescritos).
