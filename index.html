@@ -356,7 +356,7 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
     <div class="rev">
       <span class="kicker part">Proyectos</span>
       <h2 id="h-proy" class="part">Construido, publicado, funcionando.</h2>
-      <p class="lede part">Tres proyectos reales, en línea y abiertos para que los pruebes. Cada uno tiene su página, donde cuento qué problema resuelve, cómo lo construí y qué hay por dentro.</p>
+      <p class="lede part">Proyectos reales, en línea y abiertos para que los pruebes. Cada uno tiene su página, donde cuento qué problema resuelve, cómo lo construí y qué hay por dentro.</p>
     </div>
 
     <article class="feat rev">
@@ -381,6 +381,31 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
           <a class="btn btn-ghost" href="/proyectos/brasa-y-ascuas">Ver el proyecto <span aria-hidden="true">→</span></a>
           <a class="alink" href="https://buffet.hugogaliana.com" target="_blank" rel="noopener">Probar la demo ↗</a>
           <a class="alink" href="https://github.com/HugoGali1/TFG" target="_blank" rel="noopener">Ver el código ↗</a>
+        </p>
+      </div>
+    </article>
+
+    <article class="feat rev">
+      <a class="feat-media part" href="/proyectos/piezaxpieza" tabindex="-1" aria-hidden="true">
+        <figure class="shot" id="shot-piezaxpieza">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="mono">piezaxpieza.hugogaliana.com</span></div>
+          <div class="shot-img"><img src="assets/shot-piezaxpieza.jpg" width="1400" height="689" alt="" loading="lazy" decoding="async"></div>
+          <div class="shot-phone"><img src="assets/shot-piezaxpieza-movil.jpg" width="393" height="859" alt="" loading="lazy" decoding="async"></div>
+        </figure>
+      </a>
+      <div class="feat-info">
+        <span class="mono tag part">Proyecto personal</span>
+        <h3 class="part"><a href="/proyectos/piezaxpieza">PiezaxPieza</a></h3>
+        <p class="part">Comparativas y guías de compra de componentes de PC, pensadas para el programa de afiliados de Amazon.es. Cada componente tiene su ficha con las fuentes citadas y un comparador los enfrenta cara a cara. Todas las páginas salen de un único catálogo.</p>
+        <ul class="chips part" aria-label="Qué incluye">
+          <li class="chip">Comparador cara a cara</li>
+          <li class="chip">Datos con fuente</li>
+          <li class="chip">Web generada desde datos</li>
+          <li class="chip">Pruebas en navegador</li>
+        </ul>
+        <p class="feat-links part">
+          <a class="btn btn-ghost" href="/proyectos/piezaxpieza">Ver el proyecto <span aria-hidden="true">→</span></a>
+          <a class="alink" href="https://piezaxpieza.hugogaliana.com" target="_blank" rel="noopener">Probar la demo ↗</a>
         </p>
       </div>
     </article>
@@ -599,6 +624,9 @@ body.hero-a-la-vista .env i,body.hero-a-la-vista .env .f{animation-play-state:pa
 @media (max-width:980px){.feat{grid-template-columns:1fr}}
 @media (max-width:640px){
   .feat .shot-img{aspect-ratio:4/3}
+  /* El grafico del comparador esta en el centro de la captura: sin esto,
+     el movil superpuesto tapa su mitad derecha. */
+  #shot-piezaxpieza .shot-img img{object-position:85% top}
   .shot-phone{width:38%;right:4.5%;bottom:-5%}
   .feat-media{padding-bottom:12%}
 }

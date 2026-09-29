@@ -9,7 +9,7 @@ commit.
 - [x] T2 · Página propia `/proyectos/piezaxpieza`: contenido, enlace a la
       demo, metadatos, pie y enlace final a Aperture, sin cierre de «El
       código, a la vista» (RF-9 a RF-26 en esa página y su tramo de RF-27).
-- [ ] T3 · Bloque destacado en la portada, detrás de Brasa y Ascuas, y
+- [x] T3 · Bloque destacado en la portada, detrás de Brasa y Ascuas, y
       entradilla de la sección sin «Tres proyectos» (RF-1 a RF-8).
 - [ ] T4 · Navegación entre proyectos: Brasa y Ascuas enlaza a PiezaxPieza
       como siguiente proyecto, PiezaxPieza en el pie de la portada y de las
