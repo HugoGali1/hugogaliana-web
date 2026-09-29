@@ -6,7 +6,7 @@ commit.
 - [x] T1 · Capturas de la demo, de escritorio y de móvil, autohospedadas y de
       90 KB como máximo cada una, con su tamaño en el commit (RF-5 y
       requisito de peso).
-- [ ] T2 · Página propia `/proyectos/piezaxpieza`: contenido, enlace a la
+- [x] T2 · Página propia `/proyectos/piezaxpieza`: contenido, enlace a la
       demo, metadatos, pie y enlace final a Aperture, sin cierre de «El
       código, a la vista» (RF-9 a RF-26 en esa página y su tramo de RF-27).
 - [ ] T3 · Bloque destacado en la portada, detrás de Brasa y Ascuas, y
