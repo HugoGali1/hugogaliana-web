@@ -2,8 +2,9 @@
 
 Ultima sesion: **29 de septiembre de 2026**.
 Estado: **spec 003 (PiezaxPieza en el portfolio) implementada en `nueva-base`,
-subida y con preview; falta cerrarla.** T1 a T4 hechas y validadas; `nueva-base`
-va 5 commits por delante de `main`. Lo que falta, en la seccion 6.
+subida y con preview; solo falta que Hugo apruebe los textos y fusionar.** T1 a
+T4 hechas y validadas; la demo ya responde en su subdominio. `nueva-base` va
+por delante de `main`. Lo que falta, en la seccion 6.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
 > Esta excluido en `.vercelignore`. Es el punto de retomada para cualquier
@@ -33,7 +34,7 @@ npm test                                 # debe estar en verde
 | Portada `/` | Enfoque de portfolio (spec 002): hero que presenta a Hugo, proyectos con enlace al codigo, ensamblado, «Quien soy», «Como trabajo» (el metodo, con enlaces al repo) y contacto abierto. Sin servicios, proceso, FAQ ni bloque de encargos |
 | Hero | Escritorio: scrub del video. Tactil o < 900 px: clase `lite` en `<html>` e imagen fija `assets/hero-movil.jpg` (100 KB), sin animacion |
 | `/proyectos/brasa-y-ascuas`, `/aperture`, `/top-note` | Pagina propia por proyecto; estilos compartidos en `assets/caso.css` |
-| `/proyectos/piezaxpieza` y su bloque en la portada | **Solo en `nueva-base` y su preview** (spec 003). Segundo destacado tras Brasa y Ascuas, sin enlace al codigo (repo privado). Demo en `piezaxpieza.hugogaliana.com`, que es otro proyecto de Vercel (`piezaxpieza`) y aun no resuelve: falta el CNAME |
+| `/proyectos/piezaxpieza` y su bloque en la portada | **Solo en `nueva-base` y su preview** (spec 003). Segundo destacado tras Brasa y Ascuas, sin enlace al codigo (repo privado). Demo en `piezaxpieza.hugogaliana.com`, que es otro proyecto de Vercel (`piezaxpieza`); responde desde el 29/09 (CNAME en IONOS, abajo) |
 | `/proyectos` | Redirige a `/#proyectos` (`vercel.json`) |
 | Demo de Brasa y Ascuas | `buffet.hugogaliana.com`, repo aparte `HugoGali1/TFG`, en Render. **Stripe activo en modo de prueba** (ver seccion 4) |
 
@@ -156,19 +157,24 @@ reconstruye con `npm run build:topnote`.
 
 Lista de cierre en `specs/003-piezaxpieza-en-portfolio/tasks.md`.
 
-1. **CNAME en IONOS** (DNS de `hugogaliana.com`): `piezaxpieza` →
-   `92def13e8ff2a577.vercel-dns-017.com` (valor confirmado en Vercel el
-   29/09; alli el dominio figura como «Invalid Configuration» hasta que
-   exista). IONOS pide iniciar sesion: lo hace Hugo, nunca un agente.
-2. Cuando `https://piezaxpieza.hugogaliana.com` responda 200: probar «Probar
-   la demo» desde el preview y cerrar tambien la T2 de la Spec 022 en el
-   repo de PiezaxPieza.
-3. Aprobacion de Hugo sobre los textos en el preview. Abierto: si el bloque
+1. Aprobacion de Hugo sobre los textos en el preview. Abierto: si el bloque
    de PiezaxPieza se invierte (texto a la izquierda) para no repetir el de
    Brasa y Ascuas.
-4. Fusion: `git push origin nueva-base:main`.
-5. Abierto, fuera de la spec: que hacer con `piezaxpieza.es` (comprado y
-   sin usar).
+2. Fusion: `git push origin nueva-base:main`.
+
+Hecho el 29/09:
+
+- **CNAME en IONOS** (DNS de `hugogaliana.com`): `piezaxpieza` →
+  `92def13e8ff2a577.vercel-dns-017.com`, TTL 1 hora. Lo creo Claude desde
+  Chrome con la sesion que abrio Hugo (IONOS pide login: nunca lo hace un
+  agente). Vercel lo dio por valido y emitio el certificado en minutos;
+  `https://piezaxpieza.hugogaliana.com` responde 200 sin sesion.
+- En el repo de PiezaxPieza queda por cerrar la T2 de su Spec 022 (revision
+  en vivo en el subdominio), que esperaba a este DNS.
+- **`piezaxpieza.es`: se queda sin usar** (decision de Hugo, opcion 1 de
+  tres: sin usar, redirigir al subdominio o usarlo como direccion de la
+  demo). Seria el dominio de una futura version con afiliacion; al renovarlo
+  se decide si se mantiene.
 
 ### Mejoras
 

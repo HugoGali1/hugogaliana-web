@@ -19,13 +19,13 @@ commit.
 
 No es una tarea de implementación: son los criterios de finalización.
 
-- [ ] Búsqueda en los HTML publicados: ningún enlace a
+- [x] Búsqueda en los HTML publicados: ningún enlace a
       `github.com/HugoGali1/piezaxpieza`, ninguna etiqueta de afiliado y
       ninguna mención a que el proyecto esté aparcado (RF-23 a RF-26).
-- [ ] Cifras de la página cotejadas con el repositorio de PiezaxPieza
+- [x] Cifras de la página cotejadas con el repositorio de PiezaxPieza
       (RF-20).
 - [ ] Preview de la rama revisado en escritorio y a 360 px, con los textos
       aprobados por Hugo.
-- [ ] `https://piezaxpieza.hugogaliana.com` responde 200 sin sesión
+- [x] `https://piezaxpieza.hugogaliana.com` responde 200 sin sesión
       (requiere el CNAME `piezaxpieza` en IONOS). Solo entonces, fusión en
       `main`.
