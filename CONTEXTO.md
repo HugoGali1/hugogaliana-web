@@ -1,8 +1,9 @@
 # Contexto de trabajo — hugogaliana.com
 
-Ultima sesion: **24 de septiembre de 2026**.
-Estado: **`main` en produccion y al dia con la rama `nueva-base`.** Spec 002
-cerrada (T1 a T6). Sin trabajo a medias.
+Ultima sesion: **29 de septiembre de 2026**.
+Estado: **spec 003 (PiezaxPieza en el portfolio) implementada en `nueva-base`,
+subida y con preview; falta cerrarla.** T1 a T4 hechas y validadas; `nueva-base`
+va 5 commits por delante de `main`. Lo que falta, en la seccion 6.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
 > Esta excluido en `.vercelignore`. Es el punto de retomada para cualquier
@@ -32,6 +33,7 @@ npm test                                 # debe estar en verde
 | Portada `/` | Enfoque de portfolio (spec 002): hero que presenta a Hugo, proyectos con enlace al codigo, ensamblado, «Quien soy», «Como trabajo» (el metodo, con enlaces al repo) y contacto abierto. Sin servicios, proceso, FAQ ni bloque de encargos |
 | Hero | Escritorio: scrub del video. Tactil o < 900 px: clase `lite` en `<html>` e imagen fija `assets/hero-movil.jpg` (100 KB), sin animacion |
 | `/proyectos/brasa-y-ascuas`, `/aperture`, `/top-note` | Pagina propia por proyecto; estilos compartidos en `assets/caso.css` |
+| `/proyectos/piezaxpieza` y su bloque en la portada | **Solo en `nueva-base` y su preview** (spec 003). Segundo destacado tras Brasa y Ascuas, sin enlace al codigo (repo privado). Demo en `piezaxpieza.hugogaliana.com`, que es otro proyecto de Vercel (`piezaxpieza`) y aun no resuelve: falta el CNAME |
 | `/proyectos` | Redirige a `/#proyectos` (`vercel.json`) |
 | Demo de Brasa y Ascuas | `buffet.hugogaliana.com`, repo aparte `HugoGali1/TFG`, en Render. **Stripe activo en modo de prueba** (ver seccion 4) |
 
@@ -41,6 +43,33 @@ lienzo que los pintaba en movil.
 ---
 
 ## 3. Historia reciente
+
+### 29/09/2026 · spec 003, PiezaxPieza en el portfolio
+
+```
+e999145 feat(proyectos): PiezaxPieza en la navegacion entre proyectos
+6362789 feat(portada): PiezaxPieza como segundo proyecto destacado
+a5ed514 feat(proyectos): pagina propia de PiezaxPieza
+cc6d6f2 feat(proyectos): capturas de la demo de PiezaxPieza
+07e8a01 docs(specs): 003 PiezaxPieza en el portfolio
+```
+
+- Decisiones de la entrevista: segundo destacado (Brasa y Ascuas sigue como
+  proyecto principal); repo de PiezaxPieza privado, asi que sin enlace al
+  codigo; demo en el subdominio; se cuenta que nacio para afiliados de
+  Amazon.es y que la demo va sin afiliacion, pero no que el proyecto este
+  aparcado.
+- Cifras de la pagina cotejadas con el repo de PiezaxPieza el 29/09: 63
+  componentes en 7 categorias, 76 paginas en la demo, 470 pruebas, 20 specs.
+  Si se retoma el proyecto, no se actualizan solas.
+- Siguiente proyecto en cadena, en el orden de la portada: Brasa y Ascuas,
+  PiezaxPieza, Aperture, Top Note.
+- T1 a T4 las implemento el orquestador (Claude, conversacion principal), sin
+  implementador aparte; cada una la valido el subagente `validador`.
+- Preview de `e999145`:
+  https://hugogaliana-exmspm2lx-hugo-gali1-s-projects.vercel.app (protegido:
+  navegador con sesion de Vercel). Revisado el 29/09: rutas 200, imagenes,
+  sitemap, siguiente proyecto y documentacion en 404.
 
 ### 24/09/2026 · spec 002, enfoque de portfolio
 
@@ -123,6 +152,26 @@ reconstruye con `npm run build:topnote`.
 
 ## 6. Pendiente y mejoras no aplicadas
 
+### Cerrar la spec 003 (bloquea la fusion en `main`)
+
+Lista de cierre en `specs/003-piezaxpieza-en-portfolio/tasks.md`.
+
+1. **CNAME en IONOS** (DNS de `hugogaliana.com`): `piezaxpieza` →
+   `92def13e8ff2a577.vercel-dns-017.com` (valor confirmado en Vercel el
+   29/09; alli el dominio figura como «Invalid Configuration» hasta que
+   exista). IONOS pide iniciar sesion: lo hace Hugo, nunca un agente.
+2. Cuando `https://piezaxpieza.hugogaliana.com` responda 200: probar «Probar
+   la demo» desde el preview y cerrar tambien la T2 de la Spec 022 en el
+   repo de PiezaxPieza.
+3. Aprobacion de Hugo sobre los textos en el preview. Abierto: si el bloque
+   de PiezaxPieza se invierte (texto a la izquierda) para no repetir el de
+   Brasa y Ascuas.
+4. Fusion: `git push origin nueva-base:main`.
+5. Abierto, fuera de la spec: que hacer con `piezaxpieza.es` (comprado y
+   sin usar).
+
+### Mejoras
+
 Ordenadas por impacto. Ninguna esta empezada.
 
 
@@ -146,7 +195,7 @@ Ordenadas por impacto. Ninguna esta empezada.
 
 ```
 index.html              portada, todo en un fichero (CSS y JS en linea, ~97 KB)
-proyectos/*.html        una pagina por proyecto
+proyectos/*.html        una pagina por proyecto (4, con piezaxpieza.html)
 assets/caso.css         estilos de las paginas de proyecto
 404.html  privacidad.html  robots.txt  sitemap.xml
 vercel.json             cleanUrls, redirects (/buffet, /proyectos), cache y seguridad
