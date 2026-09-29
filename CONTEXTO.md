@@ -71,6 +71,20 @@ cc6d6f2 feat(proyectos): capturas de la demo de PiezaxPieza
   navegador con sesion de Vercel). Revisado el 29/09: rutas 200, imagenes,
   sitemap, siguiente proyecto y documentacion en 404.
 
+### 29/09/2026 · punto final en las listas de proyecto
+
+```
+aadce7c copy(proyectos): punto final en las listas de las paginas de proyecto
+```
+
+- A peticion de Hugo, los 46 elementos de las listas de las tarjetas (`.cell
+  li`) de las cuatro paginas de proyecto llevan punto final: 15 en Brasa y
+  Ascuas, 12 en PiezaxPieza, 10 en Aperture y 9 en Top Note. Antes no lo
+  llevaba ninguno. Criterio para lo nuevo: **todas con punto, sin mezclar**.
+- La marca de cada elemento no es un caracter del texto: es una rayita de
+  acento dibujada con CSS (`.cell li::before` en `assets/caso.css`).
+- Visto en el preview y publicado el mismo dia.
+
 ### 24/09/2026 · spec 002, enfoque de portfolio
 
 ```
