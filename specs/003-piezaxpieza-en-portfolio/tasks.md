@@ -3,7 +3,7 @@
 Una cada vez, en este orden. Cada tarea cerrada se marca `[x]` en su propio
 commit.
 
-- [ ] T1 · Capturas de la demo, de escritorio y de móvil, autohospedadas y de
+- [x] T1 · Capturas de la demo, de escritorio y de móvil, autohospedadas y de
       90 KB como máximo cada una, con su tamaño en el commit (RF-5 y
       requisito de peso).
 - [ ] T2 · Página propia `/proyectos/piezaxpieza`: contenido, enlace a la
