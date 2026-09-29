@@ -11,7 +11,7 @@ commit.
       código, a la vista» (RF-9 a RF-26 en esa página y su tramo de RF-27).
 - [x] T3 · Bloque destacado en la portada, detrás de Brasa y Ascuas, y
       entradilla de la sección sin «Tres proyectos» (RF-1 a RF-8).
-- [ ] T4 · Navegación entre proyectos: Brasa y Ascuas enlaza a PiezaxPieza
+- [x] T4 · Navegación entre proyectos: Brasa y Ascuas enlaza a PiezaxPieza
       como siguiente proyecto, PiezaxPieza en el pie de la portada y de las
       demás páginas de proyecto, y en el mapa del sitio (RF-27 a RF-29).
 
