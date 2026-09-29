@@ -1,10 +1,9 @@
 # Contexto de trabajo — hugogaliana.com
 
 Ultima sesion: **29 de septiembre de 2026**.
-Estado: **spec 003 (PiezaxPieza en el portfolio) implementada en `nueva-base`,
-subida y con preview; solo falta que Hugo apruebe los textos y fusionar.** T1 a
-T4 hechas y validadas; la demo ya responde en su subdominio. `nueva-base` va
-por delante de `main`. Lo que falta, en la seccion 6.
+Estado: **`main` en produccion y al dia con la rama `nueva-base`.** Spec 003
+(PiezaxPieza en el portfolio) cerrada y publicada: T1 a T4 y los cuatro
+criterios de cierre. Sin trabajo a medias.
 
 > Este fichero es una nota de trabajo, no forma parte del sitio.
 > Esta excluido en `.vercelignore`. Es el punto de retomada para cualquier
@@ -34,7 +33,7 @@ npm test                                 # debe estar en verde
 | Portada `/` | Enfoque de portfolio (spec 002): hero que presenta a Hugo, proyectos con enlace al codigo, ensamblado, «Quien soy», «Como trabajo» (el metodo, con enlaces al repo) y contacto abierto. Sin servicios, proceso, FAQ ni bloque de encargos |
 | Hero | Escritorio: scrub del video. Tactil o < 900 px: clase `lite` en `<html>` e imagen fija `assets/hero-movil.jpg` (100 KB), sin animacion |
 | `/proyectos/brasa-y-ascuas`, `/aperture`, `/top-note` | Pagina propia por proyecto; estilos compartidos en `assets/caso.css` |
-| `/proyectos/piezaxpieza` y su bloque en la portada | **Solo en `nueva-base` y su preview** (spec 003). Segundo destacado tras Brasa y Ascuas, sin enlace al codigo (repo privado). Demo en `piezaxpieza.hugogaliana.com`, que es otro proyecto de Vercel (`piezaxpieza`); responde desde el 29/09 (CNAME en IONOS, abajo) |
+| `/proyectos/piezaxpieza` y su bloque en la portada | Spec 003. Segundo destacado tras Brasa y Ascuas, sin enlace al codigo (repo privado). Demo en `piezaxpieza.hugogaliana.com`, que es otro proyecto de Vercel (`piezaxpieza`); responde desde el 29/09 (CNAME en IONOS, abajo) |
 | `/proyectos` | Redirige a `/#proyectos` (`vercel.json`) |
 | Demo de Brasa y Ascuas | `buffet.hugogaliana.com`, repo aparte `HugoGali1/TFG`, en Render. **Stripe activo en modo de prueba** (ver seccion 4) |
 
@@ -153,16 +152,12 @@ reconstruye con `npm run build:topnote`.
 
 ## 6. Pendiente y mejoras no aplicadas
 
-### Cerrar la spec 003 (bloquea la fusion en `main`)
+### Spec 003, cerrada el 29/09
 
-Lista de cierre en `specs/003-piezaxpieza-en-portfolio/tasks.md`.
-
-1. Aprobacion de Hugo sobre los textos en el preview. Abierto: si el bloque
-   de PiezaxPieza se invierte (texto a la izquierda) para no repetir el de
-   Brasa y Ascuas.
-2. Fusion: `git push origin nueva-base:main`.
-
-Hecho el 29/09:
+Hugo aprobo los textos en el preview tal como estaban, con el bloque de
+PiezaxPieza en el mismo sentido que el de Brasa y Ascuas (imagen a la
+izquierda). Lista de cierre completa en
+`specs/003-piezaxpieza-en-portfolio/tasks.md`.
 
 - **CNAME en IONOS** (DNS de `hugogaliana.com`): `piezaxpieza` →
   `92def13e8ff2a577.vercel-dns-017.com`, TTL 1 hora. Lo creo Claude desde

@@ -24,7 +24,7 @@ No es una tarea de implementación: son los criterios de finalización.
       ninguna mención a que el proyecto esté aparcado (RF-23 a RF-26).
 - [x] Cifras de la página cotejadas con el repositorio de PiezaxPieza
       (RF-20).
-- [ ] Preview de la rama revisado en escritorio y a 360 px, con los textos
+- [x] Preview de la rama revisado en escritorio y a 360 px, con los textos
       aprobados por Hugo.
 - [x] `https://piezaxpieza.hugogaliana.com` responde 200 sin sesión
       (requiere el CNAME `piezaxpieza` en IONOS). Solo entonces, fusión en
