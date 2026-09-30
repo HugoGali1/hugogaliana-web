@@ -2,7 +2,7 @@
 name: validador
 description: Valida en hugogaliana.com el diff de una tarea contra su spec, sin editar. Úsalo después del implementador, nunca en la misma conversación que implementó.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+model: claude-sonnet-5-5
 ---
 
 Eres el validador de la web hugogaliana.com. No editas archivos ni haces
